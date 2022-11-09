@@ -1,0 +1,22 @@
+D/jdbc1////
+D/jdbc2////
+/Buffer.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/Connection.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/DatabaseMetaData.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/Debug.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/Driver.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/EscapeProcessor.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/EscapeTokenizer.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/Field.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/MysqlDataSource.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/MysqlDataSourceFactory.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/MysqlDefs.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/MysqlIO.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/PreparedStatement.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/ResultSet.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/ResultSetMetaData.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/SQLError.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/Statement.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/Token.class/1.1/Sat Mar 11 01:52:35 2017/-kb/
+/Util.class/1.1/Sat Mar 11 01:52:36 2017/-kb/
+/Util.java.orig/1.1/Sat Mar 11 01:52:36 2017/-ko/

@@ -1,0 +1,381 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.dimata.harisma.session.employee;
+
+import com.dimata.harisma.entity.employee.CandidateGradeRequired;
+import com.dimata.harisma.entity.employee.CandidateLocation;
+import com.dimata.harisma.entity.employee.CandidatePositionCompetency;
+import com.dimata.harisma.entity.employee.CandidatePositionEducation;
+import com.dimata.harisma.entity.employee.CandidatePositionExperience;
+import com.dimata.harisma.entity.employee.CandidatePositionTraining;
+import com.dimata.harisma.entity.employee.Employee;
+import com.dimata.harisma.entity.employee.PstCandidateGradeRequired;
+import com.dimata.harisma.entity.employee.PstCandidateLocation;
+import com.dimata.harisma.entity.employee.PstCandidatePositionCompetency;
+import com.dimata.harisma.entity.employee.PstCandidatePositionEducation;
+import com.dimata.harisma.entity.employee.PstCandidatePositionExperience;
+import com.dimata.harisma.entity.employee.PstCandidatePositionTraining;
+import com.dimata.harisma.entity.employee.PstEmpEducation;
+import com.dimata.harisma.entity.employee.PstEmployee;
+import com.dimata.harisma.entity.employee.PstTrainingHistory;
+import com.dimata.harisma.entity.masterdata.PstEmployeeCompetency;
+import com.dimata.qdep.db.DBResultSet;
+import com.dimata.qdep.db.DBHandler;
+import com.dimata.qdep.db.DBResultSet;
+import java.sql.ResultSet;
+import java.util.Hashtable;
+import java.util.Vector;
+
+/**
+ *
+ * @author Kartika
+ */
+public class SessCandidate {
+    public static int MBT_DAYS = 365;
+    public static Vector<EmployeeCandidate> getCandidate(long oidCandidate, long positionId) {
+        Vector candidateList = new Vector();
+        String whereClause = "";
+        String whereTraining = "";
+        String whereEducation = "";
+        String whereCompetency = "";
+        String whereExperience = "";
+
+        /* Experience List */
+        whereClause = PstCandidatePositionExperience.fieldNames[PstCandidatePositionExperience.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listExperiences = PstCandidatePositionExperience.list(0, 0, whereClause, "");
+        if (listExperiences != null && listExperiences.size() > 0) {
+            for (int i = 0; i < listExperiences.size(); i++) {
+                CandidatePositionExperience experience = (CandidatePositionExperience) listExperiences.get(i);
+                whereExperience = whereExperience + experience.getExperienceId() + ",";
+            }
+            whereExperience = whereExperience.substring(0, whereExperience.length() - 1);
+        }
+
+        /* Competency List */
+        whereClause = PstCandidatePositionCompetency.fieldNames[PstCandidatePositionCompetency.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listCompetency = PstCandidatePositionCompetency.list(0, 0, whereClause, "");
+        if (listCompetency != null && listCompetency.size() > 0) {
+            for (int i = 0; i < listCompetency.size(); i++) {
+                CandidatePositionCompetency competency = (CandidatePositionCompetency) listCompetency.get(i);
+                whereCompetency = whereCompetency + competency.getCompetencyId() + ",";
+            }
+            whereCompetency = whereCompetency.substring(0, whereCompetency.length() - 1);
+        }
+
+        /* Training List */
+        whereClause = PstCandidatePositionTraining.fieldNames[PstCandidatePositionTraining.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listTraining = PstCandidatePositionTraining.list(0, 0, whereClause, "");
+        if (listTraining != null && listTraining.size() > 0) {
+            for (int i = 0; i < listTraining.size(); i++) {
+                CandidatePositionTraining train = (CandidatePositionTraining) listTraining.get(i);
+                whereTraining = whereTraining + train.getTrainingId() + ",";
+            }
+            whereTraining = whereTraining.substring(0, whereTraining.length() - 1);
+        }
+        /* Education List */
+        whereClause = PstCandidatePositionEducation.fieldNames[PstCandidatePositionEducation.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listEducation = PstCandidatePositionEducation.list(0, 0, whereClause, "");
+        if (listEducation != null && listEducation.size() > 0) {
+            for (int i = 0; i < listEducation.size(); i++) {
+                CandidatePositionEducation education = (CandidatePositionEducation) listEducation.get(i);
+                whereEducation = whereEducation + education.getEducationId() + ",";
+            }
+            whereEducation = whereEducation.substring(0, whereEducation.length() - 1);
+        }
+        /* Key Performa Indicator */
+        /* Sumber Pencarian */
+        /*
+         * code = 0 (candidate location)
+         * code = 1 (sumber pencarian)
+         */
+        whereClause = PstCandidateLocation.fieldNames[PstCandidateLocation.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        whereClause += " AND " + PstCandidateLocation.fieldNames[PstCandidateLocation.FLD_CODE] + "=1";
+        Vector candidateLocList = PstCandidateLocation.list(0, 0, whereClause, "");
+        String whereLocation = "";
+        if (candidateLocList != null && candidateLocList.size() > 0) {
+            for (int i = 0; i < candidateLocList.size(); i++) {
+                CandidateLocation location = (CandidateLocation) candidateLocList.get(i);
+                whereLocation = whereLocation + location.getDivisionId() + ",";
+            }
+            whereLocation = whereLocation.substring(0, whereLocation.length() - 1);
+        } else {
+            whereClause = "";
+        }
+        Vector empTraining = new Vector();
+        Vector employeeList = PstEmployee.list(0, 0, whereClause, PstEmployee.fieldNames[PstEmployee.FLD_EMPLOYEE_NUM]);
+        String whereEmployee = "";
+        /* mencari employee di databank */
+        if (employeeList != null && employeeList.size() > 0) {
+            for (int i = 0; i < employeeList.size(); i++) {
+                Employee emp = (Employee) employeeList.get(i);
+                whereEmployee = whereEmployee + emp.getOID() + ",";
+            }
+            whereEmployee = whereEmployee.substring(0, whereEmployee.length() - 1);
+            whereClause = PstTrainingHistory.fieldNames[PstTrainingHistory.FLD_EMPLOYEE_ID] + " IN (" + whereEmployee + ")";
+            whereClause += " AND " + PstTrainingHistory.fieldNames[PstTrainingHistory.FLD_TRAINING_ID] + " IN (" + whereTraining + ")";
+            empTraining = PstTrainingHistory.listDistinct(0, 0, whereClause, "");
+        }
+        Vector empFilterEdu = new Vector();
+        whereEmployee = "";
+        if (empTraining != null && empTraining.size() > 0) {
+            for (int i = 0; i < empTraining.size(); i++) {
+                Long empTrain = (Long) empTraining.get(i);
+                whereEmployee = whereEmployee + empTrain + ",";
+            }
+            whereEmployee = whereEmployee.substring(0, whereEmployee.length() - 1);
+            whereClause = PstEmpEducation.fieldNames[PstEmpEducation.FLD_EMPLOYEE_ID] + " IN (" + whereEmployee + ")";
+            whereClause += " AND " + PstEmpEducation.fieldNames[PstEmpEducation.FLD_EDUCATION_ID] + " IN (" + whereEducation + ")";
+            empFilterEdu = PstEmpEducation.listDistinct(0, 0, whereClause, "");
+        }
+
+        return candidateList;
+
+    }
+
+    public static Vector<EmployeeCandidate> queryCandidate(long oidCandidate, long positionId, SessCandidateParam parameters) {
+        String whereClause = "";
+        String whereTraining = "";
+        String whereEducation = "";
+        String whereCompetency = "";
+        String whereExperience = "";
+        String whereGradeReq = "";
+        String whereEmployeeStatus = "";
+        
+        if(parameters!=null ) { 
+          if(parameters.isEmployeeStatusActiv())  
+            whereEmployeeStatus =  " (" + PstEmployee.fieldNames[PstEmployee.FLD_RESIGNED] + " = 0 ) " ;
+          
+          if(parameters.isEmployeeStatusResigned())  
+            whereEmployeeStatus =  ( ( whereEmployeeStatus.length() > 0  ) ? " OR " : "" ) + " (" + PstEmployee.fieldNames[PstEmployee.FLD_RESIGNED] + " = 1) " ;
+          
+          if(parameters.isEmployeeStatusMBT())  
+            whereEmployeeStatus =  ( ( whereEmployeeStatus.length() > 0  ) ? " OR " : "" ) + " ( (" + PstEmployee.fieldNames[PstEmployee.FLD_RESIGNED] + " = 0) AND ( DATEDIFF( NOW(),"
+                 + PstEmployee.fieldNames[PstEmployee.FLD_BIRTH_DATE] + ") < " +  MBT_DAYS + " ) ) "    ;
+          
+          
+        }
+        
+        
+        /* Grade Level List */
+        whereClause = PstCandidateGradeRequired.fieldNames[PstCandidateGradeRequired.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listGradeRequired = PstCandidateGradeRequired.listInnerJoin(whereClause);
+        if (listGradeRequired != null && listGradeRequired.size() > 0) {
+            whereGradeReq = "( ";
+            for (int i = 0; i < listGradeRequired.size(); i++) {
+                CandidateGradeRequired grade = (CandidateGradeRequired) listGradeRequired.get(i);
+                whereGradeReq = whereGradeReq + "( gl.GRADE_RANK >=" + grade.getGradeMinimum().getGradeRank()
+                        + " AND gl.GRADE_RANK <= " + grade.getGradeMaximum().getGradeRank() + " ) "
+                        + ((i + 1) < listGradeRequired.size() ? " OR " : " )");
+            }
+        }
+
+        /* Experience List */
+        whereClause = PstCandidatePositionExperience.fieldNames[PstCandidatePositionExperience.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listExperiences = PstCandidatePositionExperience.list(0, 0, whereClause, "");
+        if (listExperiences != null && listExperiences.size() > 0) {
+            for (int i = 0; i < listExperiences.size(); i++) {
+                CandidatePositionExperience experience = (CandidatePositionExperience) listExperiences.get(i);
+                whereExperience = whereExperience + experience.getExperienceId() + ",";
+            }
+            whereExperience = whereExperience.substring(0, whereExperience.length() - 1);
+        }
+
+        /* Competency List */
+        whereClause = PstCandidatePositionCompetency.fieldNames[PstCandidatePositionCompetency.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listCompetency = PstCandidatePositionCompetency.list(0, 0, whereClause, "");
+        if (listCompetency != null && listCompetency.size() > 0) {
+            for (int i = 0; i < listCompetency.size(); i++) {
+                CandidatePositionCompetency competency = (CandidatePositionCompetency) listCompetency.get(i);
+                whereCompetency = whereCompetency + competency.getCompetencyId() + ",";
+            }
+            whereCompetency = whereCompetency.substring(0, whereCompetency.length() - 1);
+        }
+
+        /* Training List */
+        whereClause = PstCandidatePositionTraining.fieldNames[PstCandidatePositionTraining.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listTraining = PstCandidatePositionTraining.list(0, 0, whereClause, "");
+        if (listTraining != null && listTraining.size() > 0) {
+            for (int i = 0; i < listTraining.size(); i++) {
+                CandidatePositionTraining train = (CandidatePositionTraining) listTraining.get(i);
+                whereTraining = whereTraining + train.getTrainingId() + ",";
+            }
+            whereTraining = whereTraining.substring(0, whereTraining.length() - 1);
+        }
+        /* Education List */
+        whereClause = PstCandidatePositionEducation.fieldNames[PstCandidatePositionEducation.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        Vector listEducation = PstCandidatePositionEducation.list(0, 0, whereClause, "");
+        if (listEducation != null && listEducation.size() > 0) {
+            for (int i = 0; i < listEducation.size(); i++) {
+                CandidatePositionEducation education = (CandidatePositionEducation) listEducation.get(i);
+                whereEducation = whereEducation + education.getEducationId() + ",";
+            }
+            whereEducation = whereEducation.substring(0, whereEducation.length() - 1);
+        }
+        /* Key Performa Indicator */
+        /* Sumber Pencarian */
+        /*
+         * code = 0 (candidate location)
+         * code = 1 (sumber pencarian)
+         */
+        whereClause = PstCandidateLocation.fieldNames[PstCandidateLocation.FLD_CANDIDATE_MAIN_ID] + "=" + oidCandidate;
+        whereClause += " AND " + PstCandidateLocation.fieldNames[PstCandidateLocation.FLD_CODE] + "=1";
+        Vector candidateLocList = PstCandidateLocation.list(0, 0, whereClause, "");
+        String whereLocation = "";
+        if (candidateLocList != null && candidateLocList.size() > 0) {
+            for (int i = 0; i < candidateLocList.size(); i++) {
+                CandidateLocation location = (CandidateLocation) candidateLocList.get(i);
+                whereLocation = whereLocation + location.getDivisionId() + ",";
+            }
+            whereLocation = whereLocation.substring(0, whereLocation.length() - 1);
+        } else {
+            whereClause = "";
+        }
+
+        /*
+         String whereEmployee = "";
+         Vector empTraining = new Vector();
+         Vector employeeList = PstEmployee.list(0, 0, whereClause, PstEmployee.fieldNames[PstEmployee.FLD_EMPLOYEE_NUM]);
+         // mencari employee di databank
+         if (employeeList != null && employeeList.size() > 0) {
+         for (int i = 0; i < employeeList.size(); i++) {
+         Employee emp = (Employee) employeeList.get(i);
+         whereEmployee = whereEmployee + emp.getOID() + ",";
+         }
+         whereEmployee = whereEmployee.substring(0, whereEmployee.length()-1);
+         whereClause = PstTrainingHistory.fieldNames[PstTrainingHistory.FLD_EMPLOYEE_ID] +" IN ("+whereEmployee+")";
+         whereClause += " AND "+PstTrainingHistory.fieldNames[PstTrainingHistory.FLD_TRAINING_ID]+" IN ("+whereTraining+")";
+         empTraining = PstTrainingHistory.listDistinct(0, 0, whereClause, "");
+         }
+    
+         Vector empFilterEdu = new Vector();
+         whereEmployee = "";
+         if (empTraining != null && empTraining.size()>0){
+         for (int i=0; i<empTraining .size(); i++){
+         Long empTrain = (Long)empTraining .get(i);
+         whereEmployee = whereEmployee + empTrain + ",";
+         }
+         whereEmployee = whereEmployee.substring(0, whereEmployee.length()-1);
+         whereClause = PstEmpEducation.fieldNames[PstEmpEducation.FLD_EMPLOYEE_ID]+" IN ("+whereEmployee+")";
+         whereClause += " AND "+PstEmpEducation.fieldNames[PstEmpEducation.FLD_EDUCATION_ID]+" IN ("+whereEducation+")";
+         empFilterEdu = PstEmpEducation.listDistinct(0, 0, whereClause, "");
+         }
+         */
+        Hashtable<String, Float> listEmpComp = null;
+        if(whereCompetency != null && whereCompetency.length() > 0  ){
+           String sqlEmp = " SELECT he.employee_id FROM hr_employee he inner join hr_grade_level gl " +
+            " on gl.GRADE_LEVEL_ID = he.GRADE_LEVEL_ID where " + 
+                   ((whereLocation != null && whereLocation.length() > 0) ? ("he.DIVISION_ID IN(" + whereLocation + ") ") : "(1=1) ") +
+                   ((whereGradeReq != null && whereGradeReq.length() > 0) ? " AND (" +whereGradeReq + " ) " : " AND (1=1) ");
+           
+                    listEmpComp=PstEmployeeCompetency.listSumEmpCompetency(0, 10000, PstEmployeeCompetency.fieldNames[PstEmployeeCompetency.FLD_COMPETENCY_ID] + " IN (" + whereCompetency+") AND employee_id IN ("+ sqlEmp + " ) " , " SUM_COMP DESC  ");
+                }
+        
+        Vector<EmployeeCandidate> lists = new Vector();
+        DBResultSet dbrs = null;
+        try {
+            String sql
+                    = " select he.company_id, cp.COMPANY, he.employee_id,he.EMPLOYEE_NUM, he.FULL_NAME, he.COMMENCING_DATE, dv.division_id,  dv.DIVISION, "
+                    + " dep.department_id, dep.DEPARTMENT, sec.SECTION , he.SECTION_ID , "
+                    + " he.POSITION_ID, ps.POSITION, gl.GRADE_CODE, gl.GRADE_RANK, "
+                    + " ((DATEDIFF(CURRENT_DATE() , he.COMMENCING_DATE))/30 ) AS LOS , (((DATEDIFF(CURRENT_DATE() , he.COMMENCING_DATE))/30 ) - (DATEDIFF(CURRENT_DATE(),vwh.MAX_HIS_WT)/30 )) AS WORKHIS , "
+                    + " (DATEDIFF(CURRENT_DATE(),vwh.MAX_HIS_WT)/30 ) AS CURPOS, "
+                    + " SUM(hc.LEVEL_VALUE) AS SUM_COMPTCY_SCORE, escr.EDUCATION , escr.SCORE AS EDUSCORE, MAX(escr.EDULEVEL) as EDULEVEL  "
+                    + "  from hr_employee he "
+                    + " inner join pay_general cp on cp.GEN_ID = he.COMPANY_ID "
+                    + " inner join hr_division dv on dv.DIVISION_ID = he.DIVISION_ID "
+                    + " inner join hr_department dep on dep.DEPARTMENT_ID = he.DEPARTMENT_ID "
+                    + " LEFT join hr_section sec on sec.SECTION_ID = he.SECTION_ID  "
+                    + " inner join hr_position ps on ps.POSITION_ID= he.POSITION_ID "
+                    + " inner join hr_work_history_now wh on wh.EMPLOYEE_ID =  he.EMPLOYEE_ID  "
+                    + " LEFT JOIN hr_view_max_emp_work_history vwh ON vwh.EMPLOYEE_ID = he.EMPLOYEE_ID "
+                    + " inner join hr_training_history th on th.EMPLOYEE_ID =  he.EMPLOYEE_ID  "
+                    + " inner join hr_emp_competency hc on hc.EMPLOYEE_ID =  he.EMPLOYEE_ID  "
+                    + " inner join hr_emp_education ed on ed.EMPLOYEE_ID =  he.EMPLOYEE_ID  "
+                    + " inner join hr_grade_level gl on gl.GRADE_LEVEL_ID = he.GRADE_LEVEL_ID "
+                    + " inner join view_employee_edu_score escr ON escr.EMPLOYEE_ID =   he.EMPLOYEE_ID  "
+                    + " where " + ((whereLocation != null && whereLocation.length() > 0) ? ("he.DIVISION_ID IN(" + whereLocation + ") ") : "(1=1) ")
+                    + ((whereGradeReq != null && whereGradeReq.length() > 0) ? " AND (" +whereGradeReq + " ) " : " AND (1=1) ") + ((whereEmployeeStatus != null && whereEmployeeStatus.length() > 0) ? " AND (" +whereEmployeeStatus + " ) " : " AND (1=1) ")  
+                    + (whereExperience != null && whereExperience.length() > 0 ? " AND ( /* experiency  or current position*/ wh.POSITION_ID IN ( " + whereExperience + " ) OR he.POSITION_ID IN (" + whereExperience + ") )  "
+                          : " AND (1=1) ") + (whereTraining != null && whereTraining.length() > 0 ? " AND th.TRAINING_ID IN (/* training */ " + whereTraining + ") " : " AND (1=1) ")
+                    + (whereCompetency != null && whereCompetency.length() > 0 ? (" AND hc.COMPETENCY_ID IN (" + whereCompetency + ") ") : " AND (1=1) ")
+                    + (whereEducation != null && whereEducation.length() > 0 ? (" AND ed.EDUCATION_ID IN  /*education */ (6008, 6003)   ") : " AND (1=1)")
+                    + " GROUP BY he.EMPLOYEE_ID, escr.EDULEVEL  "
+                    + "ORDER BY gl.GRADE_RANK DESC, ((DATEDIFF(CURRENT_DATE() , he.COMMENCING_DATE))/30 ) DESC,  escr.EDULEVEL DESC, escr.SCORE DESC ";
+            Hashtable<String, EmployeeCandidate > tblList = new Hashtable(); 
+            Hashtable<String, Integer> tblIndex = new Hashtable();             
+            
+            dbrs = DBHandler.execQueryResult(sql);
+            ResultSet rs = dbrs.getResultSet();
+            long prevEmployeeId = 0;
+            while (rs.next()) {
+                EmployeeCandidate candidate = new EmployeeCandidate();
+                long emplOid = rs.getLong("employee_id");
+                if(tblList != null){
+                    EmployeeCandidate tempCandidate = tblList.get(""+emplOid);
+                    if( tempCandidate!=null) {
+                        int newEduLevel = rs.getInt("EDULEVEL");
+                        if(newEduLevel < tempCandidate.getEducationLevel()){
+                            continue;
+                        } else{
+                            tempCandidate.setEmployeeId(0);
+                        }
+                    }
+                }
+                if (prevEmployeeId != emplOid) { // get only most highgest level ojf employee
+                    candidate.setCompanyId(rs.getLong("company_id"));
+                    candidate.setCompany(rs.getString("COMPANY"));
+                    candidate.setEmployeeId(rs.getLong("employee_id"));
+                    candidate.setFullName(rs.getString("FULL_NAME"));
+                    candidate.setPayrollNumber(rs.getString("EMPLOYEE_NUM"));
+                    candidate.setCommecingDate(rs.getDate("COMMENCING_DATE"));
+                    candidate.setDivisionId(rs.getLong("division_id"));
+                    candidate.setDivision(rs.getString("DIVISION"));
+                    candidate.setDepartmentId(rs.getLong("department_id"));
+                    candidate.setDepartment(rs.getString("DEPARTMENT"));
+                    candidate.setSectionId(rs.getLong("SECTION_ID"));
+                    candidate.setSection(rs.getString("SECTION"));
+                    candidate.setCurrPositionId(rs.getLong("POSITION_ID"));
+                    candidate.setCurrPosition(rs.getString("POSITION"));
+                    candidate.setGradeCode(rs.getString("GRADE_CODE"));
+                    candidate.setGradeRank(rs.getInt("GRADE_RANK"));
+                    candidate.setLengthOfService(rs.getFloat("LOS"));
+                    candidate.setWorkHistoryLength(rs.getFloat("WORKHIS"));
+                    candidate.setCurrentPosLength(rs.getFloat("CURPOS"));
+                    try{candidate.setSumCompetencyScore( (listEmpComp!=null) ?  ( listEmpComp.get(""+candidate.getEmployeeId())!=null ? listEmpComp.get(""+candidate.getEmployeeId()).floatValue() : 0f )  : 0f );} catch(Exception exc){;}//rs.getFloat("SUM_COMPTCY_SCORE"));
+                    candidate.setEducationCode(rs.getString("EDUCATION"));
+                    candidate.setEducationScore(rs.getFloat("EDUSCORE"));
+                    candidate.setEducationLevel(rs.getInt("EDULEVEL"));
+                    lists.add(candidate); 
+                    tblList.put(""+candidate.getEmployeeId(), candidate);
+                    tblIndex.put(""+candidate.getEmployeeId(), new Integer (lists.size()-1));
+                    prevEmployeeId = emplOid;
+                }
+            }
+            rs.close();
+            
+            if(lists!=null && lists.size()>0){
+                for(int idx =0 ; idx < lists.size();idx++){
+                    EmployeeCandidate candidate = lists.get(idx);
+                    if(candidate.getEmployeeId()== 0){ 
+                        lists.remove(idx);
+                        idx=idx-1;
+                    }
+                }
+            }
+            
+            return lists;
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            DBResultSet.close(dbrs);
+        }
+
+        return lists;
+
+    }
+
+}

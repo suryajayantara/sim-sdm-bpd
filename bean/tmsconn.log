@@ -1,0 +1,15 @@
+Starting DBConnectionBroker Version 1.0
+dbDriver = com.mysql.jdbc.Driver
+dbURL = jdbc:mysql://localhost:3309/db_outlet
+dbLogin = root
+dbPasswd = **********
+logfile = tmsconn.log
+minconnections = 5
+maxconnections = 51
+Total refresh interval = 0.01 days
+-----------------------------------------
+Jun 30 02015 04:28:33 Opening connection 0 com.mysql.jdbc.Connection@238e0d81:
+Jun 30 02015 04:28:33 Opening connection 1 com.mysql.jdbc.Connection@31221be2:
+Jun 30 02015 04:28:33 Opening connection 2 com.mysql.jdbc.Connection@377dca04:
+Jun 30 02015 04:28:33 Opening connection 3 com.mysql.jdbc.Connection@728938a9:
+Jun 30 02015 04:28:33 Opening connection 4 com.mysql.jdbc.Connection@21b8d17c:

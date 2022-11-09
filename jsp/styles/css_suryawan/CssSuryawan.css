@@ -1,0 +1,159 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 27, 2022, 1:48:20 PM
+    Author     : User
+*/
+            .btn-simpan {
+                background-color: #00a1ec;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+                transition-duration: 0.3s;
+                cursor: pointer;
+            }
+             .btn-simpan1 {
+              background-color: #00a1ec; 
+
+            }
+
+             .btn-simpan1:hover {
+              background-color: #2A5BFE;
+              
+            }
+            .btn-back {
+                background-color: #575757;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+                transition-duration: 0.3s;
+                cursor: pointer;
+            }
+            .btn-back1 {
+              background-color: #575757; 
+            }
+
+             .btn-back1:hover {
+              background-color: #010101;
+              
+            }
+            .btn-edit {
+                background-color: #FFAA05  ;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+                transition-duration: 0.3s;
+                cursor: pointer;
+            }
+            .btn-edit1 {
+              background-color: #FFAA05; 
+            }
+
+             .btn-edit1:hover {
+              background-color: #C67001;
+              
+            }
+            .btn-add {
+                background-color: #10C538  ;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+                transition-duration: 0.3s;
+                cursor: pointer;
+            }
+             .btn-add1 {
+              background-color: #10C538; 
+            }
+
+             .btn-add1:hover {
+              background-color: #09611B;
+              
+            }
+            .btn-delete {
+                background-color: #FF0000;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+                transition-duration: 0.3s;
+                cursor: pointer;
+            }
+            .btn-delete1 {
+              background-color: #FF0000; 
+            }
+
+             .btn-delete1:hover {
+              background-color: #C60101;
+              
+            }
+            
+            .btn-detail {
+                background-color: #008000  ;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+                transition-duration: 0.3s;
+                cursor: pointer;
+            }
+            .btn-detail1 {
+              background-color: #008000; 
+            }
+
+             .btn-detail1:hover {
+              background-color: #095A1E;
+              
+            }
+            .btn-copy {
+                background-color: #AD2EE3;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+                transition-duration: 0.3s;
+                cursor: pointer;
+            }
+             .btn-copy1 {
+              background-color: #AD2EE3; 
+
+            }
+
+             .btn-copy1:hover {
+              background-color: #61094F;
+              
+            }
+            .responsive-container {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+                        .font {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 12px;
+                font-style: normal;
+                line-height: normal;
+                font-weight: normal;
+                font-variant: normal;
+            }

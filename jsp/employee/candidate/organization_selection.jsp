@@ -1,0 +1,337 @@
+<%-- 
+    Document   : organization_selection
+    Created on : Aug 29, 2016, 8:54:48 AM
+    Author     : Dimata 007
+--%>
+
+<%@page import="com.dimata.util.Command"%>
+<%@page import="com.dimata.harisma.entity.log.ChangeValue"%>
+<%@page import="com.dimata.harisma.entity.employee.CandidateLocation"%>
+<%@page import="com.dimata.harisma.entity.employee.PstCandidateLocation"%>
+<%@page import="java.util.Vector"%>
+<%@page import="com.dimata.qdep.form.FRMQueryString"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<%
+    int iCommand = FRMQueryString.requestCommand(request);
+    long oidCandidate = FRMQueryString.requestLong(request, "candidate_main_id");
+    long candidateLocId = FRMQueryString.requestLong(request, "candidate_loc_id");
+    long frmCompany = FRMQueryString.requestLong(request, "frm_company");
+    long frmDivision = FRMQueryString.requestLong(request, "frm_division");
+    long frmDepartment = FRMQueryString.requestLong(request, "frm_department");
+    long frmSection = FRMQueryString.requestLong(request, "frm_section");
+    int codeOrg = FRMQueryString.requestInt(request, "code_org");
+    long empCompanyId = 0;
+    long empDivisionId = 0;
+    Vector listLocation = new Vector();
+    ChangeValue changeValue = new ChangeValue();
+    
+    String strUrl = "";
+    strUrl  = "'"+frmCompany+"',";
+    strUrl += "'"+frmDivision+"',";
+    strUrl += "'"+frmDepartment+"',";
+    strUrl += "'"+frmSection+"',";
+    strUrl += "'frm_company',";
+    strUrl += "'frm_division',";
+    strUrl += "'frm_department',";
+    strUrl += "'frm_section'";
+    
+    /* Save Data */
+    if (iCommand == Command.SAVE){
+        try {
+            CandidateLocation entityCandLoc = new CandidateLocation();
+            entityCandLoc.setCandidateMainId(oidCandidate);
+            entityCandLoc.setCompanyId(frmCompany);
+            entityCandLoc.setDivisionId(frmDivision);
+            entityCandLoc.setDepartmentId(frmDepartment);
+            entityCandLoc.setSectionId(frmSection);
+            entityCandLoc.setCode(codeOrg);
+            PstCandidateLocation.insertExc(entityCandLoc);
+        } catch(Exception e){
+            System.out.println("save candidate location =>"+e.toString());
+        }
+        iCommand = Command.NONE;
+    }
+    if (iCommand == Command.DELETE){
+        try {
+            PstCandidateLocation.deleteExc(candidateLocId);
+        } catch(Exception e){
+            System.out.println("Delete candidate location=>"+e.toString());
+        }
+        iCommand = Command.NONE;
+    }
+    
+    String whereClause = "";
+    if (oidCandidate != 0){
+        whereClause = PstCandidateLocation.fieldNames[PstCandidateLocation.FLD_CANDIDATE_MAIN_ID]+"="+oidCandidate;
+        whereClause += " AND "+PstCandidateLocation.fieldNames[PstCandidateLocation.FLD_CODE]+"="+codeOrg;
+        listLocation = PstCandidateLocation.list(0, 0, whereClause, "");
+    }
+%>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Pilihan Organisasi</title>
+        <style type="text/css">
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: sans-serif;
+                background-color: #EEE;
+            }
+            .caption {
+                font-size: 12px;
+                color: #474747;
+                font-weight: bold;
+                padding: 2px 0px 3px 0px;
+            }
+            .divinput {
+                margin-bottom: 5px;
+                padding-bottom: 5px;
+            }
+            .content {
+                padding: 21px;
+            }
+            .btn {
+                background-color: #00a1ec;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+            }
+
+            .btn:hover {
+                color: #FFF;
+                background-color: #007fba;
+                text-decoration: none;
+            }
+            select {
+                border: 1px solid #DDD;
+                padding: 5px 7px;
+            }
+            .tblStyle {border-collapse: collapse; font-size: 12px; }
+            .tblStyle td {padding: 2px; font-size: 12px; }
+            #item {
+                background-color: #DDD;
+                color:#575757;
+                font-weight: bold;
+                padding: 5px 7px;
+                border-radius: 3px;
+            }
+            #close {
+                background-color: #EB9898;
+                color: #B83916;
+                font-weight: bold;
+                padding: 5px 7px;
+                border-radius: 3px;
+            }
+        </style>
+<script type="text/javascript">
+
+function loadCompany(
+    pCompanyId, pDivisionId, pDepartmentId, pSectionId,
+    frmCompany, frmDivision, frmDepartment, frmSection
+) {
+    var strUrl = "";
+    if (pCompanyId.length == 0) { 
+        document.getElementById("div_result").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("div_result").innerHTML = xmlhttp.responseText;
+            }
+        };
+        strUrl = "company_structure.jsp";
+        strUrl += "?p_company_id="+pCompanyId;
+        strUrl += "&p_division_id="+pDivisionId;
+        strUrl += "&p_department_id="+pDepartmentId;
+        strUrl += "&p_section_id="+pSectionId;
+        
+        strUrl += "&frm_company="+frmCompany;
+        strUrl += "&frm_division="+frmDivision;
+        strUrl += "&frm_department="+frmDepartment;
+        strUrl += "&frm_section="+frmSection;
+        xmlhttp.open("GET", strUrl, true);
+        xmlhttp.send();
+    }
+}
+    
+function loadDivision(
+    companyId, frmCompany, frmDivision, frmDepartment, frmSection
+) {
+    var strUrl = "";
+    if (companyId.length == 0) { 
+        document.getElementById("div_result").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("div_result").innerHTML = xmlhttp.responseText;
+            }
+        };
+        strUrl = "company_structure.jsp";
+
+        strUrl += "?company_id="+companyId;
+
+        strUrl += "&frm_company="+frmCompany;
+        strUrl += "&frm_division="+frmDivision;
+        strUrl += "&frm_department="+frmDepartment;
+        strUrl += "&frm_section="+frmSection;
+        xmlhttp.open("GET", strUrl, true);
+
+        xmlhttp.send();
+    }
+}
+    
+function loadDepartment(
+    companyId, divisionId, frmCompany, 
+    frmDivision, frmDepartment, frmSection
+) {
+    var strUrl = "";
+    if ((companyId.length == 0)&&(divisionId.length == 0)) { 
+        document.getElementById("div_result").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("div_result").innerHTML = xmlhttp.responseText;
+            }
+        };
+        strUrl = "company_structure.jsp";
+       
+        strUrl += "?company_id="+companyId;
+        strUrl += "&division_id="+divisionId;
+        
+        strUrl += "&frm_company="+frmCompany;
+        strUrl += "&frm_division="+frmDivision;
+        strUrl += "&frm_department="+frmDepartment;
+        strUrl += "&frm_section="+frmSection;
+        xmlhttp.open("GET", strUrl, true);
+        xmlhttp.send();
+    }
+}
+    
+function loadSection(
+    companyId, divisionId, departmentId,
+    frmCompany, frmDivision, frmDepartment, frmSection
+) {
+    var strUrl = "";
+    if ((companyId.length == 0)&&(divisionId.length == 0)&&(departmentId.length == 0)) { 
+        document.getElementById("div_result").innerHTML = "";
+        return;
+    } else {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("div_result").innerHTML = xmlhttp.responseText;
+            }
+        };
+        strUrl = "company_structure.jsp";
+       
+        strUrl += "?company_id="+companyId;
+        strUrl += "&division_id="+divisionId;
+        strUrl += "&department_id="+departmentId;
+        
+        strUrl += "&frm_company="+frmCompany;
+        strUrl += "&frm_division="+frmDivision;
+        strUrl += "&frm_department="+frmDepartment;
+        strUrl += "&frm_section="+frmSection;
+        xmlhttp.open("GET", strUrl, true);
+        xmlhttp.send();
+    }
+}
+
+function pageLoad(){ 
+    loadCompany(<%=strUrl%>);
+} 
+function cmdSave(oid, code){
+    document.frm.command.value="<%= Command.SAVE %>";
+    document.frm.code_org.value=code;
+    document.frm.candidate_main_id.value=oid;
+    document.frm.action="organization_selection.jsp";
+    document.frm.submit();
+}
+function cmdDelete(oid){
+    document.frm.command.value="<%= Command.DELETE %>";
+    document.frm.candidate_loc_id.value=oid;
+    document.frm.action="organization_selection.jsp";
+    document.frm.submit();
+}
+function cmdBack(oid){
+    document.frm.command.value ="<%= Command.NONE %>";
+    document.frm.candidate_main_id.value=oid;
+    document.frm.action="candidate_process_simple.jsp";
+    document.frm.submit();
+}
+</script>        
+    </head>
+    <body onload="pageLoad()">
+        <div class="content">
+            
+            <form name="frm" method="post" action="">
+                <input type="hidden" name="command" value="<%= iCommand %>" />
+                <input type="hidden" name="candidate_loc_id" value="<%= candidateLocId %>" />
+                <input type="hidden" name="candidate_main_id" value="<%= oidCandidate %>" />
+                <input type="hidden" name="code_org" value="<%= codeOrg %>" />
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="padding-right: 21px; border-right: 1px solid #CCC;" valign="top">
+                            <h2 style="color:#797979;">Pilih Organisasi</h2>
+                            <div id="div_result"></div>
+                            <div>&nbsp;</div>
+                            <a href="javascript:cmdSave('<%= oidCandidate %>','<%= codeOrg %>')" class="btn" style="color:#FFF;">Simpan</a>
+                            <a href="javascript:cmdBack('<%= oidCandidate %>')" class="btn" style="color:#FFF;">Kembali ke pencarian</a>
+                        </td>
+                        <td valign="top" style="padding-left: 21px;">
+                            
+                            <h2 style="color:#797979;">Daftar Organisasi</h2>
+                            <%
+                            if (listLocation != null && listLocation.size()>0){
+                                %>
+                                <table class="tblStyle">
+                                <%
+                                for (int i=0; i<listLocation.size(); i++){
+                                    CandidateLocation org = (CandidateLocation)listLocation.get(i);
+                                    %>
+                                    <tr>
+                                        <td><div id="item"><%= changeValue.getDivisionName(org.getDivisionId()) %> / <%= changeValue.getDepartmentName(org.getDepartmentId()) %></div></td>
+                                        <td><div id="close" onclick="javascript:cmdDelete('<%= org.getOID() %>')">&times;</div></td>
+                                    </tr>
+                                    <%
+                                }
+                                %>
+                                </table>
+                                <%
+                            }
+                            %>
+                            
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 21px; border-right: 1px solid #CCC;" valign="top">
+                            &nbsp;
+                        </td>
+                        <td valign="top" style="padding-left: 21px;">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-right: 21px; border-right: 1px solid #CCC;" valign="top">
+                            &nbsp;
+                        </td>
+                        <td valign="top" style="padding-left: 21px;">
+                            &nbsp;
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </body>
+</html>

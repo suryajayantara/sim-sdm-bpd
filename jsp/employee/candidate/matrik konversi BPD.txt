@@ -1,0 +1,72 @@
+<div>Tabel Konversi Assesment</div>
+        <table border="1" cellspacing="1" cellpadding="1">
+        <thead>
+            <tr>
+                <th colspan="3">TABEL KONVERSI KPI ASLI</th>                
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>100</td>
+                <td>180</td>
+                <td>Kurang</td>
+            </tr>
+            <tr>
+                <td>181</td>
+                <td>260</td>
+                <td>Cukup Baik</td>
+            </tr>
+            <tr>
+                <td>261</td>
+                <td>340</td>
+                <td>Baik</td>
+            </tr>
+            <tr>
+                <td>341</td>
+                <td>420</td>
+                <td>Memuaskan</td>
+            </tr>
+            <tr>
+                <td>421</td>
+                <td>500</td>
+                <td>Sangat Memuaskan</td>
+            </tr>
+            
+        </tbody>
+    </table>
+    <div>&nbsp;</div>
+    <table border="1" cellspacing="1" cellpadding="1">
+        <thead>
+            <tr>
+                <th colspan="3">TABEL KONVERSI KPI KE SIM SDM</th>                
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>20</td>
+                <td>36</td>
+                <td>Kurang</td>
+            </tr>
+            <tr>
+                <td>37</td>
+                <td>52</td>
+                <td>Cukup Baik</td>
+            </tr>
+            <tr>
+                <td>53</td>
+                <td>68</td>
+                <td>Baik</td>
+            </tr>
+            <tr>
+                <td>69</td>
+                <td>84</td>
+                <td>Memuaskan</td>
+            </tr>
+            <tr>
+                <td>85</td>
+                <td>100</td>
+                <td>Sangat Memuaskan</td>
+            </tr>
+          
+        </tbody>
+    </table>

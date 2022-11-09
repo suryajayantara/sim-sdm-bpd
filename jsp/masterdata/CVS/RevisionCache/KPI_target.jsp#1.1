@@ -1,0 +1,656 @@
+<%-- 
+    Document   : KPI_target
+    Created on : Sep 24, 2018, 11:34:12 AM
+    Author     : dimata005
+--%>
+<%@page import="com.dimata.harisma.form.masterdata.FrmKPI_Company_Target"%>
+<%@page import="com.dimata.gui.jsp.ControlCombo"%>
+<%@page import="com.dimata.harisma.entity.log.ChangeValue"%>
+<%@page import="com.dimata.harisma.form.masterdata.FrmDocMaster"%>
+<%@page import="com.dimata.gui.jsp.ControlLine"%>
+<%@page import="com.dimata.harisma.form.masterdata.CtrlDocMaster"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ include file = "../main/javainit.jsp" %>
+<% //int appObjCode = AppObjInfo.composeObjCode(AppObjInfo.G1_DOKUMEN_SURAT, AppObjInfo.G2_MASTER_DOCUMENT, AppObjInfo.OBJ_DOCUMENT_MASTER);
+    int appObjCode = AppObjInfo.composeObjCode(AppObjInfo.G1_REPORTS, AppObjInfo.G2_PRESENCE_REPORT, AppObjInfo.OBJ_PRESENCE_DAILY_REPORT);
+%>
+<%@ include file = "../main/checkuser.jsp" %>
+<!DOCTYPE html>
+<%
+ long kpiListId = FRMQueryString.requestLong(request, FrmKPI_Company_Target.fieldNames[FrmKPI_Company_Target.FRM_FIELD_KPI_LIST_ID]);
+ long oidCompany = FRMQueryString.requestLong(request, FrmKPI_Company_Target.fieldNames[FrmKPI_Company_Target.FRM_FIELD_COMPANY_ID]);
+ int tahun = Calendar.getInstance().get(Calendar.YEAR);  
+ int iCommand = FRMQueryString.requestCommand(request);
+ int start = FRMQueryString.requestInt(request, "start");
+ long divisionId = FRMQueryString.requestLong(request, "divId");
+ long departmentId = FRMQueryString.requestLong(request, "depId");
+ long sectionId = FRMQueryString.requestLong(request, "secId");
+ int type = FRMQueryString.requestInt(request, "type");
+ 
+ Vector listKPIDivision = new Vector(1, 1);
+ if (iCommand == Command.GOTO){
+     String where = PstKPI_Division_Target.fieldNames[PstKPI_Division_Target
+             .FLD_KPI_LIST_ID]+"="+kpiListId+" AND "+PstKPI_Division_Target
+             .fieldNames[PstKPI_Division_Target.FLD_STARTDATE] 
+             + " LIKE \"%" + tahun + "%\" AND " + PstKPI_Company_Target
+             .fieldNames[PstKPI_Division_Target.FLD_ENDDATE] 
+             + " LIKE \"%" + tahun + "%\" AND " + PstKPI_Company_Target
+             .fieldNames[PstKPI_Division_Target.FLD_DIVISION_ID] + " = " + divisionId + " ";
+    listKPIDivision = PstKPI_Division_Target.list(0, 0, where,"");
+ }
+ 
+if (iCommand == Command.SAVE && type == 2){
+    Vector vDivision = PstDivision.list(0, 0, PstDivision.fieldNames[PstDivision
+                                            .FLD_VALID_STATUS] + " = "
+                                    +PstDivision.VALID_ACTIVE ,"");
+    
+    long delDiv = PstKPI_Division_Target.deleteKpiDivisionTarget(tahun, kpiListId, oidCompany);
+    
+    for (int m = 1; m <=12; m++){
+        for (int x = 0; x < vDivision.size(); x++) {
+            Division division = (Division)vDivision.get(x);
+            double value = FRMQueryString.requestDouble(request, FrmKPI_Company_Target.fieldNames[FrmKPI_Company_Target.FRM_FIELD_PERCENT_DIVISION]+division.getOID()+"_"+m);
+            double achievement = FRMQueryString.requestDouble(request, FrmKPI_Company_Target.fieldNames[FrmKPI_Company_Target.FRM_FIELD_ACHIEVEMENT_DIVISION]+division.getOID()+"_"+m);
+            String month = "";
+            if (m < 10){
+                month = "0"+m;
+            } else {
+                month = ""+m;
+            }
+            String dateStartString = "01-"+month+"-"+tahun;
+            String dateEndString = "30-"+month+"-"+tahun;
+
+            KPI_Division_Target  kPI_Division_Target = new KPI_Division_Target();
+            kPI_Division_Target.setStartDate(Formater.formatDate(dateStartString, "dd-MM-yyyy"));
+            kPI_Division_Target.setEndDate(Formater.formatDate(dateEndString, "dd-MM-yyyy"));
+            kPI_Division_Target.setDivisionId(division.getOID());
+            kPI_Division_Target.setTarget(value);
+            kPI_Division_Target.setAchievement(achievement);
+            kPI_Division_Target.setKpiListId(kpiListId);
+            
+            try {
+                PstKPI_Division_Target.insertExc(kPI_Division_Target);
+            } catch (Exception exc){
+                
+            }
+
+        }
+    }
+}
+
+String whereClauseKpiList = " KPI_LIST_ID = " + kpiListId ;
+           whereClauseKpiList = whereClauseKpiList + " AND STARTDATE LIKE \"%" + tahun + "%\" ";
+           //hastabel untuk divisi  yang sudah diset nilainya 
+           Hashtable HlistKPI_Division_Target = new Hashtable(1, 1);         
+           HlistKPI_Division_Target = PstKPI_Division_Target.HlistNew(0, 0, whereClauseKpiList, "");
+           
+
+if (!privViewAllDivision && appUserSess.getAdminStatus() != 1){
+    divisionId = emplx.getDivisionId();
+}
+           
+    
+%>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Master Document</title>
+        <link rel="stylesheet" href="../styles/main.css" type="text/css">
+        <script src="../javascripts/jquery.min-1.6.2.js" type="text/javascript"></script>
+        <script src="../javascripts/chosen.jquery.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="../stylesheets/chosen.css" >
+        <style type="text/css">
+            .tblStyle {border-collapse: collapse; font-size: 12px;}
+            .tblStyle td {padding: 7px 9px; border: 1px solid #CCC; font-size: 12px;}
+            .title_tbl {font-weight: bold;background-color: #DDD; color: #575757;}
+            .title_page {color:#0db2e1; font-weight: bold; font-size: 14px; background-color: #EEE; border-left: 1px solid #0099FF; padding: 12px 18px;}
+
+            body {color:#373737;}
+            #menu_utama {padding: 9px 14px; border-left: 1px solid #0099FF; font-size: 14px; background-color: #F3F3F3;}
+            #menu_title {color:#0099FF; font-size: 14px;}
+            #menu_teks {color:#CCC;}
+            
+            #btn {
+              background: #3498db;
+              border: 1px solid #0066CC;
+              border-radius: 3px;
+              font-family: Arial;
+              color: #ffffff;
+              font-size: 12px;
+              padding: 3px 9px 3px 9px;
+            }
+
+            #btn:hover {
+              background: #3cb0fd;
+              border: 1px solid #3498db;
+            }
+            .breadcrumb {
+                background-color: #EEE;
+                color:#0099FF;
+                padding: 7px 9px;
+            }
+            .navbar {
+                font-family: sans-serif;
+                font-size: 12px;
+                background-color: #0084ff;
+                padding: 7px 9px;
+                color : #FFF;
+                border-top:1px solid #0084ff;
+                border-bottom: 1px solid #0084ff;
+            }
+            .navbar ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .navbar li {
+                padding: 7px 9px;
+                display: inline;
+                cursor: pointer;
+            }
+            
+            .navbar li a {
+                color : #F5F5F5;
+                text-decoration: none;
+            }
+            
+            .navbar li a:hover {
+                color:#FFF;
+            }
+            
+            .navbar li a:active {
+                color:#FFF;
+            }
+
+            .navbar li:hover {
+                background-color: #0b71d0;
+                border-bottom: 1px solid #033a6d;
+            }
+
+            .active {
+                background-color: #0b71d0;
+                border-bottom: 1px solid #033a6d;
+            }
+            .title_part {color:#FF7E00; background-color: #F7F7F7; border-left: 1px solid #0099FF; padding: 9px 11px;}
+            
+            body {background-color: #EEE;}
+            .header {
+                
+            }
+            .content-main {
+                padding: 21px 32px;
+                margin: 0px 23px 59px 23px;
+            }
+            .content-info {
+                padding: 21px;
+                border-bottom: 1px solid #E5E5E5;
+            }
+            .content-title {
+                padding: 21px;
+                border-bottom: 1px solid #E5E5E5;
+                margin-bottom: 5px;
+            }
+            #title-large {
+                color: #575757;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            #title-small {
+                color:#797979;
+                font-size: 11px;
+            }
+            .content {
+                padding: 21px;
+            }
+            .box {
+                margin: 17px 7px;
+                background-color: #FFF;
+                color:#575757;
+            }
+            #box_title {
+                padding:21px; 
+                font-size: 14px; 
+                color: #007fba;
+                border-top: 1px solid #28A7D1;
+                border-bottom: 1px solid #EEE;
+            }
+            #box_content {
+                padding:21px; 
+                font-size: 12px;
+                color: #575757;
+            }
+            .box-info {
+                padding:21px 43px; 
+                background-color: #F7F7F7;
+                border-bottom: 1px solid #CCC;
+                -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+                 -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+                      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+            }
+            #title-info-name {
+                padding: 11px 15px;
+                font-size: 35px;
+                color: #535353;
+            }
+            #title-info-desc {
+                padding: 7px 15px;
+                font-size: 21px;
+                color: #676767;
+            }
+            
+            #photo {
+                padding: 7px; 
+                background-color: #FFF; 
+                border: 1px solid #DDD;
+            }
+
+            .btn {
+                background-color: #00a1ec;
+                border-radius: 3px;
+                font-family: Arial;
+                color: #EEE;
+                font-size: 12px;
+                padding: 7px 11px 7px 11px;
+                text-decoration: none;
+            }
+
+            .btn:hover {
+                color: #FFF;
+                background-color: #007fba;
+                text-decoration: none;
+            }
+            
+            .btn-small {
+                font-family: sans-serif;
+                text-decoration: none;
+                padding: 5px 7px; 
+                background-color: #EEE; color: #575757; 
+                font-size: 11px; cursor: pointer;
+                border-radius: 3px;
+                border: 1px solid #DDD;
+            }
+            .btn-small:hover { background-color: #DDD; color: #474747;}
+            
+            .btn-small-1 {
+                font-family: sans-serif;
+                text-decoration: none;
+                padding: 5px 7px; 
+                background-color: #EEE; color: #575757; 
+                font-size: 11px; cursor: pointer;
+                border-radius: 3px;
+            }
+            .btn-small-1:hover { background-color: #DDD; color: #474747;}
+            
+            .tbl-main {border-collapse: collapse; font-size: 11px; background-color: #FFF; margin: 0px;}
+            .tbl-main td {padding: 4px 7px; border: 1px solid #DDD; }
+            #tbl-title {font-weight: bold; background-color: #F5F5F5; color: #575757;}
+            
+            .tbl-small {border-collapse: collapse; font-size: 11px; background-color: #FFF;}
+            .tbl-small td {padding: 2px 3px; border: 1px solid #DDD; }
+            
+            #caption {
+                font-size: 12px;
+                color: #474747;
+                font-weight: bold;
+                padding: 2px 0px 3px 0px;
+            }
+            #divinput {
+                margin-bottom: 5px;
+                padding-bottom: 5px;
+            }
+            
+            #div_item_sch {
+                background-color: #EEE;
+                color: #575757;
+                padding: 5px 7px;
+            }
+            
+            #record_count{
+                font-size: 12px;
+                font-weight: bold;
+                padding-bottom: 9px;
+            }
+            #box-form {
+                background-color: #EEE; 
+                border-radius: 5px;
+            }
+            .formstyle {
+                background-color: #FFF;
+                padding: 21px;
+                border-radius: 3px;
+                margin: 3px 0px;
+            }
+            .form-style {
+                font-size: 12px;
+                color: #575757;
+                border: 1px solid #DDD;
+                border-radius: 5px;
+            }
+            .form-title {
+                padding: 11px 21px;
+                text-align: left;
+                border-bottom: 1px solid #DDD;
+                background-color: #FFF;
+                border-top-left-radius: 5px;
+                border-top-right-radius: 5px;
+                font-weight: bold;
+            }
+            .form-content {
+                text-align: left;
+                padding: 21px;
+                background-color: #DDD;
+            }
+            .form-footer {
+                border-top: 1px solid #DDD;
+                padding: 11px 21px;
+                background-color: #FFF;
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+            #confirm {
+                padding: 5px 7px;
+                background-color: #FF6666;
+                color: #FFF;
+                border-radius: 3px;
+                font-size: 12px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            #btn-confirm {
+                padding: 3px 5px; border-radius: 2px;
+                background-color: #CF5353; color: #FFF; 
+                font-size: 11px; cursor: pointer;
+            }
+            .footer-page {
+                font-size: 12px;
+            }
+            .btn-small-e {
+                font-family: sans-serif;
+                text-decoration: none;
+                padding: 3px 5px; 
+                background-color: #92C8E8; color: #F5F5F5; 
+                font-size: 11px; cursor: pointer;
+                border-radius: 3px;
+            }
+            .btn-small-e:hover { background-color: #659FC2; color: #FFF;}
+            
+            .btn-small-x {
+                font-family: sans-serif;
+                text-decoration: none;
+                padding: 3px 5px; 
+                background-color: #EB9898; color: #F5F5F5; 
+                font-size: 11px; cursor: pointer;
+                border-radius: 3px;
+            }
+            .btn-small-x:hover { background-color: #D14D4D; color: #FFF;}
+            
+            
+        </style>
+<script language="JavaScript">
+        function cmdUpdateSec(){
+            document.frmKPI_Company_Target.command.value="<%=String.valueOf(Command.GOTO)%>";
+            document.frmKPI_Company_Target.action="KPI_target.jsp";
+            document.frmKPI_Company_Target.submit();
+        }
+        
+        function cmdSave(type){
+            document.frmKPI_Company_Target.command.value="<%=Command.SAVE%>";
+            document.frmKPI_Company_Target.type.value=type;
+            document.frmKPI_Company_Target.action="KPI_target.jsp";
+            document.frmKPI_Company_Target.submit();
+        }
+        
+        function cmdDep(divId){
+            document.frmKPI_Company_Target.command.value="<%=Command.EDIT%>";
+            document.frmKPI_Company_Target.divId.value=divId;
+            document.frmKPI_Company_Target.depId.value=0;
+            document.frmKPI_Company_Target.secId.value=0;
+            document.frmKPI_Company_Target.action="KPI_target.jsp";
+            document.frmKPI_Company_Target.submit();
+        }
+</script>
+    </head>
+    <body onload="prepare()" >
+        <div class="header">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%> 
+            <%@include file="../styletemplate/template_header.jsp" %>
+            <%} else {%>
+            <tr> 
+                <td ID="TOPTITLE" background="<%=approot%>/images/HRIS_HeaderBg3.jpg" width="100%" height="54"> 
+                    <!-- #BeginEditable "header" --> 
+                    <%@ include file = "../main/header.jsp" %>
+                    <!-- #EndEditable --> 
+                </td>
+            </tr>
+            <tr> 
+                <td  bgcolor="#9BC1FF" height="15" ID="MAINMENU" valign="middle"> <!-- #BeginEditable "menumain" --> 
+                    <%@ include file = "../main/mnmain.jsp" %>
+                    <!-- #EndEditable --> </td>
+            </tr>
+            <tr> 
+                <td  bgcolor="#9BC1FF" height="10" valign="middle"> 
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr> 
+                            <td align="left"><img src="<%=approot%>/images/harismaMenuLeft1.jpg" width="8" height="8"></td>
+                            <td align="center" background="<%=approot%>/images/harismaMenuLine1.jpg" width="100%"><img src="<%=approot%>/images/harismaMenuLine1.jpg" width="8" height="8"></td>
+                            <td align="right"><img src="<%=approot%>/images/harismaMenuRight1.jpg" width="8" height="8"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <%}%>
+            </table>
+        </div>
+        <div id="menu_utama">
+            <span id="menu_title"><strong>Masterdata</strong> <strong style="color:#333;"> / </strong>Document</span>
+        </div>
+        <div class="content-main">
+            <form name="frmKPI_Company_Target" method ="post" action="">
+            <input type="hidden" name="command" value="<%=iCommand%>">
+            <input type="hidden" name="start" value="<%=start%>">
+            <input type="hidden" name="type" value="<%=type%>">
+            
+            <input type="hidden" name="divId" value="<%=divisionId%>">
+            <input type="hidden" name="depId" value="<%=departmentId%>">
+            <input type="hidden" name="secId" value="<%=sectionId%>">
+                
+                <div class="formstyle">
+                    <div id="caption">Tahun</div>
+                    <div id="divinput">
+                        <%= ControlCombo.draw(FrmKPI_Company_Target.fieldNames[FrmKPI_Company_Target.FRM_FIELD_YEAR],"formElemen",null, ""+tahun, FrmKPI_Company_Target.getYearValue(), FrmKPI_Company_Target.getYearKey(), "onChange=\"javascript:cmdUpdateSec()\"") %> 
+                    </div>
+                    <div id="caption">KPI_List</div>
+                    <div id="divinput">
+                        <%
+                            Vector kpilist_value1 = new Vector(1, 1);
+                            Vector kpilist_key1 = new Vector(1, 1);
+                            Vector listkpilist1 = PstKPI_List.list(0, 0, "", "");
+                            kpilist_value1.add(""+0);
+                            kpilist_key1.add("select");
+                            for (int i = 0; i < listkpilist1.size(); i++) {
+                                KPI_List kPI_List = (KPI_List) listkpilist1.get(i);
+
+                                String titleX = "";
+                                if (kPI_List.getKpi_title().length()>53){
+                                    titleX = kPI_List.getKpi_title().substring(0,50)+"...";
+                                } else {
+                                    titleX = kPI_List.getKpi_title();
+                                }
+                                kpilist_key1.add(titleX);
+                                kpilist_value1.add(String.valueOf(kPI_List.getOID()));
+                            }
+
+                            %>
+                           <%= ControlCombo.draw(FrmKPI_Company_Target.fieldNames[FrmKPI_Company_Target.FRM_FIELD_KPI_LIST_ID], "formElemen chosen-select", null, "" + (kpiListId), kpilist_value1, kpilist_key1,"onChange=\"javascript:cmdUpdateSec()\"")%> 
+
+                    </div>
+                    <div id="caption">Company</div>
+                    <div id="divinput">
+                        <%
+                            Vector comp_value1 = new Vector(1, 1);
+                            Vector comp_key1 = new Vector(1, 1);
+                            Vector listCompany = PstCompany.list(0, 0, "", "");
+                            comp_value1.add(""+0);
+                            comp_key1.add("select");
+                            for (int i = 0; i < listCompany.size(); i++) {
+                                Company comp = (Company) listCompany.get(i);
+                                comp_key1.add(comp.getCompany());
+                                comp_value1.add(String.valueOf(comp.getOID()));
+                            }
+
+                            %>
+                           <%= ControlCombo.draw(FrmKPI_Company_Target.fieldNames[FrmKPI_Company_Target.FRM_FIELD_COMPANY_ID], "formElemen chosen-select", null, ""+oidCompany , comp_value1, comp_key1,"onChange=\"javascript:cmdUpdateSec()\"")%> 
+
+                    </div>       
+                </div>
+                <div>&nbsp;</div>
+                <% if (kpiListId != 0 && oidCompany != 0) { %>
+                    <div class="formstyle" style="overflow-x: auto">
+                        <%
+                            String whereDivision = "";
+                            if (divisionId != 0){
+                                whereDivision = " AND "+PstDivision.fieldNames
+                                        [PstDivision.FLD_DIVISION_ID]+"="+divisionId;
+                            }
+                            Vector vDivision = PstDivision.list(0, 0, 
+                                        PstDivision.fieldNames[PstDivision
+                                                .FLD_VALID_STATUS] + " = "
+                                        +PstDivision.VALID_ACTIVE + " AND "
+                                        +PstDivision.fieldNames[PstDivision
+                                                .FLD_COMPANY_ID] + " = "+ oidCompany
+                                        + whereDivision, "");
+                            if (vDivision.size()>0){
+                                %>
+                                <table id="division_table" style="width: 100%;" class="tblStyle" >
+                                    <thead style="">
+                                        <td style="font-weight: bold; text-align: center; width: 40%">Division</td>
+                                        <td style="font-weight: bold; text-align: center">Januari</td>
+                                        <td style="font-weight: bold; text-align: center">Februari</td>
+                                        <td style="font-weight: bold; text-align: center">Maret</td>
+                                        <td style="font-weight: bold; text-align: center">April</td>
+                                        <td style="font-weight: bold; text-align: center">Mei</td>
+                                        <td style="font-weight: bold; text-align: center">Juni</td>
+                                        <td style="font-weight: bold; text-align: center">Juli</td>
+                                        <td style="font-weight: bold; text-align: center">Agustus</td>
+                                        <td style="font-weight: bold; text-align: center">September</td>
+                                        <td style="font-weight: bold; text-align: center">Oktober</td>
+                                        <td style="font-weight: bold; text-align: center">November</td>
+                                        <td style="font-weight: bold; text-align: center">Desember</td>
+                                        <td style="font-weight: bold; text-align: center">Total</td>
+                                        <td style="font-weight: bold; text-align: center">Achievment</td>
+                                    </thead>
+
+                                <%
+                                for (int i=0; i < vDivision.size(); i++){
+                                    Division div = (Division) vDivision.get(i);
+                                    KPI_Division_Target kPI_Division_Target1 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_1");
+                                    KPI_Division_Target kPI_Division_Target2 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_2");
+                                    KPI_Division_Target kPI_Division_Target3 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_3");
+                                    KPI_Division_Target kPI_Division_Target4 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_4");
+                                    KPI_Division_Target kPI_Division_Target5 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_5");
+                                    KPI_Division_Target kPI_Division_Target6 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_6");
+                                    KPI_Division_Target kPI_Division_Target7 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_7");
+                                    KPI_Division_Target kPI_Division_Target8 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_8");
+                                    KPI_Division_Target kPI_Division_Target9 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_9");
+                                    KPI_Division_Target kPI_Division_Target10 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_10");
+                                    KPI_Division_Target kPI_Division_Target11 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_11");
+                                    KPI_Division_Target kPI_Division_Target12 = (KPI_Division_Target) HlistKPI_Division_Target.get(div.getOID()+"_12");
+                                    double totalTargetDiv = kPI_Division_Target1.getTarget() + kPI_Division_Target2.getTarget() + kPI_Division_Target3.getTarget()
+                                                        + kPI_Division_Target4.getTarget() + kPI_Division_Target5.getTarget() + kPI_Division_Target6.getTarget()
+                                                        + kPI_Division_Target7.getTarget() + kPI_Division_Target8.getTarget() + kPI_Division_Target9.getTarget()
+                                                        + kPI_Division_Target10.getTarget() + kPI_Division_Target11.getTarget() + kPI_Division_Target12.getTarget();
+                                    %>
+                                    <tr>
+                                        <td><%=totalTargetDiv > 0 ? "<a href=\"javascript:cmdDep('"+div.getOID()+"')\">"+div.getDivision()+"</a>" : div.getDivision()%></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_1" size="8" value="<%=kPI_Division_Target1.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_2" size="8" value="<%=kPI_Division_Target2.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_3" size="8" value="<%=kPI_Division_Target3.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_4" size="8" value="<%=kPI_Division_Target4.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_5" size="8" value="<%=kPI_Division_Target5.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_6" size="8" value="<%=kPI_Division_Target6.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_7" size="8" value="<%=kPI_Division_Target7.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_8" size="8" value="<%=kPI_Division_Target8.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_9" size="8" value="<%=kPI_Division_Target9.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_10" size="8" value="<%=kPI_Division_Target10.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_11" size="8" value="<%=kPI_Division_Target11.getTarget()%>"/></td>
+                                        <td><input type="text" name="FRM_FIELD_TARGET_DIVISION<%=div.getOID()%>_12" size="8" value="<%=kPI_Division_Target12.getTarget()%>"/></td>
+                                        <td style="text-align: center"><%=totalTargetDiv%></td>
+                                        <td style="text-align: center">0</td>
+                                    </tr>
+                                    <%
+                                        if (divisionId == div.getOID() && totalTargetDiv>0){
+                                            String whereDept = PstDepartment.fieldNames[PstDepartment.FLD_DIVISION_ID]
+                                                            + " = " + div.getOID();
+                                            Vector listDept = PstDepartment.listVerySimple(whereDept);
+                                            if (listDept.size()>0){
+                                                for (int d =0; d <listDept.size(); d++){
+                                                    Department department = (Department) listDept.get(d);
+                                                    double totalTargetDept = 0;
+                                                    %>
+                                                    <tr>
+                                                        <td>--<%=totalTargetDept > 0 ? "<a href=\"javascript:cmdSec('"+department.getOID()+"')\">"+department.getDepartment()+"</a>" : department.getDepartment()%></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_1" size="8" value="<%=kPI_Division_Target1.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_2" size="8" value="<%=kPI_Division_Target2.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_3" size="8" value="<%=kPI_Division_Target3.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_4" size="8" value="<%=kPI_Division_Target4.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_5" size="8" value="<%=kPI_Division_Target5.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_6" size="8" value="<%=kPI_Division_Target6.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_7" size="8" value="<%=kPI_Division_Target7.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_8" size="8" value="<%=kPI_Division_Target8.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_9" size="8" value="<%=kPI_Division_Target9.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_10" size="8" value="<%=kPI_Division_Target10.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_11" size="8" value="<%=kPI_Division_Target11.getTarget()%>"/></td>
+                                                        <td><input type="text" name="FRM_FIELD_TARGET_DEPARTMENT<%=department.getOID()%>_12" size="8" value="<%=kPI_Division_Target12.getTarget()%>"/></td>
+                                                        <td style="text-align: center"><%=totalTargetDept%></td>
+                                                        <td style="text-align: center">0</td>
+                                                    </tr>
+                                                    <%
+                                                }
+                                            }
+                                        }
+                                }
+                                %>
+                                </table>
+                                <%
+                            }
+
+                        %>
+                        <br>
+                        <div>
+                            <a href="javascript:cmdSave(2)" class="btn" style="color:#FFF;">Save</a>
+                            <a href="javascript:cmdBack()" class="btn" style="color:#FFF;">Back</a>
+                        </div>
+                    </div>
+                <% } %>
+            </form>
+        </div>
+        <div class="footer-page">
+            <table>
+                <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%>
+                <tr>
+                    <td valign="bottom"><%@include file="../footer.jsp" %></td>
+                </tr>
+                <%} else {%>
+                <tr> 
+                    <td colspan="2" height="20" ><%@ include file = "../main/footer.jsp" %></td>
+                </tr>
+                <%}%>
+            </table>
+        </div>
+            <script type="text/javascript">
+                        var config = {
+                            '.chosen-select'           : {},
+                            '.chosen-select-deselect'  : {allow_single_deselect:true},
+                            '.chosen-select-no-single' : {disable_search_threshold:10},
+                            '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+                            '.chosen-select-width'     : {width:"100%"}
+                        }
+                        for (var selector in config) {
+                            $(selector).chosen(config[selector]);
+                        }
+            </script>          
+    </body>
+</html>
+
