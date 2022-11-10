@@ -273,11 +273,12 @@
             }
             var popup;
 
-            function init() {
+            function init(oid) {
+                document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 onload = "init()";
 //                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("kpi_distribution.jsp?emp_department="
-                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+                popup = window.open("kpi_setting_list_form.jsp?=504404826175489487"
+                        , "SelectEmployee", "height=600,width=1000,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
                 popup.focus();
             }
         </script>
@@ -429,7 +430,7 @@
                         if (kpiSetting.getOID() > 0) {
                     %>
                     <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal" >Pilih Kpi Type <strong><i class="fa fa-plus"></i></strong></a>
-                    <a href="javascript:cmdAddKpiSettingListForm(<%=kpiSetting.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1" >Tambah Detail<strong><i class="fa fa-plus"></i></strong></a>
+                    <a href="javascript:init(<%=kpiSetting.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1" >Tambah Detail<strong><i class="fa fa-plus"></i></strong></a>
                             <%}%>
                     <div>&nbsp;</div>
                 </div>

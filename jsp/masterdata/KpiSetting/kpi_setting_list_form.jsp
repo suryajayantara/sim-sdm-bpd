@@ -40,8 +40,6 @@
     /*untuk memisah controller satu dengan lainnya, jadi ketika menyimpan data atau perlu action di controller berbeda, maka action akan diarahkan ke controller yang sesuai*/
     long typeform = FRMQueryString.requestLong(request, "typeform");
     
-    
-    
     /*Ini Untuk array of string OID*/
     String oid_division[] = FRMQueryString.requestStringValues(request, "division");
     String oid_company[] = FRMQueryString.requestStringValues(request, "company");
@@ -55,7 +53,6 @@
     long positionId = FRMQueryString.requestLong(request, "position");
     String startDate = FRMQueryString.requestString(request, "start_date");
     String validDate = FRMQueryString.requestString(request, "valid_date");
-
     Long dtReq = FRMQueryString.requestLong(request, "requestDateDaily");
     java.util.Date requestDate = new Date();
     if (dtReq != 0) {
@@ -76,19 +73,6 @@
 
     String strDate = "";
 
-    Vector listKpiSetting = new Vector();
-    boolean selectDiv = true;
-    boolean selectComp = true;
-    boolean selectPosisi = true;
-
- 
-  
-
-
-
-
-
-
     /* ADD Data Kpi Setting */
 //String sValidDate= FRMQueryString.requestString(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]);
 //sValidDate = sValidDate; 
@@ -102,8 +86,7 @@
         } 
     }
     KpiSetting kpiSetting = ctrlKpiSetting.getKpiSetting();
-    
-
+  
  /*controller untuk simpan data kpi setting type*/
     CtrlKpiSettingType ctrlKpiSettingType = new CtrlKpiSettingType(request);
     if (typeform == 2){
@@ -145,15 +128,6 @@
         oidCompany = kpiSetting.getCompanyId();
     }
 
-    String strDisable = "";
-    if (appUserSess.getAdminStatus() == 0) {
-        oidCompany = emplx.getCompanyId();
-        if (!privViewAllDivision) {
-            positionId = emplx.getPositionId();
-            strDisable = "disabled=\"disabled\"";
-        }
-
-    }
 
 %>
 <html>
@@ -216,61 +190,61 @@
             }
 
             function cmdCancel() {
-                document.FRM_NAME_KPISETTING.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.oidKpiSetting.value = 0;
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = 0;
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
 
             function cmdBack() {
-                document.FRM_NAME_KPISETTING.command.value = "<%=Command.LIST%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_list.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
 
             function cmdEditDetail(oid) {
-                document.FRM_NAME_KPISETTING.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTING.oidKpiSetting.value = oid;
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             
             function cmdAdd() {
-                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.ADD%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdAddKpiSettingList() {
-                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_list.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.ADD%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdAddKpiSettingList() {
-                document.FRM_NAME_KPISETTING.targetId.value = 0;
-                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.targetId.value = 0;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.ADD%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdSave() {
-                document.FRM_NAME_KPISETTING.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdSaveKpiType() {
-                document.FRM_NAME_KPISETTINGTYPE.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPISETTINGTYPE.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGTYPE.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdSaveKpiSettingList() {
-                document.FRM_NAME_KPISETTING.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdEdit(oid){
-		document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value=oid;
-                document.FRM_NAME_KPISETTING.command.value="<%= Command.EDIT %>";
-                document.FRM_NAME_KPISETTING.action="kpi_setting_target.jsp";
-                document.FRM_NAME_KPISETTING.submit();
+		document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value=oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value="<%= Command.EDIT %>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action="kpi_setting_target.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             var popup;
 
@@ -320,7 +294,7 @@
            <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
            
                 <div class="box">
-           <form name="FRM_NAME_KPISETTING_LIST_DETAIL" method ="post" action="">
+           <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="urlBack" value="kpi_setting_list_detail.jsp">
                 <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
@@ -355,7 +329,7 @@
                 <div><%= PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID()) %></div>
             </div>
             <div class="formstyle">
-                <form name="FRM_NAME_KPISETTING" method ="post" action="">
+                <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="typeform" value="3">
                 <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
@@ -478,23 +452,20 @@
                   </table>
                      <div>&nbsp;</div>
                          <a href="javascript:cmdSaveKpiSettingList()" style="color:#FFF;" class="btn-simpan btn-simpan1">Simpan</a>
-                         &nbsp;<a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
+                         &nbsp;<a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1" onclick="cmdBack()">Kembali</a>
                        </div>
                    
               
-           </table>  
-           </form>
            </div>
            </div>
-    </div>
-                               
+                  
             <!--Pop up untuk form tambah kpi group-->
             <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <center><strong>Tambah Kpi Group</strong></center>
                 <div class="modal-body">
-                    <form name="FRM_NAME_KPISETTING" method ="post" action="">
+                    <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                         <input type="hidden" name="command" value="<%=iCommand%>">
                         <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
                         <div class="form-group">
@@ -528,7 +499,7 @@
             <div class="modal-content">
                 <center><strong>Tambah KPI</strong></center>
                 <div class="modal-body">
-                    <form name="FRM_NAME_KPISETTING" method ="post" action="">
+                    <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                         <input type="hidden" name="command" value="<%=iCommand%>">
                         <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
                         <div class="form-group">
@@ -634,4 +605,3 @@
         </script>
 
             </html>
-
