@@ -497,19 +497,13 @@
             if (kpiSetting.getOID() > 0) {
         %>
         <!--Tampilan form setelah input data kpi type-->
-
+        <%
+            Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
+            for (int i = 0; i < vKpiSetting.size(); i++) {
+                KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
+        %>
         <div class="formstyle">
-            <div> KPI Type:
-                <%
-                Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
-                for (int i = 0; i < vKpiSetting.size(); i++) {
-                    KPI_Type kpiType = (KPI_Type)vKpiSetting.get(i);
-                %>
-                <%= kpiType.getType_name()%>
-                <%}%>
-            </div>
-        </div>
-        <div class="formstyle">
+            <span> KPI Type <%= kpiType.getType_name()%> </span>
             <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="typeform" value="3">
@@ -551,11 +545,10 @@
                         <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a></center>
                     </td>
                     </tr>
-
                 </table>
-
-
         </div>
+        <%}%>
+
 
 
     </table>  
@@ -582,19 +575,19 @@
 <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
 <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
 <script language="JavaScript">
-                            //var oBody = document.body;
-                            //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+                                        //var oBody = document.body;
+                                        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-                            $(function () {
-                                //Initialize Select2 Elements
-                                $('.select2').select2()
+                                        $(function () {
+                                            //Initialize Select2 Elements
+                                            $('.select2').select2()
 
-                                //Initialize Select2 Elements
+                                            //Initialize Select2 Elements
 
-                                $('.select2bs4').select2({
-                                    theme: 'bootstrap4'
-                                })
-                            })
+                                            $('.select2bs4').select2({
+                                                theme: 'bootstrap4'
+                                            })
+                                        })
 
 </script>
 <script type="text/javascript">
