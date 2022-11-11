@@ -26,6 +26,8 @@
 <%@ include file = "../../main/checkuser.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
+
 <%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
@@ -208,11 +210,6 @@
                 $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
             }
 
-//            function cmdUpdateDivision() {
-//                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-//                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-//                document.FRM_NAME_KPISETTING.submit();
-//            }
             function cmdUpdateSec() {
                 document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
                 document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
