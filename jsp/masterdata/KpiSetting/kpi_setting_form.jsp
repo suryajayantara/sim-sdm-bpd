@@ -277,8 +277,8 @@
                 document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 onload = "init()";
 //                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("kpi_setting_list_form.jsp?=504404826175489487"
-                        , "SelectEmployee", "height=600,width=1000,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+                popup = window.open("kpi_setting_list_form.jsp"
+                        , "SelectEmployee", "height=600,width=1200,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
                 popup.focus();
             }
         </script>
