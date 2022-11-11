@@ -332,9 +332,10 @@
                 <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                     <input type="hidden" name="command" value="<%=iCommand%>">
                     <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
-                    <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal2"  >Tambah Kpi Group <strong><i class="fa fa-plus"></i></strong></a>
-                    &nbsp;<a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1"  data-toggle="modal" data-target="#exampleModal3" >Tambah Kpi <strong><i class="fa fa-plus"></i></strong></a>
-                    &nbsp;<a href="javascript:init()"  style="color:#FFF;" class="btn-add btn-add1" >Tambah Distribusi <strong><i class="fa fa-plus"></i></strong></a>
+                    <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-simpan btn-simpan1" data-toggle="modal" data-target="#exampleModal2"  >Tambah Group Baru  <strong><i class="fa fa-plus"></i></strong></a>
+                    &nbsp;<a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal2"  >Master Data Kpi Group <strong><i class="fa fa-plus"></i></strong></a>
+                    &nbsp;<a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1"  data-toggle="modal" data-target="#exampleModal3" >Naster Data Kpi <strong><i class="fa fa-plus"></i></strong></a>
+                    &nbsp;<a href="javascript:init()"  style="color:#FFF;" class="btn-add btn-add1" >Master Data Distribusi <strong><i class="fa fa-plus"></i></strong></a>
                     <div>&nbsp;</div>
                     <table class="tblStyle" style="width: 100%;">
                         <tr>
@@ -471,8 +472,25 @@
                         <div>KPI Type</div>
                         <select name="kpi_type" id="" multiple="multiple" class="select2" style="width: 80%;">
                             <option value="">=Select=</option>
-                            <option value="">sasaran kinerja</option>
-                            <option value="">Sasaran kinerja berdasarkan divisi</option>
+                            <%
+                                        Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
+                                        for (int i = 0; i < listKpiType.size(); i++) {
+                                            KPI_Type objKpiType = (KPI_Type) listKpiType.get(i);
+                                            String selected = "";
+                                            if (oid_kpi_type != null) {
+                                                for (int j = 0; j < oid_kpi_type.length; j++) {
+                                                    String oidKpiType = "" + objKpiType.getOID();
+                                                    if (oidKpiType.equals("" + oid_kpi_type[j])) {
+                                                        selected = "selected";
+                                                    }
+                                                }
+                                            }
+
+                                    %>
+                                     <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option>
+                                    <%
+                                        }
+                                    %>
                         </select>
                         <div>&nbsp;</div>
                         <div>KPI Tittle</div>
