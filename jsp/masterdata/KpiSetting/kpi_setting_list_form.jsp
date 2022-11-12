@@ -5,6 +5,8 @@
 --%>
 
 
+<%@page import="com.dimata.harisma.form.masterdata.CtrlKPI_Group"%>
+<%@page import="com.dimata.harisma.form.masterdata.FrmKPI_Group"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingList"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingList"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKPI_List"%>
@@ -29,6 +31,8 @@
 <%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
+    long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]);
+
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
     long kpiSettingId = FRMQueryString.requestLong(request, "kpi_setting_id");
@@ -52,6 +56,8 @@
     long positionId = FRMQueryString.requestLong(request, "position");
     String startDate = FRMQueryString.requestString(request, "start_date");
     String validDate = FRMQueryString.requestString(request, "valid_date");
+    String grouptitle = FRMQueryString.requestString(request, "group_title");
+    String description = FRMQueryString.requestString(request, "description");
     Long dtReq = FRMQueryString.requestLong(request, "requestDateDaily");
     java.util.Date requestDate = new Date();
     if (dtReq != 0) {
@@ -63,7 +69,6 @@
     ChangeValue changeValue = new ChangeValue();
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String strDateNow = "";
-
     if (dtReq != 0) {
         strDateNow = sdf.format(requestDate);
     } else {
@@ -73,8 +78,8 @@
     String strDate = "";
 
     /* ADD Data Kpi Setting */
-//String sValidDate= FRMQueryString.requestString(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]);
-//sValidDate = sValidDate; 
+    //String sValidDate= FRMQueryString.requestString(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]);
+    //sValidDate = sValidDate; 
 
     /*controller untuk simpan data kpi setting*/
     CtrlKpiSetting ctrlKpiSetting = new CtrlKpiSetting(request);
@@ -94,12 +99,21 @@
         if (iCommand == Command.SAVE) {
             iCommand = 0;
         }
-
         kpiSetting = ctrlKpiSetting.getKpiSetting();
     }
-    KpiSettingType kpiSettingType = ctrlKpiSettingType.getKpiSettingType();
-    if (iCommand == Command.EDIT && kpiSettingType != null && kpiSettingType.exists()) {
-
+        KpiSettingType kpiSettingType = ctrlKpiSettingType.getKpiSettingType();
+        if (iCommand == Command.EDIT && kpiSettingType != null && kpiSettingType.exists()) {
+    }
+    
+    /*controller untuk simpan data kpi group*/
+    CtrlKPI_Group ctrlKPI_Group = new CtrlKPI_Group(request);
+    KPI_Group kpiGroup = ctrlKPI_Group.getdKPI_Group();
+    if (typeform == 3) {
+        long iErrCodeKpiGroup = ctrlKPI_Group.action(iCommand, oidKpiGroupBuatNambahGroup);
+        if (iCommand == Command.SAVE) {
+            iCommand = 0;
+        }
+        kpiSetting = ctrlKpiSetting.getKpiSetting();
     }
     /*end*/
 
@@ -229,6 +243,11 @@
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
+            function cmdSaveKpiGroup() {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
             function cmdSaveKpiType() {
                 document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
@@ -325,9 +344,7 @@
     </div>
     <div class="box">
         <div class="content-main">   
-            <div class="formstyle">
-                <div><%= PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID())%></div>
-            </div>
+          
             <div class="formstyle">
                 <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                     <input type="hidden" name="command" value="<%=iCommand%>">
@@ -465,12 +482,14 @@
         <div class="modal-content">
             <center><strong>Tambah Kpi Group</strong></center>
             <div class="modal-body">
-                <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
-                    <input type="hidden" name="command" value="<%=iCommand%>">
+                <form name="FRM_NAME_KPI_GROUP" method ="post" action="">
+                    <input type="hidden" name="command" value="<%= Command.SAVE %>">
+                    <input type="hidden" name="typeform" value="3">
                     <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
+                    <input type="hidden" name="<%=FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiGroup.getOID()%>">
                     <div class="form-group">
                         <div>KPI Type</div>
-                        <select name="kpi_type" id="" multiple="multiple" class="select2" style="width: 80%;">
+                        <select name="<%= FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_TYPE_ID] %>" class="select2" style="width: 80%;">
                             <option value="">=Select=</option>
                             <%
                                         Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
@@ -494,16 +513,15 @@
                         </select>
                         <div>&nbsp;</div>
                         <div>KPI Tittle</div>
-                        <input type="text" style="width: 80%;">
+                        <input type="text" value="<%=grouptitle%>" name="<%=FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_GROUP_TITLE]%>" id="<%=FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_GROUP_TITLE]%>" style="width: 80%;">
                         </input>
                         <div>&nbsp;</div>
                         <div>Description</div>
-                        <textarea style="width: 80%;">
-                        </textarea>
+                        <textarea style="width: 80%;" value="<%=description%>" name="<%=FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_DESCRIPTION]%>" id="<%=FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_DESCRIPTION]%>"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <a href="" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
+                        <button onclick="cmdSaveKpiGroup()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</button>
                     </div>
                 </form>
             </div>
@@ -511,6 +529,7 @@
     </div>
 </div>            
 
+                    
 <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
