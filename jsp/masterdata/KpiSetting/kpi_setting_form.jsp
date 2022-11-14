@@ -460,7 +460,7 @@
                     <input type="hidden" name="typeform" value="3">
                     <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
                     <table class="tblStyle" style="width: 100%;">
-                        <thead>
+                        <thead class="text-center">
                             <tr>
                                 <th class="title_tbl"  style="width: 20%;">Kpi Group</th>
                                 <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>

@@ -166,7 +166,7 @@ if (iCommand == Command.LIST){
             </table>
         </div>
         <div id="menu_utama">
-            <span id="menu_title">Daftar KPI Setting</span>
+            <span id="menu_title" class="text-center">Daftar KPI Setting</span>
         </div>
             <form name="frm" metdod="post" action="">
                  <input type="hidden" name="command" value="<%= iCommand %>"> -
