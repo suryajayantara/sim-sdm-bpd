@@ -367,7 +367,7 @@
             <div class="d-flex justify-content-between">
                 <span> KPI Group : </span>
                 <div>
-                    <a href="javascript:init()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Group
+                    <a href="javascript:init()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah KPI
                         <strong><i class="fa fa-plus"></i></strong>
                     </a>
                     <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
@@ -464,9 +464,6 @@
                     </tr>
     
                 </table>
-                <div>&nbsp;</div>
-                <a href="javascript:cmdSaveKpiSettingList()" style="color:#FFF;" class="btn-simpan btn-simpan1">Simpan</a>
-                &nbsp;<a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1" >Kembali</a>
             </form>       
         </div>
     </div> 
