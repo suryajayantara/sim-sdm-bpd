@@ -270,11 +270,11 @@
             }
             var popup;
 
-            function init(oid) {
+            function init(oid, oidKpiSetting) {
                 document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 onload = "init()";
 //                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_TYPE_ID="+oid
+                popup = window.open("kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_TYPE_ID="+oid+"&FRM_FIELD_KPI_SETTING_ID="+oidKpiSetting
                         , "SelectEmployee", "height=600,width=1200,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
                 popup.focus();
             }
@@ -332,7 +332,7 @@
                             <td valign="top" width="35%">
                                 <div id="caption">Company</div>
                                 <div id="divinput">
-                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_COMPANY_ID]%>" id="company" class="chosen-select" data-placeholder='Select Company...' onchange="javascript:cmdUpdateDivision()" >
+                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_COMPANY_ID]%>" id="company" class="custom-select form-select-sm col-6" data-placeholder='Select Company...' onchange="javascript:cmdUpdateDivision()" style="width: 20%;">
                                         <option value="0">-select-</option>
                                         <%
                                             Vector listCompany = PstCompany.list(0, 0, "", PstCompany.fieldNames[PstCompany.FLD_COMPANY]);
@@ -352,11 +352,10 @@
                                             }
                                         %>
                                     </select>
-
                                 </div>
                                 <div id="caption">Jabatan</div>
                                 <div id="divinput">
-                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_POSITION_ID]%>" style="width: 20%;" data-placeholder='Select Jabatan...'  multiple="multiple" class="select2" valie="<%=oidKpiSetting%>">
+                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_POSITION_ID]%>" style="width: 20%;" data-placeholder='Select Jabatan...'  multiple="multiple" class="select2 custom-select form-select-sm col-6" valie="<%=oidKpiSetting%>">
                                         <%
                                             Vector listPosition = PstPosition.list(0, 0, "", "");
                                             for (int i = 0; i < listPosition.size(); i++) {
@@ -395,12 +394,12 @@
                                             key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_CANCELLED]);
                                         }
                                     %>
-                                    <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_STATUS], "chosen-select", null, "" + kpiSetting.getStatus(), val_status, key_status, "style='width : 20%' id='status'")%> 
+                                    <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_STATUS], "custom-select form-select-sm", null, "" + kpiSetting.getStatus(), val_status, key_status, "style='width : 20%' id='status'")%> 
                                 </div>
                                 <div id="caption">Dari Tanggal</div>
 
                                 <div id="divinput">
-                                    <input  type="date" id="startDate" class="mydate" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]%>" value="<%= (startDate.equals("") ? strDateNow : startDate)%>" />
+                                    <input style="width: 20%;" type="date" id="startDate" class="mydate form-control col-3" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]%>" value="<%= (startDate.equals("") ? strDateNow : startDate)%>"/>
                                     <span id="info1"></span>
 
                                 </div>
@@ -408,14 +407,12 @@
                                 <div id="caption">Sampai Tanggal</div>
 
                                 <div id="divinput">
-
-                                    <input type="date" id="validDate" class="mydate" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_VALID_DATE]%>" value="<%= validDate%>" />
-
+                                    <input type="date" id="validDate" class="mydate form-control" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_VALID_DATE]%>" value="<%= validDate%>" style="width: 20%;" />
                                 </div>
 
                                 <div id="caption">Tahun</div>
                                 <div id="divinput" >
-                                    <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_TAHUN], "chosen-select", null, "" + kpiSetting.getTahun(), valTahun, keyTahun, "style='width : 20%'")%> 
+                                    <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_TAHUN], "custom-select form-select-sm", null, "" + kpiSetting.getTahun(), valTahun, keyTahun, "style='width : 20%'")%> 
                                 </div>
                             </td>
                         </tr>
@@ -447,15 +444,15 @@
             <div class="formstyle mb-3">
                 <div class="row mb-3">
                     <div class="col d-flex justify-content-between">
+                        <span> <%= kpiType.getType_name()%> </span>
                         <div>
-                            <span> KPI Type <%= kpiType.getType_name()%> </span>
-                            <a href="javascript:init(<%=kpiType.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1" >Tambah Detail
+                            <a href="javascript:init('<%=kpiType.getOID()%>', '<%=kpiSetting.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
+                            <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                                <strong><i class="fa fa-trash"></i></strong>
+                            </a>
                         </div>
-                        <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1 ms-3">
-                            <strong><i class="fa fa-trash"></i></strong>
-                        </a>
                     </div>
                 </div>
                 <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
@@ -463,42 +460,35 @@
                     <input type="hidden" name="typeform" value="3">
                     <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
                     <table class="tblStyle" style="width: 100%;">
-                        <tr>
-                            <td class="title_tbl"  style="width: 20%;">Kpi Group</td>
-                            <td class="title_tbl" style="width: 20%;">Key Performance Indicator</td>
-                            <td class="title_tbl">Distribution Option</td>
-                            <td class="title_tbl">Satuan Ukur</td>
-                            <td class="title_tbl">Target</td>
-                            <td class="title_tbl">Bobot</td>
-                            <td class="title_tbl">Action</td>
-                        </tr>
-                        <tr>
-                            <td>   
-                                kpi group
-
-                            </td>
-                            <td>
-                                KPI
-                            </td>
-                            <td>
-                                distribution option
-                            </td>
-                            <td>
-                                satuan ukur
-                            </td>
-                            <td>
-                                <!--                        button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                        <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a></center>
-                        </td>
-                        <td>
-                            bobot
-                        </td>
-                        <td>
-                            <!--                          button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                        <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                            <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a></center>
-                        </td>
-                        </tr>
+                        <thead class="text-center">
+                            <tr>
+                                <th class="title_tbl"  style="width: 20%;">Kpi Group</th>
+                                <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
+                                <th class="title_tbl">Distribution Option</th>
+                                <th class="title_tbl">Satuan Ukur</th>
+                                <th class="title_tbl">Target</th>
+                                <th class="title_tbl">Bobot</th>
+                                <th class="title_tbl">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="p-3">kpi group</td>
+                                <td>KPI</td>
+                                <td>distribution option</td>
+                                <td>satuan ukur</td>
+                                <td class="text-center">
+                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                </td>
+                                <td>bobot</td>
+                                <td class="text-center">
+                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                    <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
+                                    <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </form>
             </div>
