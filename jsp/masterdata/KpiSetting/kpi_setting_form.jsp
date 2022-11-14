@@ -26,6 +26,8 @@
 <%@ include file = "../../main/checkuser.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
+
 <%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
@@ -208,11 +210,6 @@
                 $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
             }
 
-//            function cmdUpdateDivision() {
-//                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-//                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-//                document.FRM_NAME_KPISETTING.submit();
-//            }
             function cmdUpdateSec() {
                 document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
                 document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
@@ -277,12 +274,13 @@
                 document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 onload = "init()";
 //                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("kpi_setting_list_form.jsp"
+                popup = window.open("kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_TYPE_ID="+oid
                         , "SelectEmployee", "height=600,width=1200,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
                 popup.focus();
             }
         </script>
     </head>
+
     <body onload="prepare()" >
         <div class="header">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -429,143 +427,140 @@
                     <%
                         if (kpiSetting.getOID() > 0) {
                     %>
-                    <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal" >Pilih Kpi Type <strong><i class="fa fa-plus"></i></strong></a>
-                    <a href="javascript:init(<%=kpiSetting.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1" >Tambah Detail<strong><i class="fa fa-plus"></i></strong></a>
-                            <%}%>
+                        <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal" >Pilih Kpi Type <strong><i class="fa fa-plus"></i></strong></a>
+                    <%}%>
                     <div>&nbsp;</div>
                 </div>
                 <div>&nbsp;</div>
             </form> 
         </table>
 
-        <!-- Modal adalah javascript untuk memunculkan pop up saat klik button tambah kpi -->
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-
-                        <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type</h5>
-
-                    </div>
-                    <div class="modal-body">
-                        <form name="FRM_NAME_KPISETTINGTYPE" method ="post" action="">
-                            <input type="hidden" name="command" value="<%=iCommand%>">
-                            <input type="hidden" name="typeform" value="2">
-                            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getOID()%>">
-                            <input type="hidden" name="oidKpiSettingType" value="<%=oidKpiSettingType%>">
-                            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
-                            <div class="form-group">
-                                <label for="exampleInputPassword1">Kpi Type</label>
-                                <select name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" id="kpiTypeId" multiple="multiple" class="select2" style="width: 100%;">
-                                    <option value="">=Select=</option>
-                                    <%
-                                        Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
-                                        for (int i = 0; i < listKpiType.size(); i++) {
-                                            KPI_Type objKpiType = (KPI_Type) listKpiType.get(i);
-                                            String selected = "";
-                                            if (oid_kpi_type != null) {
-                                                for (int j = 0; j < oid_kpi_type.length; j++) {
-                                                    String oidKpiType = "" + objKpiType.getOID();
-                                                    if (oidKpiType.equals("" + oid_kpi_type[j])) {
-                                                        selected = "selected";
-                                                    }
-                                                }
-                                            }
-
-                                    %>
-
-                                    <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option>
-                                    <%
-                                        }
-                                    %>
-
-
-                                </select>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <a href="javascript:cmdSaveKpiType()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
-                            </div>
-                        </form> 
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--End-->	
-
-
         <%
             if (kpiSetting.getOID() > 0) {
         %>
         <!--Tampilan form setelah input data kpi type-->
+        <%
+            Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
+            for (int i = 0; i < vKpiSetting.size(); i++) {
+                KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
+        %>
+            <div class="formstyle mb-3">
+                <div class="row mb-3">
+                    <div class="col d-flex justify-content-between">
+                        <div>
+                            <span> KPI Type <%= kpiType.getType_name()%> </span>
+                            <a href="javascript:init(<%=kpiType.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1" >Tambah Detail
+                                <strong><i class="fa fa-plus"></i></strong>
+                            </a>
+                        </div>
+                        <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1 ms-3">
+                            <strong><i class="fa fa-trash"></i></strong>
+                        </a>
+                    </div>
+                </div>
+                <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
+                    <input type="hidden" name="command" value="<%=iCommand%>">
+                    <input type="hidden" name="typeform" value="3">
+                    <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+                    <table class="tblStyle" style="width: 100%;">
+                        <tr>
+                            <td class="title_tbl"  style="width: 20%;">Kpi Group</td>
+                            <td class="title_tbl" style="width: 20%;">Key Performance Indicator</td>
+                            <td class="title_tbl">Distribution Option</td>
+                            <td class="title_tbl">Satuan Ukur</td>
+                            <td class="title_tbl">Target</td>
+                            <td class="title_tbl">Bobot</td>
+                            <td class="title_tbl">Action</td>
+                        </tr>
+                        <tr>
+                            <td>   
+                                kpi group
 
-        <div class="formstyle">
-            <div> KPI Type:
-                <%
-                Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
-                for (int i = 0; i < vKpiSetting.size(); i++) {
-                    KPI_Type kpiType = (KPI_Type)vKpiSetting.get(i);
-                %>
-                <%= kpiType.getType_name()%>
-                <%}%>
+                            </td>
+                            <td>
+                                KPI
+                            </td>
+                            <td>
+                                distribution option
+                            </td>
+                            <td>
+                                satuan ukur
+                            </td>
+                            <td>
+                                <!--                        button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                        <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a></center>
+                        </td>
+                        <td>
+                            bobot
+                        </td>
+                        <td>
+                            <!--                          button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                        <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
+                            <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a></center>
+                        </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        <%}%>
+
+    <!-- Modal adalah javascript untuk memunculkan pop up saat klik button tambah kpi -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type</h5>
+
+                </div>
+                <div class="modal-body">
+                    <form name="FRM_NAME_KPISETTINGTYPE" method ="post" action="">
+                        <input type="hidden" name="command" value="<%=iCommand%>">
+                        <input type="hidden" name="typeform" value="2">
+                        <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getOID()%>">
+                        <input type="hidden" name="oidKpiSettingType" value="<%=oidKpiSettingType%>">
+                        <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Kpi Type</label>
+                            <select name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" id="kpiTypeId" class="select2" style="width: 100%;">
+                                <option value="">=Select=</option>
+                                <%
+                                    Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
+                                    for (int i = 0; i < listKpiType.size(); i++) {
+                                        KPI_Type objKpiType = (KPI_Type) listKpiType.get(i);
+                                        String selected = "";
+                                        if (oid_kpi_type != null) {
+                                            for (int j = 0; j < oid_kpi_type.length; j++) {
+                                                String oidKpiType = "" + objKpiType.getOID();
+                                                if (oidKpiType.equals("" + oid_kpi_type[j])) {
+                                                    selected = "selected";
+                                                }
+                                            }
+                                        }
+
+                                %>
+
+                                <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option>
+                                <%
+                                    }
+                                %>
+
+
+                            </select>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a href="javascript:cmdSaveKpiType()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
+                        </div>
+                    </form> 
+                </div>
             </div>
         </div>
-        <div class="formstyle">
-            <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
-                <input type="hidden" name="command" value="<%=iCommand%>">
-                <input type="hidden" name="typeform" value="3">
-                <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
-                <table class="tblStyle" style="width: 100%;">
-                    <tr>
-                        <td class="title_tbl"  style="width: 20%;">Kpi Group</td>
-                        <td class="title_tbl" style="width: 20%;">Key Performance Indicator</td>
-                        <td class="title_tbl">Distribution Option</td>
-                        <td class="title_tbl">Satuan Ukur</td>
-                        <td class="title_tbl">Target</td>
-                        <td class="title_tbl">Bobot</td>
-                        <td class="title_tbl">Action</td>
-                    </tr>
-                    <tr>
-                        <td>   
-                            kpi group
-
-                        </td>
-                        <td>
-                            KPI
-                        </td>
-                        <td>
-                            distribution option
-                        </td>
-                        <td>
-                            satuan ukur
-                        </td>
-                        <td>
-                            <!--                        button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                    <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a></center>
-                    </td>
-                    <td>
-                        bobot
-                    </td>
-                    <td>
-                        <!--                          button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                    <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                        <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a></center>
-                    </td>
-                    </tr>
-
-                </table>
-
-
-        </div>
-
-
-    </table>  
-</form>
-</div>
-
-<%}%>            
+    </div>
+    <!--End-->	
+</body>        
+<%}%>
 
 <div class="footer-page">
     <table>
@@ -585,20 +580,19 @@
 <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
 <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
 <script language="JavaScript">
-                            //var oBody = document.body;
-                            //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+    //var oBody = document.body;
+    //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-                            $(function () {
-                                //Initialize Select2 Elements
-                                $('.select2').select2()
+    $(function () {
+        //Initialize Select2 Elements
+        $('.select2').select2()
 
-                                //Initialize Select2 Elements
+        //Initialize Select2 Elements
 
-                                $('.select2bs4').select2({
-                                    theme: 'bootstrap4'
-                                })
-                            })
-
+        $('.select2bs4').select2({
+            theme: 'bootstrap4'
+        })
+    })
 </script>
 <script type="text/javascript">
     var config = {
