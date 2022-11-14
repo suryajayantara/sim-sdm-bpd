@@ -18,6 +18,8 @@ note :
 /* Alter table in target */
 ALTER TABLE `pay_general` 
 	CHANGE `REG_TAX_DATE` `REG_TAX_DATE` date   NOT NULL after `REG_TAX_BUS_NR` , ENGINE=InnoDB; 
+ALTER TABLE `hr_section`  
+  ENGINE=INNODB;
 
 
 /* Create table in target */
@@ -99,7 +101,6 @@ CREATE TABLE `hr_kpi_setting`(
 	FOREIGN KEY (`COMPANY_ID`) REFERENCES `pay_general` (`GEN_ID`) ON DELETE CASCADE ON UPDATE CASCADE 
 ) ENGINE=InnoDB DEFAULT CHARSET='latin1' COLLATE='latin1_swedish_ci';
 
-baru sampai sini-------------------------------------------------<yang atas sudah>
 
 /* Create table in target */
 CREATE TABLE `hr_kpi_setting_company`(
@@ -162,15 +163,6 @@ CREATE TABLE `hr_kpi_setting_position`(
 	FOREIGN KEY (`KPI_SETTING_ID`) REFERENCES `hr_kpi_setting` (`KPI_SETTING_ID`) ON UPDATE CASCADE , 
 	CONSTRAINT `FK_POSITION_ID` 
 	FOREIGN KEY (`POSITION_ID`) REFERENCES `hr_position` (`POSITION_ID`) ON DELETE CASCADE ON UPDATE CASCADE 
-) ENGINE=InnoDB DEFAULT CHARSET='latin1' COLLATE='latin1_swedish_ci';
-
-
-/* Create table in target */
-CREATE TABLE `hr_kpi_setting_profile`(
-	`KPI_SETTING_PROFILE_ID` bigint(20) NOT NULL  , 
-	`KPI_SETTING_ID` bigint(20) NOT NULL  , 
-	`POSITION_ID` bigint(20) NOT NULL  , 
-	PRIMARY KEY (`KPI_SETTING_PROFILE_ID`) 
 ) ENGINE=InnoDB DEFAULT CHARSET='latin1' COLLATE='latin1_swedish_ci';
 
 
@@ -261,16 +253,26 @@ CREATE TABLE `hr_kpi_type_group`(
 	FOREIGN KEY (`KPI_TYPE_ID`) REFERENCES `hr_kpi_type` (`KPI_TYPE_ID`) ON DELETE CASCADE ON UPDATE CASCADE 
 ) ENGINE=InnoDB DEFAULT CHARSET='utf8mb4' COLLATE='utf8mb4_general_ci';
 
-ALTER TABLE `hr_kpi_setting_profile`  
-  ADD CONSTRAINT `FK_HR_POSITION` FOREIGN KEY (`POSITION_ID`) REFERENCES `hr_position`(`POSITION_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE `hr_kpi_setting_profile`  
-  ADD FOREIGN KEY (`KPI_SETTING_ID`) REFERENCES .`hr_kpi_setting`(`KPI_SETTING_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
-
+/* Alter table in kpi setting type */
   ALTER TABLE `hr_kpi_setting_type`  
   ADD FOREIGN KEY (`KPI_TYPE_ID`) REFERENCES `hr_kpi_type`(`KPI_TYPE_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-  ALTER TABLE `hr_kpi_setting_type`  
-  ADD FOREIGN KEY (`KPI_TYPE_ID`) REFERENCES `hr_kpi_type`(`KPI_TYPE_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+/* Alter table in kpi setting position */
+ALTER TABLE `hr_kpi_setting_position`  
+  ADD FOREIGN KEY (`POSITION_ID`) REFERENCES `hr_position`(`POSITION_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-RENAME TABLE `hr_kpi_setting_profile` TO `hr_kpi_setting_position`;
+/* Alter table in kpi setting */
+  ALTER TABLE `hr_kpi_setting`  
+  ADD FOREIGN KEY (`COMPANY_ID`) REFERENCES `pay_general`(`GEN_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/* Alter table in kpi list */
+ALTER TABLE `hr_kpi_list`  
+  ADD FOREIGN KEY (`COMPANY_ID`) REFERENCES `pay_general`(`GEN_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/* Alter table in kpi target */
+ALTER TABLE `hr_kpi_target`  
+  ADD FOREIGN KEY (`SECTION_ID`) REFERENCES `hr_section`(`SECTION_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+/* Alter table in kpi target detail employee */
+ALTER TABLE `hr_kpi_target_detail_employee`  
+  ADD FOREIGN KEY (`EMPLOYEE_ID`) REFERENCES `hr_employee`(`EMPLOYEE_ID`);
