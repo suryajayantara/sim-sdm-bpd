@@ -447,15 +447,15 @@
             <div class="formstyle mb-3">
                 <div class="row mb-3">
                     <div class="col d-flex justify-content-between">
+                        <span> KPI Type <%= kpiType.getType_name()%> </span>
                         <div>
-                            <span> KPI Type <%= kpiType.getType_name()%> </span>
-                            <a href="javascript:init(<%=kpiType.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1" >Tambah Detail
+                            <a href="javascript:init(<%=kpiType.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
+                            <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                                <strong><i class="fa fa-trash"></i></strong>
+                            </a>
                         </div>
-                        <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1 ms-3">
-                            <strong><i class="fa fa-trash"></i></strong>
-                        </a>
                     </div>
                 </div>
                 <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
@@ -488,7 +488,7 @@
                             </td>
                             <td>
                                 <!--                        button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                        <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a></center>
+                        <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; font-size:12px;" class="badge badge-warning badge-pill">Edit</a></center>
                         </td>
                         <td>
                             bobot
