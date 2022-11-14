@@ -28,7 +28,8 @@
 <%@ include file = "../../main/checkuser.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+<%    
+    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]);
@@ -139,6 +140,17 @@
         kpiSetting.setCompanyId(oidCompany);
     } else {
         oidCompany = kpiSetting.getCompanyId();
+    }
+    
+    // untuk mengambil data KPI Setting Type
+    Vector kpiType = new Vector();
+    try {
+        if (oidKpiSettingType != 0) {
+            String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
+            kpiType = PstKPI_Type.list(0, 1, query, "");
+        }
+    } catch (Exception e) {
+        System.out.println("Error fetch sale :" + e);
     }
 
 
@@ -319,9 +331,13 @@
                 <div class="content-main">
                     <div>&nbsp;</div>
                     <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-
+                    <% 
+                        for(int i = 0; i < kpiType.size(); i++){
+                            KPI_Type objKpiType = (KPI_Type) kpiType.get(i);
+                    %>
+                            <span><%= objKpiType.getType_name() %> - <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></span>
+                    <% } %>
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
-                    <div style="font-size: 15px">Company: <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
                     <div style="font-size: 15px">Jabatan:
                         <%
                             Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
