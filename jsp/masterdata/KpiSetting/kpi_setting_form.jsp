@@ -270,11 +270,11 @@
             }
             var popup;
 
-            function init(oid) {
+            function init(oid, oidKpiSetting) {
                 document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 onload = "init()";
 //                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_TYPE_ID="+oid
+                popup = window.open("kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_TYPE_ID="+oid+"&FRM_FIELD_KPI_SETTING_ID="+oidKpiSetting
                         , "SelectEmployee", "height=600,width=1200,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
                 popup.focus();
             }
@@ -446,7 +446,7 @@
                     <div class="col d-flex justify-content-between">
                         <span> <%= kpiType.getType_name()%> </span>
                         <div>
-                            <a href="javascript:init(<%=kpiType.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
+                            <a href="javascript:init('<%=kpiType.getOID()%>', '<%=kpiSetting.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
                             <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">

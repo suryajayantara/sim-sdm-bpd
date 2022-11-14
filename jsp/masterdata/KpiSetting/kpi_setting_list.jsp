@@ -126,12 +126,12 @@ if (iCommand == Command.LIST){
         <link rel="stylesheet" href="<%=approot%>/javascripts/datepicker/tdemes/jquery.ui.all.css">
         <script src="<%=approot%>/javascripts/jquery.js"></script>
         <script src="<%=approot%>/javascripts/datepicker/jquery.ui.core.js"></script>
-	<script src="<%=approot%>/javascripts/datepicker/jquery.ui.widget.js"></script>
-	<script src="<%=approot%>/javascripts/datepicker/jquery.ui.datepicker.js"></script>
+        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.widget.js"></script>
+        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.datepicker.js"></script>
 		<script src="../../javascripts/chosen.jquery.js" type="text/javascript"></script>
                 <link rel="stylesheet" href="<%=approot%>/styles/datatable/v1/jquery.dataTables.min.css" >
                 <script src="<%=approot%>/styles/datatable/v1/jquery.dataTables.min.js"></script>
-		<link rel="stylesheet" href="../../stylesheets/chosen.css" >
+		<link rel="stylesheet" href="../../stylesheets/chosen.css">
      </head>
     <body>
         <div class="header">
@@ -336,7 +336,7 @@ if (iCommand == Command.LIST){
                     %>
                 </table>
 
-                    <% }%>S
+                    <% }%>
                     
                 
             </form>
@@ -366,8 +366,6 @@ if (iCommand == Command.LIST){
 		for (var selector in config) {
 			$(selector).chosen(config[selector]);
 		}
-                
-        
 	</script>    
     </body>
 </html>
