@@ -176,7 +176,6 @@ if (iCommand == Command.LIST){
             <div id="box-title">Pencarian</div>
             <div id="box-content">
                 <table>
-                     
                    <tr>
                         <td><strong>Company</strong></td>
                         <td>
@@ -337,7 +336,7 @@ if (iCommand == Command.LIST){
                     %>
                 </table>
 
-                    <% }%>
+                    <% }%>S
                     
                 
             </form>
