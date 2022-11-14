@@ -380,89 +380,92 @@
                 <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
                 <div>&nbsp;</div>
                 <table class="tblStyle" style="width: 100%;">
-                    <tr>
-                        <td class="title_tbl" style="width: 20%;">Key Performance Indicator</td>
-                        <td class="title_tbl">Distribution Option</td>
-                        <td class="title_tbl">Satuan Ukur</td>
-                        <td class="title_tbl">Target</td>
-                        <td class="title_tbl">Bobot</td>
-                        <td class="title_tbl">Action</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                <option>Select</option>
-                                <%
-                                    Vector listKpi = PstKPI_List.list(0, 0, "", "");
-                                    for (int i = 0; i < listKpi.size(); i++) {
-                                        KPI_List objKpi = (KPI_List) listKpi.get(i);
-                                        String selected = "";
-                                        if (oid_kpi != null) {
-                                            for (int j = 0; j < oid_kpi.length; j++) {
-                                                String oidKpi = "" + objKpi.getOID();
-                                                if (oidKpi.equals("" + oid_kpi[j])) {
-                                                    selected = "selected";
+                    <thead class="text-center">
+                        <tr>
+                            <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
+                            <th class="title_tbl">Distribution Option</th>
+                            <th class="title_tbl">Satuan Ukur</th>
+                            <th class="title_tbl">Target</th>
+                            <th class="title_tbl">Bobot</th>
+                            <th class="title_tbl">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select style="width: 100%;" class="form-control form-control-sm custom-select">
+                                    <option>Select</option>
+                                    <%
+                                        Vector listKpi = PstKPI_List.list(0, 0, "", "");
+                                        for (int i = 0; i < listKpi.size(); i++) {
+                                            KPI_List objKpi = (KPI_List) listKpi.get(i);
+                                            String selected = "";
+                                            if (oid_kpi != null) {
+                                                for (int j = 0; j < oid_kpi.length; j++) {
+                                                    String oidKpi = "" + objKpi.getOID();
+                                                    if (oidKpi.equals("" + oid_kpi[j])) {
+                                                        selected = "selected";
+                                                    }
                                                 }
                                             }
+        
+                                    %>
+        
+                                    <option value="<%=objKpi.getOID()%>" <%=selected%>><%=objKpi.getKpi_title()%></option>
+                                    <%
                                         }
-    
-                                %>
-    
-                                <option value="<%=objKpi.getOID()%>" <%=selected%>><%=objKpi.getKpi_title()%></option>
-                                <%
-                                    }
-                                %>
-                            </select>
-                        </td>
-                        <td>
-                            <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                <option>Select</option>
-                                <%
-                                    Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
-                                    for (int i = 0; i < listKpiDistribution.size(); i++) {
-                                        KpiDistribution objKpiDistribution = (KpiDistribution) listKpiDistribution.get(i);
-                                        String selected = "";
-                                        if (oid_kpi != null) {
-                                            for (int j = 0; j < oid_kpi.length; j++) {
-                                                String oidKpiDistribution = "" + objKpiDistribution.getOID();
-                                                if (oidKpiDistribution.equals("" + oid_kpi_distribution[j])) {
-                                                    selected = "selected";
+                                    %>
+                                </select>
+                            </td>
+                            <td>
+                                <select style="width: 100%;" class="form-control form-control-sm custom-select">
+                                    <option>Select</option>
+                                    <%
+                                        Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
+                                        for (int i = 0; i < listKpiDistribution.size(); i++) {
+                                            KpiDistribution objKpiDistribution = (KpiDistribution) listKpiDistribution.get(i);
+                                            String selected = "";
+                                            if (oid_kpi != null) {
+                                                for (int j = 0; j < oid_kpi.length; j++) {
+                                                    String oidKpiDistribution = "" + objKpiDistribution.getOID();
+                                                    if (oidKpiDistribution.equals("" + oid_kpi_distribution[j])) {
+                                                        selected = "selected";
+                                                    }
                                                 }
                                             }
+        
+                                    %>
+        
+                                    <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
+                                    <%
                                         }
-    
-                                %>
-    
-                                <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
-                                <%
-                                    }
-                                %>
-                            </select>
-                        </td>
-                        <td>
-                            <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                <option value="">Select</option>
-                                <option value="0">Persentase</option>
-                                <option value="1">Waktu</option>
-                                <option value="2">Jumlah</option>
-                            </select>
-                        </td>
-                        <td>
-                            <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                    <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a></center>
-                    </td>
-                    <td>
-                        10
-                    </td>
-                    <td>
-                        <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                        <div class="responsive-container">
-                            <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
-                            <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
-                        </div>
-                    </td>
-                    </tr>
-    
+                                    %>
+                                </select>
+                            </td>
+                            <td>
+                                <select style="width: 100%;" class="form-control form-control-sm custom-select">
+                                    <option value="">Select</option>
+                                    <option value="0">Persentase</option>
+                                    <option value="1">Waktu</option>
+                                    <option value="2">Jumlah</option>
+                                </select>
+                            </td>
+                            <td>
+                                <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                <center>
+                                    <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                </center>
+                            </td>
+                            <td>10</td>
+                            <td>
+                                <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                <div class="responsive-container">
+                                    <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
+                                    <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </form>       
         </div>
