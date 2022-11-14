@@ -332,7 +332,7 @@
                             <td valign="top" width="35%">
                                 <div id="caption">Company</div>
                                 <div id="divinput">
-                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_COMPANY_ID]%>" id="company" class="chosen-select" data-placeholder='Select Company...' onchange="javascript:cmdUpdateDivision()" >
+                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_COMPANY_ID]%>" id="company" class="custom-select form-select-sm col-6" data-placeholder='Select Company...' onchange="javascript:cmdUpdateDivision()" >
                                         <option value="0">-select-</option>
                                         <%
                                             Vector listCompany = PstCompany.list(0, 0, "", PstCompany.fieldNames[PstCompany.FLD_COMPANY]);
@@ -352,7 +352,6 @@
                                             }
                                         %>
                                     </select>
-
                                 </div>
                                 <div id="caption">Jabatan</div>
                                 <div id="divinput">
