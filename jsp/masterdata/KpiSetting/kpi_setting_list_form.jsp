@@ -150,7 +150,7 @@
             kpiType = PstKPI_Type.list(0, 1, query, "");
         }
     } catch (Exception e) {
-        System.out.println("Error fetch sale :" + e);
+        System.out.println("Error fetch :" + e);
     }
 
 
@@ -335,10 +335,10 @@
                         for(int i = 0; i < kpiType.size(); i++){
                             KPI_Type objKpiType = (KPI_Type) kpiType.get(i);
                     %>
-                            <span><%= objKpiType.getType_name() %> - <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></span>
+                            <span><%= objKpiType.getType_name() %> - <%= PstCompany.getCompanyName(oidCompany) %></span>
                     <% } %>
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
-                    <div style="font-size: 15px">Jabatan:
+                    <div style="font-size: 15px">Jabatan: <%= oidCompany %>
                         <%
                             Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
                             for (int i = 0; i < vListPosisi.size(); i++) {

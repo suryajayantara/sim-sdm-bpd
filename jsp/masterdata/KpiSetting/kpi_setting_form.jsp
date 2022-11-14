@@ -446,7 +446,7 @@
                     <div class="col d-flex justify-content-between">
                         <span> <%= kpiType.getType_name()%> </span>
                         <div>
-                            <a href="javascript:init(<%=kpiType.getOID()%>, <%=kpiSetting.getOID()%>)" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
+                            <a href="javascript:init('<%=kpiType.getOID()%>', '<%=kpiSetting.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
                             <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
