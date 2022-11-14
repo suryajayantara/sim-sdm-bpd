@@ -355,7 +355,7 @@
                     <a href="javascript:cmdEdit()" style="color:#FFF;" class="btn-edit btn-edit1" >Edit Kpi Setting</a>
                     <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-simpan btn-simpan1" data-toggle="modal" data-target="#exampleModal2"  >Tambah Group Baru  <strong><i class="fa fa-plus"></i></strong></a>
                     &nbsp;<a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal2"  >Master Data Kpi Group <strong><i class="fa fa-plus"></i></strong></a>
-                    &nbsp;<a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1"  data-toggle="modal" data-target="#exampleModal3" >Naster Data Kpi <strong><i class="fa fa-plus"></i></strong></a>
+                    &nbsp;<a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1"  data-toggle="modal" data-target="#exampleModal3" >Master Data Kpi <strong><i class="fa fa-plus"></i></strong></a>
                     &nbsp;<a href="javascript:init()"  style="color:#FFF;" class="btn-add btn-add1" >Master Data Distribusi <strong><i class="fa fa-plus"></i></strong></a>
             <!--Tampilan form setelah input data kpi type-->
         </div>  
@@ -393,7 +393,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select style="width: 100%;" class="form-control form-control-sm custom-select">
+                                <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
                                     <option>Select</option>
                                     <%
                                         Vector listKpi = PstKPI_List.list(0, 0, "", "");
@@ -415,10 +415,11 @@
                                     <%
                                         }
                                     %>
-                                </select>
+                                </select> --%>
+                                Kpi Performance
                             </td>
                             <td>
-                                <select style="width: 100%;" class="form-control form-control-sm custom-select">
+                                <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
                                     <option>Select</option>
                                     <%
                                         Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
@@ -440,15 +441,17 @@
                                     <%
                                         }
                                     %>
-                                </select>
+                                </select> --%>
+                                Distribution Option
                             </td>
                             <td>
-                                <select style="width: 100%;" class="form-control form-control-sm custom-select">
+                                <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
                                     <option value="">Select</option>
                                     <option value="0">Persentase</option>
                                     <option value="1">Waktu</option>
                                     <option value="2">Jumlah</option>
-                                </select>
+                                </select> --%>
+                                Satuan Ukur
                             </td>
                             <td>
                                 <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
