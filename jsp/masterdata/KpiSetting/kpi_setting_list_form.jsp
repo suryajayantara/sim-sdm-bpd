@@ -361,15 +361,26 @@
         </div>  
          </form>
     </div>
+
     <div class="box mb-5">
         <div class="formstyle">
+            <div class="d-flex justify-content-between">
+                <span> KPI Group : </span>
+                <div>
+                    <a href="javascript:init()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Group
+                        <strong><i class="fa fa-plus"></i></strong>
+                    </a>
+                    <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                        <strong><i class="fa fa-trash"></i></strong>
+                    </a>
+                </div>
+            </div>
             <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
                 <div>&nbsp;</div>
                 <table class="tblStyle" style="width: 100%;">
                     <tr>
-                        <!-- <td class="title_tbl" style="width: 20%;">Kpi Group</td> -->
                         <td class="title_tbl" style="width: 20%;">Key Performance Indicator</td>
                         <td class="title_tbl">Distribution Option</td>
                         <td class="title_tbl">Satuan Ukur</td>
@@ -378,31 +389,6 @@
                         <td class="title_tbl">Action</td>
                     </tr>
                     <tr>
-                        <!-- <td>   
-                            <select  style="width: 100%;" class="form-style">
-                                <option>Select</option>
-                                <%
-                                    Vector listKpiGroup = PstKPI_Group.list(0, 0, "", "");
-                                    for (int i = 0; i < listKpiGroup.size(); i++) {
-                                        KPI_Group objKpiGroup = (KPI_Group) listKpiGroup.get(i);
-                                        String selected = "";
-                                        if (oid_kpi_group != null) {
-                                            for (int j = 0; j < oid_kpi_group.length; j++) {
-                                                String oidKpiGroup = "" + objKpiGroup.getOID();
-                                                if (oidKpiGroup.equals("" + oid_kpi_group[j])) {
-                                                    selected = "selected";
-                                                }
-                                            }
-                                        }
-    
-                                %>
-    
-                                <option value="<%=objKpiGroup.getOID()%>" <%=selected%>><%=objKpiGroup.getGroup_title()%></option>
-                                <%
-                                    }
-                                %>
-                            </select>
-                        </td> -->
                         <td>
                             <select style="width: 100%;" class="form-control form-control-sm custom-select">
                                 <option>Select</option>
@@ -466,11 +452,7 @@
                     <center><a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a></center>
                     </td>
                     <td>
-                        <!-- <div container mt-3> -->
-                            <!-- <div class="form-group" id="only-number"> -->
-                                <input type="text" class="form-control form-control-sm" id="number" placeholder="Input only number" style="width: 100%;">
-                            <!-- </div> -->
-                        <!-- </div> -->
+                        10
                     </td>
                     <td>
                         <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
@@ -485,9 +467,10 @@
                 <div>&nbsp;</div>
                 <a href="javascript:cmdSaveKpiSettingList()" style="color:#FFF;" class="btn-simpan btn-simpan1">Simpan</a>
                 &nbsp;<a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1" >Kembali</a>
+            </form>       
         </div>
     </div> 
-</form>       
+
 <!--Pop up untuk form tambah kpi group-->
 <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
