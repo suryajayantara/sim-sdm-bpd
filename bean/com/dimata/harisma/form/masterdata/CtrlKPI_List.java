@@ -138,7 +138,7 @@ public class CtrlKPI_List extends Control implements I_Language{
                                                    long p = PstKPI_List_Group.insertExc(kPI_List_Group);
                                                 }
 												
-												for (int i= 0 ; i<this.kPI_List.getArrkpipositionSize();i++ ){
+						for (int i= 0 ; i<this.kPI_List.getArrkpipositionSize();i++ ){
                                                    long posId = this.kPI_List.getArrkpiposition(i);
                                                    KpiListPosition kpiListPosition = new KpiListPosition();
                                                    kpiListPosition.setKpiId(oid);
