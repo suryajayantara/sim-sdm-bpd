@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="latin1" collation="latin1_swedish_ci">hairisma_bpd</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="hr_position" view="colnames">
+<left>5</left>
+<top>18</top>
+<width>303</width>
+<height>311</height>
+<sql_create_table>CREATE TABLE `hr_position` (
+  `POSITION_ID` bigint(20) NOT NULL DEFAULT 0,
+  `POSITION` varchar(124) DEFAULT NULL,
+  `DESCRIPTION` text DEFAULT NULL,
+  `POSITION_LEVEL` int(11) DEFAULT NULL,
+  `DISABLED_APP_UNDER_SUPERVISOR` int(11) DEFAULT NULL,
+  `DISABLED_APP_DEPT_SCOPE` int(11) DEFAULT NULL,
+  `DISABLED_APP_DIV_SCOPE` int(11) DEFAULT NULL,
+  `ALL_DEPARTMENT` int(11) DEFAULT NULL,
+  `DEDLINE_SCH_BEFORE` int(11) DEFAULT NULL,
+  `DEDLINE_SCH_AFTER` int(11) DEFAULT NULL,
+  `DEDLINE_SCH_LEAVE_BEFORE` int(11) DEFAULT NULL,
+  `DEDLINE_SCH_LEAVE_AFTER` int(11) DEFAULT NULL,
+  `HEAD_TITLE` int(11) NOT NULL DEFAULT 0,
+  `POSITION_LEVEL_PAYROL` int(11) DEFAULT 0,
+  `POSITION_KODE` text DEFAULT NULL,
+  `FLAG_POSITION_SHOW_IN_PAYROLL_INPUT` int(2) DEFAULT 0 COMMENT 'memunculkan position yg diinginkan muncul di pay input',
+  `AGE_MIN` int(3) DEFAULT NULL,
+  `AGE_RECOMMENDED` int(3) DEFAULT NULL,
+  `AGE_MAX` int(3) DEFAULT NULL,
+  `LENGTH_OF_SERVICE_MIN` int(2) DEFAULT NULL,
+  `LENGTH_OF_SERVICE_RECOMMENDED` int(2) DEFAULT NULL,
+  `LENGTH_OF_EXPERIENCE_MIN` int(2) DEFAULT NULL,
+  `LENGTH_OF_EXPERIENCE_RECOMMENDED` int(2) DEFAULT NULL,
+  `VALID_STATUS` int(2) NOT NULL,
+  `VALID_START` date DEFAULT NULL,
+  `VALID_END` date DEFAULT NULL,
+  `LEVEL_ID` bigint(20) NOT NULL,
+  `START_DATE` date DEFAULT NULL,
+  `END_DATE` date DEFAULT NULL,
+  `POSITION_GROUP_ID` bigint(20) DEFAULT NULL,
+  `TENAGA_KERJA` int(2) DEFAULT NULL,
+  `JENIS_JABATAN` int(2) DEFAULT NULL,
+  `ALIAS` varchar(124) DEFAULT NULL,
+  `POSITION_TYPE_ID` bigint(25) DEFAULT NULL,
+  PRIMARY KEY (`POSITION_ID`),
+  KEY `POSITION_TYPE` (`POSITION_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_setting" view="colnames">
+<left>500</left>
+<top>29</top>
+<width>145</width>
+<height>180</height>
+<sql_create_table>CREATE TABLE `hr_kpi_setting` (
+  `KPI_SETTING_ID` bigint(20) NOT NULL,
+  `VALID_DATE` date DEFAULT NULL,
+  `STATUS` int(2) DEFAULT NULL,
+  `START_DATE` date DEFAULT NULL,
+  `COMPANY_ID` bigint(20) DEFAULT NULL,
+  `TAHUN` bigint(10) DEFAULT NULL,
+  PRIMARY KEY (`KPI_SETTING_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_setting_group" view="colnames">
+<left>693</left>
+<top>163</top>
+<width>193</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `hr_kpi_setting_group` (
+  `KPI_SETTING_GROUP_ID` bigint(20) NOT NULL,
+  `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
+  `KPI_GROUP_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`KPI_SETTING_GROUP_ID`),
+  KEY `FK_HR_KPI_SETTING` (`KPI_SETTING_ID`),
+  KEY `FK_HR_KPI_GROUP` (`KPI_GROUP_ID`),
+  CONSTRAINT `FK_HR_KPI_GROUP` FOREIGN KEY (`KPI_GROUP_ID`) REFERENCES `hr_kpi_group` (`KPI_GROUP_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_HR_KPI_SETTING` FOREIGN KEY (`KPI_SETTING_ID`) REFERENCES `hr_kpi_setting` (`KPI_SETTING_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_setting_list" view="colnames">
+<left>671</left>
+<top>424</top>
+<width>181</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE `hr_kpi_setting_list` (
+  `KPI_SETTING_LIST_ID` bigint(20) NOT NULL,
+  `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
+  `KPI_LIST_ID` bigint(20) DEFAULT NULL,
+  `KPI_DISTRIBUTION_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`KPI_SETTING_LIST_ID`),
+  KEY `FK_KPI_SETTING_ID` (`KPI_SETTING_ID`),
+  KEY `FK_KPI_LIST_ID` (`KPI_LIST_ID`),
+  KEY `FK_KPI_DISTRIBUTION_ID` (`KPI_DISTRIBUTION_ID`),
+  CONSTRAINT `FK_KPI_DISTRIBUTION_ID` FOREIGN KEY (`KPI_DISTRIBUTION_ID`) REFERENCES `hr_kpi_distribution` (`KPI_DISTRIBUTION_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_KPI_LIST_ID` FOREIGN KEY (`KPI_LIST_ID`) REFERENCES `hr_kpi_list` (`KPI_LIST_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_KPI_SETTING_ID` FOREIGN KEY (`KPI_SETTING_ID`) REFERENCES `hr_kpi_setting` (`KPI_SETTING_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_setting_type" view="colnames">
+<left>690</left>
+<top>20</top>
+<width>180</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `hr_kpi_setting_type` (
+  `KPI_SETTING_TYPE_ID` bigint(20) NOT NULL,
+  `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
+  `KPI_TYPE_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`KPI_SETTING_TYPE_ID`),
+  KEY `FK_KPI_SETTING_TYPE_ID` (`KPI_SETTING_ID`),
+  KEY `KPI_TYPE_ID` (`KPI_TYPE_ID`),
+  CONSTRAINT `FK_KPI_SETTING_TYPE_ID` FOREIGN KEY (`KPI_SETTING_ID`) REFERENCES `hr_kpi_setting` (`KPI_SETTING_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `hr_kpi_setting_type_ibfk_1` FOREIGN KEY (`KPI_TYPE_ID`) REFERENCES `hr_kpi_type` (`KPI_TYPE_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `hr_kpi_setting_type_ibfk_2` FOREIGN KEY (`KPI_TYPE_ID`) REFERENCES `hr_kpi_type` (`KPI_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_target_detail_employee" view="colnames">
+<left>386</left>
+<top>220</top>
+<width>255</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE `hr_kpi_target_detail_employee` (
+  `KPI_TARGET_DETAIL_EMPLOYEE_ID` bigint(25) NOT NULL,
+  `KPI_TARGET_DETAIL_ID` bigint(25) DEFAULT NULL,
+  `EMPLOYEE_ID` bigint(25) DEFAULT NULL,
+  `BOBOT` double DEFAULT NULL,
+  PRIMARY KEY (`KPI_TARGET_DETAIL_EMPLOYEE_ID`),
+  KEY `FK_KPI_TARGET_DETAIL_ID` (`KPI_TARGET_DETAIL_ID`),
+  CONSTRAINT `FK_KPI_TARGET_DETAIL_ID` FOREIGN KEY (`KPI_TARGET_DETAIL_ID`) REFERENCES `hr_kpi_target_detail` (`KPI_TARGET_DETAIL_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_target_detail" view="colnames">
+<left>223</left>
+<top>389</top>
+<width>189</width>
+<height>248</height>
+<sql_create_table>CREATE TABLE `hr_kpi_target_detail` (
+  `KPI_TARGET_DETAIL_ID` bigint(25) NOT NULL,
+  `KPI_TARGET_ID` bigint(25) DEFAULT NULL,
+  `KPI_ID` bigint(25) DEFAULT NULL,
+  `PERIOD` int(2) DEFAULT NULL,
+  `DATE_FROM` date DEFAULT NULL,
+  `DATE_TO` date DEFAULT NULL,
+  `AMOUNT` double DEFAULT NULL,
+  `KPI_GROUP_ID` bigint(25) DEFAULT NULL,
+  `WEIGHT_VALUE` double DEFAULT NULL,
+  `KPI_SETTING_LIST_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`KPI_TARGET_DETAIL_ID`),
+  KEY `FK_KPI_SETTING_LIST_ID` (`KPI_SETTING_LIST_ID`),
+  KEY `FK_KPI_TARGET_ID` (`KPI_TARGET_ID`),
+  CONSTRAINT `FK_KPI_SETTING_LIST_ID` FOREIGN KEY (`KPI_SETTING_LIST_ID`) REFERENCES `hr_kpi_setting_list` (`KPI_SETTING_LIST_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_KPI_TARGET_ID` FOREIGN KEY (`KPI_TARGET_ID`) REFERENCES `hr_kpi_target` (`KPI_TARGET_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_target" view="colnames">
+<left>29</left>
+<top>373</top>
+<width>159</width>
+<height>311</height>
+<sql_create_table>CREATE TABLE `hr_kpi_target` (
+  `KPI_TARGET_ID` bigint(25) NOT NULL,
+  `CREATE_DATE` date DEFAULT NULL,
+  `TITLE` varchar(255) DEFAULT NULL,
+  `STATUS_DOC` int(2) DEFAULT 0,
+  `COMPANY_ID` bigint(25) DEFAULT NULL,
+  `DIVISION_ID` bigint(25) DEFAULT NULL,
+  `DEPARTMENT_ID` bigint(25) DEFAULT NULL,
+  `SECTION_ID` bigint(25) DEFAULT NULL,
+  `COUNT_IDX` int(2) DEFAULT 0,
+  `APPROVAL_1` bigint(25) DEFAULT NULL,
+  `APPROVAL_DATE_1` date DEFAULT NULL,
+  `APPROVAL_2` bigint(25) DEFAULT NULL,
+  `APPROVAL_DATE_2` date DEFAULT NULL,
+  `APPROVAL_3` bigint(25) DEFAULT NULL,
+  `APPROVAL_DATE_3` date DEFAULT NULL,
+  `APPROVAL_4` bigint(25) DEFAULT NULL,
+  `APPROVAL_DATE_4` date DEFAULT NULL,
+  `APPROVAL_5` bigint(25) DEFAULT NULL,
+  `APPROVAL_DATE_5` date DEFAULT NULL,
+  `APPROVAL_6` bigint(25) DEFAULT NULL,
+  `APPROVAL_DATE_6` date DEFAULT NULL,
+  `AUTHOR_ID` bigint(25) DEFAULT NULL,
+  `TAHUN` int(10) DEFAULT NULL,
+  `POSITION_ID` bigint(25) DEFAULT NULL,
+  PRIMARY KEY (`KPI_TARGET_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_distribution" view="colnames">
+<left>486</left>
+<top>560</top>
+<width>181</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `hr_kpi_distribution` (
+  `KPI_DISTRIBUTION_ID` bigint(20) NOT NULL,
+  `DISTRIBUTION` varchar(165) DEFAULT NULL,
+  PRIMARY KEY (`KPI_DISTRIBUTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_kpi_group" view="colnames">
+<left>951</left>
+<top>226</top>
+<width>138</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `hr_kpi_group` (
+  `KPI_GROUP_ID` bigint(20) NOT NULL,
+  `KPI_TYPE_ID` bigint(20) NOT NULL,
+  `GROUP_TITLE` varchar(512) DEFAULT NULL,
+  `DESCRIPTION` varchar(512) DEFAULT NULL,
+  `NUMBER_INDEX` int(3) DEFAULT NULL,
+  PRIMARY KEY (`KPI_GROUP_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="hr_kpi_list" view="colnames">
+<left>946</left>
+<top>406</top>
+<width>138</width>
+<height>299</height>
+<sql_create_table>CREATE TABLE `hr_kpi_list` (
+  `KPI_LIST_ID` bigint(20) NOT NULL,
+  `COMPANY_ID` bigint(20) NOT NULL,
+  `KPI_TITLE` varchar(256) DEFAULT NULL,
+  `DESCRIPTION` text DEFAULT NULL,
+  `VALID_FROM` datetime DEFAULT NULL,
+  `VALID_TO` datetime DEFAULT NULL,
+  `VALUE_TYPE` varchar(64) DEFAULT NULL,
+  `INPUT_TYPE` int(2) DEFAULT 0,
+  `PARENT_ID` bigint(20) DEFAULT NULL,
+  `KORELASI` int(2) DEFAULT 0,
+  `RANGE_START` double DEFAULT NULL,
+  `RANGE_END` double DEFAULT NULL,
+  `NUMBER_INDEX` int(3) DEFAULT NULL,
+  PRIMARY KEY (`KPI_LIST_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="hr_kpi_type" view="colnames">
+<left>933</left>
+<top>13</top>
+<width>138</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `hr_kpi_type` (
+  `KPI_TYPE_ID` bigint(20) NOT NULL,
+  `TYPE_NAME` varchar(256) DEFAULT NULL,
+  `DESCRIPTION` varchar(512) DEFAULT NULL,
+  `COMPANY` varchar(256) DEFAULT NULL,
+  `NUMBER_INDEX` int(3) DEFAULT NULL,
+  PRIMARY KEY (`KPI_TYPE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
+</table>
+<table name="hr_kpi_setting_position" view="colnames">
+<left>321</left>
+<top>38</top>
+<width>166</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `hr_kpi_setting_position` (
+  `KPI_SETTING_POSITION_ID` bigint(20) NOT NULL,
+  `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
+  `POSITION_ID` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`KPI_SETTING_POSITION_ID`),
+  KEY `FK_KPI_SETTING_POSITION_ID` (`KPI_SETTING_ID`),
+  KEY `POSITION_ID` (`POSITION_ID`),
+  CONSTRAINT `FK_KPI_SETTING_POSITION_ID` FOREIGN KEY (`KPI_SETTING_ID`) REFERENCES `hr_kpi_setting` (`KPI_SETTING_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `hr_kpi_setting_position_ibfk_1` FOREIGN KEY (`POSITION_ID`) REFERENCES `hr_position` (`POSITION_ID`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
