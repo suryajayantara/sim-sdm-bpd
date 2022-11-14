@@ -440,25 +440,64 @@
             Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
             for (int i = 0; i < vKpiSetting.size(); i++) {
                 KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
+                if(kpiType.getOID() > 0){
         %>
-            <div class="formstyle mb-3">
-                <div class="row mb-3">
-                    <div class="col d-flex justify-content-between">
-                        <span> <%= kpiType.getType_name()%> </span>
-                        <div>
-                            <a href="javascript:init('<%=kpiType.getOID()%>', '<%=kpiSetting.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
-                                <strong><i class="fa fa-plus"></i></strong>
-                            </a>
-                            <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
-                                <strong><i class="fa fa-trash"></i></strong>
-                            </a>
+                <div class="formstyle mb-3">
+                    <div class="row mb-3">
+                        <div class="col d-flex justify-content-between">
+                            <span> <%= kpiType.getType_name() %> </span>
+                            <div>
+                                <a href="javascript:init('<%= kpiType.getOID() %>', '<%=kpiSetting.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
+                                    <strong><i class="fa fa-plus"></i></strong>
+                                </a>
+                                <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                                    <strong><i class="fa fa-trash"></i></strong>
+                                </a>
+                            </div>
                         </div>
                     </div>
+                    <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
+                        <input type="hidden" name="command" value="<%=iCommand%>">
+                        <input type="hidden" name="typeform" value="3">
+                        <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+                        <table class="tblStyle" style="width: 100%;">
+                            <thead class="text-center">
+                                <tr>
+                                    <th class="title_tbl"  style="width: 20%;">Kpi Group</th>
+                                    <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
+                                    <th class="title_tbl">Distribution Option</th>
+                                    <th class="title_tbl">Satuan Ukur</th>
+                                    <th class="title_tbl">Target</th>
+                                    <th class="title_tbl">Bobot</th>
+                                    <th class="title_tbl">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="p-3">kpi group</td>
+                                    <td>KPI</td>
+                                    <td>distribution option</td>
+                                    <td>satuan ukur</td>
+                                    <td class="text-center">
+                                        <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                            <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                    </td>
+                                    <td>bobot</td>
+                                    <td class="text-center">
+                                        <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
+                                        <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
-                <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
-                    <input type="hidden" name="command" value="<%=iCommand%>">
-                    <input type="hidden" name="typeform" value="3">
-                    <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+        <%
+                } else {
+
+        %>
+                <div class="formstyle mb-3">
                     <table class="tblStyle" style="width: 100%;">
                         <thead class="text-center">
                             <tr>
@@ -473,27 +512,15 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="p-3">kpi group</td>
-                                <td>KPI</td>
-                                <td>distribution option</td>
-                                <td>satuan ukur</td>
-                                <td class="text-center">
-                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
-                                </td>
-                                <td>bobot</td>
-                                <td class="text-center">
-                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                    <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                                    <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
-                                </td>
+                                <td class="text-center" colspan="7">Data tidak ditemukan.</td>
                             </tr>
                         </tbody>
                     </table>
-                </form>
-            </div>
-        <%}%>
-
+                </div>
+        <%
+                }
+            }
+        %>
     <!-- Modal adalah javascript untuk memunculkan pop up saat klik button tambah kpi -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
