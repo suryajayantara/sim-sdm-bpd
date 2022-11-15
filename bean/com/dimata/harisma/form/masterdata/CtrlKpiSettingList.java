@@ -94,6 +94,7 @@ public class CtrlKpiSettingList extends Control implements I_Language {
 
     public int action(int cmd, long oidKpiSettingList, HttpServletRequest request) {
         msgString = "";
+
         int excCode = I_DBExceptionInfo.NO_EXCEPTION;
         int rsCode = RSLT_OK;
         switch (cmd) {
