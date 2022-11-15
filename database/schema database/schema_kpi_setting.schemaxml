@@ -3,13 +3,13 @@
 <source>
 <database charset="latin1" collation="latin1_swedish_ci">hairisma_bpd</database>
 </source>
-<canvas zoom="100">
+<canvas zoom="70">
 <tables>
 <table name="hr_position" view="colnames">
 <left>5</left>
-<top>18</top>
-<width>303</width>
-<height>311</height>
+<top>13</top>
+<width>212</width>
+<height>218</height>
 <sql_create_table>CREATE TABLE `hr_position` (
   `POSITION_ID` bigint(20) NOT NULL DEFAULT 0,
   `POSITION` varchar(124) DEFAULT NULL,
@@ -50,10 +50,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_setting" view="colnames">
-<left>500</left>
-<top>29</top>
-<width>145</width>
-<height>180</height>
+<left>350</left>
+<top>20</top>
+<width>102</width>
+<height>126</height>
 <sql_create_table>CREATE TABLE `hr_kpi_setting` (
   `KPI_SETTING_ID` bigint(20) NOT NULL,
   `VALID_DATE` date DEFAULT NULL,
@@ -67,10 +67,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_setting_group" view="colnames">
-<left>693</left>
-<top>163</top>
-<width>193</width>
-<height>129</height>
+<left>485</left>
+<top>114</top>
+<width>135</width>
+<height>90</height>
 <sql_create_table>CREATE TABLE `hr_kpi_setting_group` (
   `KPI_SETTING_GROUP_ID` bigint(20) NOT NULL,
   `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
@@ -83,10 +83,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_setting_list" view="colnames">
-<left>671</left>
-<top>424</top>
-<width>181</width>
-<height>146</height>
+<left>470</left>
+<top>296</top>
+<width>127</width>
+<height>102</height>
 <sql_create_table>CREATE TABLE `hr_kpi_setting_list` (
   `KPI_SETTING_LIST_ID` bigint(20) NOT NULL,
   `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
@@ -102,10 +102,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_setting_type" view="colnames">
-<left>690</left>
-<top>20</top>
-<width>180</width>
-<height>129</height>
+<left>483</left>
+<top>14</top>
+<width>126</width>
+<height>90</height>
 <sql_create_table>CREATE TABLE `hr_kpi_setting_type` (
   `KPI_SETTING_TYPE_ID` bigint(20) NOT NULL,
   `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
@@ -119,10 +119,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_target_detail_employee" view="colnames">
-<left>386</left>
-<top>220</top>
-<width>255</width>
-<height>146</height>
+<left>271</left>
+<top>154</top>
+<width>179</width>
+<height>102</height>
 <sql_create_table>CREATE TABLE `hr_kpi_target_detail_employee` (
   `KPI_TARGET_DETAIL_EMPLOYEE_ID` bigint(25) NOT NULL,
   `KPI_TARGET_DETAIL_ID` bigint(25) DEFAULT NULL,
@@ -130,14 +130,16 @@
   `BOBOT` double DEFAULT NULL,
   PRIMARY KEY (`KPI_TARGET_DETAIL_EMPLOYEE_ID`),
   KEY `FK_KPI_TARGET_DETAIL_ID` (`KPI_TARGET_DETAIL_ID`),
-  CONSTRAINT `FK_KPI_TARGET_DETAIL_ID` FOREIGN KEY (`KPI_TARGET_DETAIL_ID`) REFERENCES `hr_kpi_target_detail` (`KPI_TARGET_DETAIL_ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `EMPLOYEE_ID` (`EMPLOYEE_ID`),
+  CONSTRAINT `FK_KPI_TARGET_DETAIL_ID` FOREIGN KEY (`KPI_TARGET_DETAIL_ID`) REFERENCES `hr_kpi_target_detail` (`KPI_TARGET_DETAIL_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `hr_kpi_target_detail_employee_ibfk_1` FOREIGN KEY (`EMPLOYEE_ID`) REFERENCES `hr_employee` (`EMPLOYEE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_target_detail" view="colnames">
-<left>223</left>
-<top>389</top>
-<width>189</width>
-<height>248</height>
+<left>156</left>
+<top>272</top>
+<width>132</width>
+<height>174</height>
 <sql_create_table>CREATE TABLE `hr_kpi_target_detail` (
   `KPI_TARGET_DETAIL_ID` bigint(25) NOT NULL,
   `KPI_TARGET_ID` bigint(25) DEFAULT NULL,
@@ -152,15 +154,17 @@
   PRIMARY KEY (`KPI_TARGET_DETAIL_ID`),
   KEY `FK_KPI_SETTING_LIST_ID` (`KPI_SETTING_LIST_ID`),
   KEY `FK_KPI_TARGET_ID` (`KPI_TARGET_ID`),
+  KEY `FK_HR_KPI_GROUPID` (`KPI_GROUP_ID`),
+  KEY `FK_KPI_LIST` (`KPI_ID`),
   CONSTRAINT `FK_KPI_SETTING_LIST_ID` FOREIGN KEY (`KPI_SETTING_LIST_ID`) REFERENCES `hr_kpi_setting_list` (`KPI_SETTING_LIST_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_KPI_TARGET_ID` FOREIGN KEY (`KPI_TARGET_ID`) REFERENCES `hr_kpi_target` (`KPI_TARGET_ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_target" view="colnames">
-<left>29</left>
-<top>373</top>
-<width>159</width>
-<height>311</height>
+<left>20</left>
+<top>261</top>
+<width>111</width>
+<height>218</height>
 <sql_create_table>CREATE TABLE `hr_kpi_target` (
   `KPI_TARGET_ID` bigint(25) NOT NULL,
   `CREATE_DATE` date DEFAULT NULL,
@@ -186,14 +190,16 @@
   `AUTHOR_ID` bigint(25) DEFAULT NULL,
   `TAHUN` int(10) DEFAULT NULL,
   `POSITION_ID` bigint(25) DEFAULT NULL,
-  PRIMARY KEY (`KPI_TARGET_ID`)
+  PRIMARY KEY (`KPI_TARGET_ID`),
+  KEY `SECTION_ID` (`SECTION_ID`),
+  CONSTRAINT `hr_kpi_target_ibfk_1` FOREIGN KEY (`SECTION_ID`) REFERENCES `hr_section` (`SECTION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_distribution" view="colnames">
-<left>486</left>
-<top>560</top>
-<width>181</width>
-<height>112</height>
+<left>341</left>
+<top>392</top>
+<width>127</width>
+<height>78</height>
 <sql_create_table>CREATE TABLE `hr_kpi_distribution` (
   `KPI_DISTRIBUTION_ID` bigint(20) NOT NULL,
   `DISTRIBUTION` varchar(165) DEFAULT NULL,
@@ -201,10 +207,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_group" view="colnames">
-<left>951</left>
-<top>226</top>
-<width>138</width>
-<height>163</height>
+<left>666</left>
+<top>159</top>
+<width>97</width>
+<height>114</height>
 <sql_create_table>CREATE TABLE `hr_kpi_group` (
   `KPI_GROUP_ID` bigint(20) NOT NULL,
   `KPI_TYPE_ID` bigint(20) NOT NULL,
@@ -215,10 +221,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
 </table>
 <table name="hr_kpi_list" view="colnames">
-<left>946</left>
-<top>406</top>
-<width>138</width>
-<height>299</height>
+<left>663</left>
+<top>285</top>
+<width>97</width>
+<height>209</height>
 <sql_create_table>CREATE TABLE `hr_kpi_list` (
   `KPI_LIST_ID` bigint(20) NOT NULL,
   `COMPANY_ID` bigint(20) NOT NULL,
@@ -233,14 +239,16 @@
   `RANGE_START` double DEFAULT NULL,
   `RANGE_END` double DEFAULT NULL,
   `NUMBER_INDEX` int(3) DEFAULT NULL,
-  PRIMARY KEY (`KPI_LIST_ID`)
+  PRIMARY KEY (`KPI_LIST_ID`),
+  KEY `COMPANY_ID` (`COMPANY_ID`),
+  CONSTRAINT `hr_kpi_list_ibfk_1` FOREIGN KEY (`COMPANY_ID`) REFERENCES `pay_general` (`GEN_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
 </table>
 <table name="hr_kpi_type" view="colnames">
-<left>933</left>
-<top>13</top>
-<width>138</width>
-<height>163</height>
+<left>653</left>
+<top>9</top>
+<width>97</width>
+<height>114</height>
 <sql_create_table>CREATE TABLE `hr_kpi_type` (
   `KPI_TYPE_ID` bigint(20) NOT NULL,
   `TYPE_NAME` varchar(256) DEFAULT NULL,
@@ -251,10 +259,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8</sql_create_table>
 </table>
 <table name="hr_kpi_setting_position" view="colnames">
-<left>321</left>
-<top>38</top>
-<width>166</width>
-<height>129</height>
+<left>225</left>
+<top>27</top>
+<width>99</width>
+<height>90</height>
 <sql_create_table>CREATE TABLE `hr_kpi_setting_position` (
   `KPI_SETTING_POSITION_ID` bigint(20) NOT NULL,
   `KPI_SETTING_ID` bigint(20) DEFAULT NULL,
@@ -267,10 +275,10 @@
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="pay_general" view="colnames">
-<left>1138</left>
-<top>25</top>
-<width>184</width>
-<height>311</height>
+<left>797</left>
+<top>19</top>
+<width>129</width>
+<height>218</height>
 <sql_create_table>CREATE TABLE `pay_general` (
   `GEN_ID` bigint(20) NOT NULL DEFAULT 0,
   `COMPANY` varchar(128) NOT NULL DEFAULT '',
@@ -305,6 +313,175 @@
   `COMPANY_PARENTS_ID` bigint(20) DEFAULT NULL,
   UNIQUE KEY `XPKpay_general` (`GEN_ID`),
   KEY `XIF1pay_general` (`LOCAL_CUR_CODE`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_section" view="colnames">
+<left>25</left>
+<top>509</top>
+<width>109</width>
+<height>162</height>
+<sql_create_table>CREATE TABLE `hr_section` (
+  `SECTION_ID` bigint(20) NOT NULL DEFAULT 0,
+  `DEPARTMENT_ID` bigint(20) DEFAULT NULL,
+  `SECTION` varchar(100) DEFAULT NULL,
+  `DESCRIPTION` varchar(200) DEFAULT NULL,
+  `SECTION_LINK_TO` varchar(255) DEFAULT NULL,
+  `VALID_STATUS` int(2) DEFAULT 1,
+  `VALID_START` date DEFAULT NULL,
+  `VALID_END` date DEFAULT NULL,
+  `LEVEL` int(2) DEFAULT 0,
+  PRIMARY KEY (`SECTION_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="hr_employee" view="colnames">
+<left>163</left>
+<top>505</top>
+<width>168</width>
+<height>218</height>
+<sql_create_table>CREATE TABLE `hr_employee` (
+  `EMPLOYEE_ID` bigint(20) NOT NULL DEFAULT 0,
+  `DIVISION_ID` bigint(20) DEFAULT 0,
+  `DEPARTMENT_ID` bigint(20) DEFAULT 0,
+  `POSITION_ID` bigint(20) DEFAULT 0,
+  `POSITION_LEVEL` varchar(100) DEFAULT NULL,
+  `SECTION_ID` bigint(20) DEFAULT 0,
+  `EMPLOYEE_NUM` varchar(20) DEFAULT NULL,
+  `EMP_CATEGORY_ID` bigint(20) DEFAULT 0,
+  `LEVEL_ID` bigint(20) DEFAULT 0,
+  `FULL_NAME` varchar(100) DEFAULT NULL,
+  `ADDRESS` varchar(200) DEFAULT NULL,
+  `phone` varchar(128) DEFAULT NULL,
+  `ADDRESS_PERMANENT` varchar(200) DEFAULT NULL,
+  `phone_emergency` varchar(128) DEFAULT NULL,
+  `HANDPHONE` varchar(128) DEFAULT NULL,
+  `POSTAL_CODE` int(11) DEFAULT 0,
+  `SEX` tinyint(2) DEFAULT 0,
+  `BIRTH_PLACE` varchar(50) DEFAULT NULL,
+  `BIRTH_DATE` date DEFAULT NULL,
+  `PROBATION_UNTIL` date DEFAULT NULL,
+  `RELIGION_ID` bigint(20) DEFAULT 0,
+  `BLOOD_TYPE` char(2) DEFAULT NULL,
+  `ASTEK_NUM` varchar(15) DEFAULT NULL,
+  `ASTEK_DATE` date DEFAULT NULL,
+  `MARITAL_ID` bigint(20) DEFAULT 0,
+  `LOCKER_ID` bigint(20) DEFAULT 0,
+  `COMMENCING_DATE` date DEFAULT NULL,
+  `RESIGNED` int(11) DEFAULT 0,
+  `RESIGNED_DATE` date DEFAULT NULL,
+  `RESIGNED_REASON_ID` bigint(20) DEFAULT 0,
+  `RESIGNED_DESC` text DEFAULT NULL,
+  `BARCODE_NUMBER` varchar(20) DEFAULT NULL,
+  `BASIC_SALARY` decimal(10,2) DEFAULT 0.00,
+  `IS_ASSIGN_TO_ACCOUNTING` tinyint(2) DEFAULT 0,
+  `EMP_PIN` varchar(20) DEFAULT NULL,
+  `CURIER` varchar(40) DEFAULT NULL,
+  `INDENT_CARD_NR` varchar(64) DEFAULT NULL,
+  `INDENT_CARD_VALID_TO` datetime DEFAULT NULL,
+  `TAX_REG_NR` varchar(128) DEFAULT NULL,
+  `ADDRESS_FOR_TAX` varchar(128) DEFAULT NULL,
+  `NATIONALITY_TYPE` int(4) DEFAULT 0,
+  `EMAIL_ADDRESS` varchar(128) DEFAULT NULL,
+  `CATEGORY_DATE` date DEFAULT NULL,
+  `LEAVE_STATUS` int(4) DEFAULT 0,
+  `RACE` bigint(64) NOT NULL DEFAULT 0,
+  `ENTRY_DATE_DW` datetime DEFAULT NULL,
+  `CONTRACT_DATE` datetime DEFAULT NULL,
+  `PERMANENT_DATE` datetime DEFAULT NULL,
+  `REFERENCE` varchar(100) DEFAULT NULL,
+  `ISSUED_BY_KTP` varchar(100) DEFAULT NULL,
+  `PARENT01` varchar(100) DEFAULT NULL,
+  `PARENT02` varchar(100) DEFAULT NULL,
+  `EMERGENCY_NAME` varchar(100) DEFAULT NULL,
+  `SPECIAL_EMPLOYEE` tinyint(1) DEFAULT 0,
+  `KECAMATAN1` varchar(200) DEFAULT NULL,
+  `KABUPATEN1` varchar(200) DEFAULT NULL,
+  `PROPINSI1` varchar(200) DEFAULT NULL,
+  `TIME_IN_BOX_NO` bigint(20) DEFAULT 0,
+  `KECAMATAN2` varchar(200) DEFAULT NULL,
+  `KABUPATEN2` varchar(200) DEFAULT NULL,
+  `PROPINSI2` varchar(200) DEFAULT NULL,
+  `VEHICLE` varchar(255) DEFAULT NULL,
+  `DATE_OF_BIRTH_KTP` datetime DEFAULT NULL,
+  `COMPANY_ID` bigint(20) DEFAULT 0,
+  `EDUCATION_ID` bigint(20) DEFAULT 0,
+  `FATHER` varchar(45) DEFAULT NULL,
+  `MOTHER` varchar(45) DEFAULT NULL,
+  `PARENTS_ADDRESS` varchar(100) DEFAULT NULL,
+  `NAME_EMG` varchar(128) DEFAULT NULL,
+  `PHONE_EMG` varchar(45) DEFAULT NULL,
+  `ADDRESS_EMG` varchar(100) DEFAULT NULL,
+  `HOD_EMPLOYEE_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_COUNTRY_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_PROVINCE_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_REGENCY_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_SUBREGENCY_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_PMNT_COUNTRY_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_PMNT_PROVINCE_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_PMNT_REGENCY_ID` bigint(20) unsigned DEFAULT 0,
+  `ADDR_PMNT_SUBREGENCY_ID` bigint(20) unsigned DEFAULT 0,
+  `ID_CARD_ISSUED_BY` varchar(100) DEFAULT NULL,
+  `ID_CARD_BIRTH_DATE` date DEFAULT NULL,
+  `EMAIL` varchar(64) DEFAULT NULL,
+  `TAX_MARITAL_ID` bigint(20) DEFAULT 0,
+  `NO_REKENING` varchar(60) DEFAULT NULL,
+  `GRADE_LEVEL_ID` bigint(20) DEFAULT 0,
+  `COUNT_IDX` int(80) DEFAULT 0,
+  `LOCATION_ID` bigint(20) DEFAULT NULL,
+  `END_CONTRACT` date DEFAULT NULL,
+  `WORK_ASSIGN_COMPANY_ID` bigint(20) DEFAULT NULL,
+  `WORK_ASSIGN_DIVISION_ID` bigint(20) DEFAULT NULL,
+  `WORK_ASSIGN_DEPARTMENT_ID` bigint(20) DEFAULT NULL,
+  `WORK_ASSIGN_SECTION_ID` bigint(20) DEFAULT NULL,
+  `WORK_ASSIGN_POSITION_ID` bigint(20) DEFAULT NULL,
+  `ID_CARD_TYPE` varchar(15) DEFAULT NULL,
+  `NPWP` varchar(30) DEFAULT NULL,
+  `BPJS_NO` varchar(30) DEFAULT NULL,
+  `BPJS_DATE` date DEFAULT NULL,
+  `SHIO` varchar(25) DEFAULT NULL,
+  `ELEMEN` varchar(30) DEFAULT NULL,
+  `IQ` char(4) DEFAULT NULL,
+  `EQ` char(4) DEFAULT NULL,
+  `PROBATION_END_DATE` date DEFAULT NULL,
+  `STATUS_PENSIUN_PROGRAM` int(1) DEFAULT NULL,
+  `START_DATE_PENSIUN` date DEFAULT NULL,
+  `PRESENCE_CHECK_PARAMETER` int(11) DEFAULT NULL,
+  `MEDICAL_INFO` text DEFAULT NULL,
+  `DANA_PENDIDIKAN` int(2) DEFAULT NULL,
+  `PAYROLL_GROUP` bigint(20) DEFAULT NULL,
+  `PROVIDER_ID` bigint(20) DEFAULT NULL,
+  `MEMBER_OF_KESEHATAN` int(2) DEFAULT NULL,
+  `MEMBER_OF_KETENAGAKERJAAN` int(2) DEFAULT NULL,
+  `EMP_DOC_ID` bigint(20) DEFAULT NULL,
+  `HISTORY_GROUP` int(2) DEFAULT NULL,
+  `HISTORY_TYPE` int(2) DEFAULT NULL,
+  `EMP_DOC_ID_GRADE` bigint(20) DEFAULT NULL,
+  `SK_NOMOR` varchar(128) DEFAULT NULL,
+  `SK_TANGGAL` date DEFAULT NULL,
+  `NKK` varchar(64) DEFAULT NULL,
+  `SK_NOMOR_GRADE` varchar(128) DEFAULT NULL,
+  `SK_TANGGAL_GRADE` date DEFAULT NULL,
+  `NAME_ON_CARD` varchar(50) DEFAULT NULL,
+  `NATIONALITY_ID` bigint(20) DEFAULT NULL,
+  `FIRST_CONTRACT_DATE` date DEFAULT NULL,
+  `BPJS_TK_PENSIUN` bigint(20) DEFAULT NULL,
+  `BPJS_TK_PENSIUN_DATE` date DEFAULT NULL,
+  PRIMARY KEY (`EMPLOYEE_ID`),
+  UNIQUE KEY `BARCODE_NUMBER` (`BARCODE_NUMBER`),
+  UNIQUE KEY `EMP_NUM_UNQ` (`EMPLOYEE_NUM`),
+  KEY `FK_hr_employee_company` (`COMPANY_ID`),
+  KEY `FK_hr_employee_division` (`DIVISION_ID`),
+  KEY `FK_hr_employee_department` (`DEPARTMENT_ID`),
+  KEY `FK_hr_employee_position` (`POSITION_ID`),
+  KEY `FK_hr_employee_education` (`EDUCATION_ID`),
+  KEY `FK_hr_employee_locker` (`LOCKER_ID`),
+  KEY `FK_hr_employee_level` (`LEVEL_ID`),
+  KEY `FK_hr_employee_category` (`EMP_CATEGORY_ID`),
+  KEY `FK_hr_employee_marital` (`MARITAL_ID`),
+  CONSTRAINT `FK_hr_employee_category` FOREIGN KEY (`EMP_CATEGORY_ID`) REFERENCES `hr_emp_category` (`EMP_CATEGORY_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_hr_employee_department` FOREIGN KEY (`DEPARTMENT_ID`) REFERENCES `hr_department` (`DEPARTMENT_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_hr_employee_division` FOREIGN KEY (`DIVISION_ID`) REFERENCES `hr_division` (`DIVISION_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_hr_employee_level` FOREIGN KEY (`LEVEL_ID`) REFERENCES `hr_level` (`LEVEL_ID`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_hr_employee_marital` FOREIGN KEY (`MARITAL_ID`) REFERENCES `hr_marital` (`MARITAL_ID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 </tables>
