@@ -517,15 +517,15 @@
                             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting %>">
                             <div class="form-group">
                              <label for="exampleInputPassword">KPI Group</label>
-                            <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
+                            <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
                                     <option value="">=Select=</option>
                                     <%
                                         Vector listKpiGroup = PstKPI_Group.list(0, 0, "", "");
                                         for (int i = 0; i < listKpiGroup.size(); i++) {
                                             KPI_Group objKpiGroup = (KPI_Group) listKpiGroup.get(i);
                                             String selected = "";
-                                            if (oid_kpi != null) {
-                                                for (int j = 0; j < oid_kpi.length; j++) {
+                                            if (oid_kpi_group != null) {
+                                                for (int j = 0; j < oid_kpi_group.length; j++) {
                                                     String oidKpiGroup = "" + objKpiGroup.getOID();
                                                     if (oidKpiGroup.equals("" + oid_kpi_group[j])) {
                                                         selected = "selected";

@@ -38,6 +38,7 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
     private KpiSettingGroup entKpiSettingGroup;
     private PstKpiSettingGroup pstKpiSettingGroup;
     private FrmKpiSettingGroup frmKpiSettingGroup;
+    private long oidKpiSettingGroup;
     int language = LANGUAGE_DEFAULT;
 
     public CtrlKpiSettingGroup(HttpServletRequest request) {
@@ -140,6 +141,16 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
 
                 } else {
                     try {
+                        this.oidKpiSettingGroup = oidKpiSettingGroup;
+                        Vector<Long> vOidKpiGroup = frmKpiSettingGroup.getvOidKpiGroup();
+                          if (vOidKpiGroup != null){
+                              for(int ux = 0 ; ux < vOidKpiGroup.size();ux++){
+                              KpiSettingGroup objKpiSettingGroup = new KpiSettingGroup();
+                              objKpiSettingGroup.setKpiSettingId(entKpiSettingGroup.getKpiSettingId());
+                              objKpiSettingGroup.setKpiGroupId(vOidKpiGroup.get(ux));
+                              PstKpiSettingGroup.insertExc(objKpiSettingGroup);
+                              }
+                          }
                         long oid = pstKpiSettingGroup.updateExc(this.entKpiSettingGroup);
                         msgString = FRMMessage.getMessage(FRMMessage.MSG_UPDATED);
                     } catch (DBException dbexc) {

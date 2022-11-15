@@ -76,7 +76,7 @@ public void requestEntityObject(KpiSettingGroup entKpiSettingGroup) {
    try {
         this.requestParam();
         entKpiSettingGroup.setKpiSettingGroupId(getLong(FRM_FIELD_KPI_SETTING_GROUP_ID));
-        entKpiSettingGroup.setOID(getLong(FRM_FIELD_KPI_SETTING_ID));
+        entKpiSettingGroup.setKpiSettingId(getLong(FRM_FIELD_KPI_SETTING_ID));
         vOidKpiGroup = getVectorLong(fieldNames[FRM_FIELD_KPI_GROUP_ID]);
    } catch (Exception e) {
         System.out.println("Error on requestEntityObject : " + e.toString());
