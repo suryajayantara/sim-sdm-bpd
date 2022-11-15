@@ -30,10 +30,12 @@
 <%@ include file = "../../main/checkuser.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+<%    
+    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]);
+
 
     Vector vKpiType = new Vector();    
     Vector vKpiSetting = new Vector();
@@ -145,8 +147,12 @@
     KpiSettingList kpiSettingList = ctrlKpiSettingList.getKpiSettingList();
 
     /*controlle untuk mengolah data kpi Setting Group*/
-
-    
+    CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
+    long iErrCodeSetttingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiGroupBuatNambahGroup, request);
+    if (iCommand == Command.SAVE) {
+        iCommand = 0;
+    }
+    KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
     
     if (oidCompany != 0) {
         kpiSetting.setCompanyId(oidCompany);
@@ -154,27 +160,33 @@
         oidCompany = kpiSetting.getCompanyId();
     }
 
-            // untuk mengambil data jabatan
-            vListPosisi = PstPosition.listWithJoinKpiSettingPosition(oidKpiSetting);
-            
-            // untuk mengambil data kpi group setting
-            String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
-            vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+    if(oidKpiSetting != 0){
+        // untuk mengambil data jabatan
+        vListPosisi = PstPosition.listWithJoinKpiSettingPosition(oidKpiSetting);
+
+        // untuk mengambil data kpi group setting
+        String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
+        vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+    }
+    if(companyOID != 0){ // untuk mengambil data company
+        String query = "GEN_ID = '" + companyOID + "'";
+        vCompany = PstCompany.list(0, 1, query, "");
+        for(int i = 0; i < vCompany.size(); i++){
+            Company objCompany = (Company) vCompany.get(i);
+            companyName = objCompany.getCompany();
         }
-        if(companyOID != 0){ // untuk mengambil data company
-            String query = "GEN_ID = '" + companyOID + "'";
-            vCompany = PstCompany.list(0, 1, query, "");
-            for(int i = 0; i < vCompany.size(); i++){
-                Company objCompany = (Company) vCompany.get(i);
-                companyName = objCompany.getCompany();
-            }
-    
+    }
+
+    // untuk mengambil data KPI Setting Type
+    Vector kpiType = new Vector();
+    try {
+        if (oidKpiSettingType != 0) {
+            String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
+            kpiType = PstKPI_Type.list(0, 1, query, "");
         }
     } catch (Exception e) {
         System.out.println("Error fetch :" + e);
     }
-
-
 %>
 <html>
     <head>
