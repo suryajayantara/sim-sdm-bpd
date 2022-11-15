@@ -1,0 +1,3 @@
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005001', 'Sasaran Kinerja', '', '', '1'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005002', 'Sasaran Kinerja Berdasarkan Tugas Pokok', '', '', '2'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005003', 'Sasaran Kinerja Berdasarkan Inisiatif Strategis atau Tugas Ad-hoc', '', '', '3'); 
