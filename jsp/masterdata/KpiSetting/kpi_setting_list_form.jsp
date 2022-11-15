@@ -157,7 +157,6 @@
     }
 
     // untuk mengambil data KPI Setting Type
-    Vector kpiType = new Vector();
     try {
         if (oidKpiSettingType != 0) {
             String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
