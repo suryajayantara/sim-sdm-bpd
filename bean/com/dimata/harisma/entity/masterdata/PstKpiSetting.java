@@ -257,7 +257,7 @@ public class PstKpiSetting extends DBHandler implements I_DBInterface, I_DBType,
                             "  LEFT JOIN `pay_general` tb_perusahan\n" +
                             "    ON kpi_setting.`COMPANY_ID` = `tb_perusahan`.`GEN_ID`\n"+
                          "WHERE "+ whereClause + 
-                         " GROUP BY kpi_setting.`KPI_SETTING_ID`";
+                         "GROUP BY kpi_setting.`KPI_SETTING_ID`";
                          
             dbrs = DBHandler.execQueryResult(sql);
             ResultSet rs = dbrs.getResultSet();
