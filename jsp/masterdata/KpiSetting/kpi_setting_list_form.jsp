@@ -30,11 +30,11 @@
 <%@ include file = "../../main/checkuser.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+<%    
+    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]);
-<<<<<<< HEAD
     
     Vector vKpiType = new Vector();    
     Vector vKpiSetting = new Vector();
@@ -46,9 +46,6 @@
     String kpiTypeName = "";    
     String companyName = "";
     String positionName = "";
-=======
-
->>>>>>> e53ba0eadf67b9dad09d7153838f3d0a299c89ba
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
     long kpiSettingId = FRMQueryString.requestLong(request, "kpi_setting_id");
@@ -147,8 +144,6 @@
         iCommand = 0;
     }
     KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
-
-    
     
     if (oidCompany != 0) {
         kpiSetting.setCompanyId(oidCompany);
@@ -156,35 +151,33 @@
         oidCompany = kpiSetting.getCompanyId();
     }
 
-<<<<<<< HEAD
-            // untuk mengambil data jabatan
-            vListPosisi = PstPosition.listWithJoinKpiSettingPosition(oidKpiSetting);
-            
-            // untuk mengambil data kpi group setting
-            String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
-            vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+    if(oidKpiSetting != 0){
+        // untuk mengambil data jabatan
+        vListPosisi = PstPosition.listWithJoinKpiSettingPosition(oidKpiSetting);
+
+        // untuk mengambil data kpi group setting
+        String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
+        vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+    }
+    if(companyOID != 0){ // untuk mengambil data company
+        String query = "GEN_ID = '" + companyOID + "'";
+        vCompany = PstCompany.list(0, 1, query, "");
+        for(int i = 0; i < vCompany.size(); i++){
+            Company objCompany = (Company) vCompany.get(i);
+            companyName = objCompany.getCompany();
         }
-        if(companyOID != 0){ // untuk mengambil data company
-            String query = "GEN_ID = '" + companyOID + "'";
-            vCompany = PstCompany.list(0, 1, query, "");
-            for(int i = 0; i < vCompany.size(); i++){
-                Company objCompany = (Company) vCompany.get(i);
-                companyName = objCompany.getCompany();
-            }
-=======
+    }
+
     // untuk mengambil data KPI Setting Type
     Vector kpiType = new Vector();
     try {
         if (oidKpiSettingType != 0) {
             String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
             kpiType = PstKPI_Type.list(0, 1, query, "");
->>>>>>> e53ba0eadf67b9dad09d7153838f3d0a299c89ba
         }
     } catch (Exception e) {
         System.out.println("Error fetch :" + e);
     }
-
-
 %>
 <html>
     <head>
@@ -387,7 +380,7 @@
                     <span><%= objKpiType.getType_name()%> - <%= PstCompany.getCompanyName(oidCompany)%></span>
                     <% }%>
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
-<<<<<<< HEAD
+
                     <div class="row">
                         <div class="col-2">
                             <div style="font-size: 15px">Jabatan</div>
@@ -419,7 +412,7 @@
                             <div style="font-size: 15px">: <%= validD %></div>
                             <div style="font-size: 15px">: <%= year %></div>
                         </div>
-=======
+
                     <div style="font-size: 15px">Jabatan: <%= oidCompany%>
                         <%
                             Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
@@ -428,7 +421,7 @@
                         %>
                         <%= objPosition.getPosition()%>,
                         <%}%>
->>>>>>> e53ba0eadf67b9dad09d7153838f3d0a299c89ba
+
                     </div>
                     <div style="font-size: 15px">Status: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
                     <div style="font-size: 15px">Tanggal Mulai: <%= kpiSetting.getStartDate()%></div>
@@ -443,7 +436,7 @@
                     <!--Tampilan form setelah input data kpi type-->
                 </div>  
             </form>
-<<<<<<< HEAD
+
         </div>  </div>
         
         <%
@@ -462,7 +455,7 @@
                                 <strong><i class="fa fa-trash"></i></strong>
                             </a>
                         </div>
-=======
+
         </div>
 
         <div class="box mb-5">
@@ -476,7 +469,7 @@
                         <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
                             <strong><i class="fa fa-trash"></i></strong>
                         </a>
->>>>>>> e53ba0eadf67b9dad09d7153838f3d0a299c89ba
+
                     </div>
                     <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                         <input type="hidden" name="command" value="<%=iCommand%>">
@@ -511,7 +504,7 @@
                                                             }
                                                         }
                                                     }
-<<<<<<< HEAD
+
 
                                             %>
 
@@ -635,7 +628,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <center><strong>Tambah KPI</strong></center>
-=======
+
                                             %>
 
                                         <option value="<%=objKpi.getOID()%>" <%=selectedKpi%>><%=objKpi.getKpi_title()%></option>
@@ -717,7 +710,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Group</h5>
                     </div>                            
->>>>>>> e53ba0eadf67b9dad09d7153838f3d0a299c89ba
+
                     <div class="modal-body">
                         <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
                             <input type="hidden" name="command" value="<%=iCommand%>">
