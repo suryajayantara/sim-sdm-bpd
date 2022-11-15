@@ -33,11 +33,11 @@
 <%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
-    long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]);
+    long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]);
 
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
-    long kpiSettingId = FRMQueryString.requestLong(request, "kpi_setting_id");
+    long kpiSettingId = (FRMQueryString.requestLong(request, "kpi_setting_id") == 0)? oidKpiSetting : FRMQueryString.requestLong(request, "kpi_setting_id");
     int iCommand = FRMQueryString.requestCommand(request);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     long oidCompany = FRMQueryString.requestLong(request, "company");
@@ -83,14 +83,22 @@
     //String sValidDate= FRMQueryString.requestString(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]);
     //sValidDate = sValidDate; 
 
+    CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
+    if (typeform == 1){
+    long iErrCodeSetttingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiGroupBuatNambahGroup, request);
+    if (iCommand == Command.SAVE) {
+        iCommand = 0;
+    }
+    }
+    KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
+
+    
     /*controller untuk simpan data kpi setting*/
     CtrlKpiSetting ctrlKpiSetting = new CtrlKpiSetting(request);
-    if (typeform == 1) {
         long iErrCode = ctrlKpiSetting.action(iCommand, oidKpiSetting, request);
         if (iCommand == Command.SAVE) {
             iCommand = 0;
         }
-    }
     KpiSetting kpiSetting = ctrlKpiSetting.getKpiSetting();
 
     /*controller untuk simpan data kpi setting type*/
@@ -127,12 +135,6 @@
     KpiSettingList kpiSettingList = ctrlKpiSettingList.getKpiSettingList();
 
     /*controlle untuk mengolah data kpi Setting Group*/
-    CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
-    long iErrCodeSetttingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiGroupBuatNambahGroup, request);
-    if (iCommand == Command.SAVE) {
-        iCommand = 0;
-    }
-    KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
 
     
     
@@ -508,11 +510,12 @@
                         <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Group</h5>
                     </div>                            
                     <div class="modal-body">
-                        <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
-                            <input type="hidden" name="command" value="<%=iCommand%>">
+                        <form name="FRM_NAME_KPISETTINGGROUP" method ="post" action="">
+                            <input type="hidden" name="command" value="<%=Command.SAVE %>">
                             <input type="hidden" name="typeform" value="1">
-                            <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingId()%>">
-                             <div class="form-group">
+                            <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingGroupId() %>">
+                            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
+                            <div class="form-group">
                              <label for="exampleInputPassword">KPI Group</label>
                             <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
                                     <option value="">=Select=</option>
@@ -687,10 +690,9 @@
         </script>
         <script>
             function cmdSaveKpiSettingGroup() {
-                alert("dian ngentod");
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+//                document.FRM_NAME_KPISETTINGGROUP.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGGROUP.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPISETTINGGROUP.submit();
             }
         </script>
 

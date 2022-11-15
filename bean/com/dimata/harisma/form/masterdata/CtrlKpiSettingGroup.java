@@ -75,7 +75,7 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
     public void setLanguage(int language) {
         this.language = language;
     }
-
+    
     public KpiSettingGroup getKpiSettingGroup() {
         return entKpiSettingGroup;
     }
