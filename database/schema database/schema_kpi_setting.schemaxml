@@ -61,7 +61,9 @@
   `START_DATE` date DEFAULT NULL,
   `COMPANY_ID` bigint(20) DEFAULT NULL,
   `TAHUN` bigint(10) DEFAULT NULL,
-  PRIMARY KEY (`KPI_SETTING_ID`)
+  PRIMARY KEY (`KPI_SETTING_ID`),
+  KEY `COMPANY_ID` (`COMPANY_ID`),
+  CONSTRAINT `hr_kpi_setting_ibfk_1` FOREIGN KEY (`COMPANY_ID`) REFERENCES `pay_general` (`GEN_ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 <table name="hr_kpi_setting_group" view="colnames">
@@ -262,6 +264,47 @@
   KEY `POSITION_ID` (`POSITION_ID`),
   CONSTRAINT `FK_KPI_SETTING_POSITION_ID` FOREIGN KEY (`KPI_SETTING_ID`) REFERENCES `hr_kpi_setting` (`KPI_SETTING_ID`) ON UPDATE CASCADE,
   CONSTRAINT `hr_kpi_setting_position_ibfk_1` FOREIGN KEY (`POSITION_ID`) REFERENCES `hr_position` (`POSITION_ID`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
+</table>
+<table name="pay_general" view="colnames">
+<left>1138</left>
+<top>25</top>
+<width>184</width>
+<height>311</height>
+<sql_create_table>CREATE TABLE `pay_general` (
+  `GEN_ID` bigint(20) NOT NULL DEFAULT 0,
+  `COMPANY` varchar(128) NOT NULL DEFAULT '',
+  `COMP_ADDRESS` varchar(255) NOT NULL DEFAULT '',
+  `CITY` varchar(64) NOT NULL DEFAULT '',
+  `ZIP_CODE` varchar(20) NOT NULL DEFAULT '',
+  `BUSSINESS_TYPE` varchar(64) NOT NULL DEFAULT '',
+  `TAX_OFFICE` varchar(128) NOT NULL DEFAULT '',
+  `REG_TAX_NR` varchar(20) NOT NULL DEFAULT '',
+  `REG_TAX_BUS_NR` varchar(20) DEFAULT NULL,
+  `REG_TAX_DATE` date NOT NULL,
+  `TEL` varchar(20) NOT NULL DEFAULT '',
+  `FAX` varchar(20) DEFAULT NULL,
+  `LEADER_NAME` varchar(20) DEFAULT NULL,
+  `LEADER_POSITION` varchar(32) NOT NULL DEFAULT '',
+  `TAX_REP_LOCATION` varchar(32) NOT NULL DEFAULT '',
+  `TAX_YEAR` int(11) NOT NULL DEFAULT 0,
+  `TAX_MONTH` tinyint(4) NOT NULL DEFAULT 0,
+  `TAX_REP_DATE` int(11) NOT NULL DEFAULT 0,
+  `TAX_PAID_PCT` double NOT NULL DEFAULT 0,
+  `TAX_POS_COST_PCT` double NOT NULL DEFAULT 0,
+  `TAX_POS_COST_MAX` float NOT NULL DEFAULT 0,
+  `TAX_ROUND1000` smallint(6) NOT NULL DEFAULT 0,
+  `TAX_CALC_MTD` smallint(6) NOT NULL DEFAULT 0,
+  `NON_TAX_INCOME` float NOT NULL DEFAULT 0,
+  `NON_TAX_WIFE` int(11) DEFAULT NULL,
+  `NON_TAX_DEPNT` int(11) DEFAULT NULL,
+  `TAX_FORM_SIGN_BY` smallint(6) NOT NULL DEFAULT 0,
+  `LOCAL_CUR_CODE` varchar(20) DEFAULT NULL,
+  `WORK_DAYS` int(4) DEFAULT NULL,
+  `CODE_COMPANY` varchar(20) DEFAULT NULL,
+  `COMPANY_PARENTS_ID` bigint(20) DEFAULT NULL,
+  UNIQUE KEY `XPKpay_general` (`GEN_ID`),
+  KEY `XIF1pay_general` (`LOCAL_CUR_CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1</sql_create_table>
 </table>
 </tables>
