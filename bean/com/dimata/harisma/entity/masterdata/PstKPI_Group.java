@@ -4,6 +4,7 @@
  */
 package com.dimata.harisma.entity.masterdata;
 
+import static com.dimata.harisma.entity.masterdata.PstKpiSetting.resultToObject;
 import com.dimata.qdep.db.DBException;
 import com.dimata.qdep.db.DBHandler;
 import com.dimata.qdep.db.DBResultSet;
@@ -226,7 +227,32 @@ public class PstKPI_Group extends DBHandler implements I_DBInterface, I_DBType, 
         return new Vector();
     }
     
-      public static void resultToObject(ResultSet rs, KPI_Group kPI_Group) {
+    public static Vector listWithJoinSetting(String whereClause) {
+        Vector lists = new Vector();
+        DBResultSet dbrs = null;
+        try {
+            String sql = "SELECT hr_kpi_group.`KPI_GROUP_ID`, hr_kpi_group.`KPI_TYPE_ID`, hr_kpi_group.`GROUP_TITLE`, hr_kpi_group.`DESCRIPTION`, hr_kpi_group.`NUMBER_INDEX` FROM hr_kpi_group \n" +
+                            "INNER JOIN hr_kpi_setting_group ON hr_kpi_group.`KPI_GROUP_ID` = hr_kpi_setting_group.`KPI_GROUP_ID` \n" +
+                            "INNER JOIN hr_kpi_setting ON hr_kpi_setting_group.`KPI_SETTING_ID` = hr_kpi_setting.`KPI_SETTING_ID` \n" +
+                            "WHERE "+ whereClause ;
+            dbrs = DBHandler.execQueryResult(sql);
+            ResultSet rs = dbrs.getResultSet();
+            while (rs.next()) { 
+                KPI_Group entKpiGroup = new KPI_Group();
+                resultToObject(rs, entKpiGroup);
+                lists.add(entKpiGroup);
+            }
+            rs.close();
+            return lists;
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            DBResultSet.close(dbrs);
+        }
+        return new Vector();
+    }
+    
+    public static void resultToObject(ResultSet rs, KPI_Group kPI_Group) {
         try {
             kPI_Group.setOID(rs.getLong(PstKPI_Group.fieldNames[PstKPI_Group.FLD_KPI_GROUP_ID]));
             kPI_Group.setKpi_type_id(rs.getLong(PstKPI_Group.fieldNames[PstKPI_Group.FLD_KPI_TYPE_ID]));
