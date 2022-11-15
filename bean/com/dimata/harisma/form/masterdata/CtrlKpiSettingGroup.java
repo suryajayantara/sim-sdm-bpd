@@ -16,6 +16,7 @@ import com.dimata.qdep.system.*;
 import com.dimata.qdep.form.*;
 import com.dimata.qdep.db.*;
 import com.dimata.harisma.entity.masterdata.*;
+import java.util.Vector;
 
 /*
 Description : Controll KpiSettingGroup
@@ -117,8 +118,17 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
 
                 if (entKpiSettingGroup.getOID() == 0) {
                     try {
-                        long oid = pstKpiSettingGroup.insertExc(this.entKpiSettingGroup);
-                        msgString = FRMMessage.getMessage(FRMMessage.MSG_SAVED);
+                        
+                        Vector<Long> vOidKpiGroup = frmKpiSettingGroup.getvOidKpiGroup();
+                          if (vOidKpiGroup != null){
+                              for(int ux = 0 ; ux < vOidKpiGroup.size();ux++){
+                              KpiSettingGroup objKpiSettingGroup = new KpiSettingGroup();
+                              objKpiSettingGroup.setKpiSettingId(entKpiSettingGroup.getKpiSettingId());
+                              objKpiSettingGroup.setKpiGroupId(vOidKpiGroup.get(ux));
+                              PstKpiSettingGroup.insertExc(objKpiSettingGroup);
+                              }
+                          }
+                        
                     } catch (DBException dbexc) {
                         excCode = dbexc.getErrorCode();
                         msgString = getSystemMessage(excCode);
