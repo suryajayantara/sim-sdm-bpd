@@ -399,18 +399,38 @@
                     <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
                     <span><%= kpiTypeName %> - <%= companyName %></span>
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
-                    <div style="font-size: 15px">Jabatan:
-                        <%
-                            for (int i = 0; i < vListPosisi.size(); i++) {
-                                Position objPosition = (Position) vListPosisi.get(i);
-                        %>
-                            <%= objPosition.getPosition()%>,
-                        <%}%>
+                    <div class="row">
+                        <div class="col-2">
+                            <div style="font-size: 15px">Jabatan</div>
+                            <%
+                                for (int i = 0; i < vListPosisi.size() - 1; i++) {
+                            %>
+                                <div style="font-size: 15px;" class="text-white">S </div>
+
+                            <% } %>
+                            <div style="font-size: 15px">Status</div>
+                            <div style="font-size: 15px">Tanggal Mulai</div>
+                            <div style="font-size: 15px">Tanggal Selesai</div>
+                            <div style="font-size: 15px">Tahun</div>
+                        </div>
+                        <div class="col-10">
+                            <div style="font-size: 15px">:
+                                <%
+                                    for (int i = 0; i < vListPosisi.size(); i++) {
+                                        Position objPosition = (Position) vListPosisi.get(i);
+                                %>
+                                    <%= objPosition.getPosition() %>
+                                    <% if(i != vListPosisi.size() - 1){ %>
+                                        <br> &nbsp;
+                                    <% } %>
+                                <% } %>
+                            </div>
+                            <div style="font-size: 15px">: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
+                            <div style="font-size: 15px">: <%= startD %></div>
+                            <div style="font-size: 15px">: <%= validD %></div>
+                            <div style="font-size: 15px">: <%= year %></div>
+                        </div>
                     </div>
-                    <div style="font-size: 15px">Status: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
-                    <div style="font-size: 15px">Tanggal Mulai: <%= startD %></div>
-                    <div style="font-size: 15px">Tanggal Selesai: <%= validD %></div>
-                    <div style="font-size: 15px">Tahun: <%= year %></div>
                     <div style="border-top: 1px solid #DDD;">&nbsp;</div>
                     <a href="javascript:cmdEdit()" style="color:#FFF;" class="btn-edit btn-edit1" >Edit Kpi Setting</a>
                     <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-simpan btn-simpan1" data-toggle="modal" data-target="#exampleModal"  >Tambah Group Baru  <strong><i class="fa fa-plus"></i></strong></a>
