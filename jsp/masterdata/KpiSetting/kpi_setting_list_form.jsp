@@ -36,6 +36,17 @@
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]);
 
+    Vector vKpiType = new Vector();    
+    Vector vKpiSetting = new Vector();
+    Vector vCompany = new Vector();
+    Vector vListPosisi = new Vector();
+    Vector vKpiSettingGroup = new Vector();
+    int year = 0;
+    long companyOID = 0;
+    String kpiTypeName = "";    
+    String companyName = "";
+    String positionName = "";
+    Date startD = null, validD = null;
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
     long kpiSettingId = (FRMQueryString.requestLong(request, "kpi_setting_id") == 0)? oidKpiSetting : FRMQueryString.requestLong(request, "kpi_setting_id");
@@ -141,24 +152,50 @@
     
 
     /*controlle untuk mengolah data kpi Setting Group*/
-
-    
-    
-    if (oidCompany != 0) {
-        kpiSetting.setCompanyId(oidCompany);
-    } else {
-        oidCompany = kpiSetting.getCompanyId();
-    }
-
-    // untuk mengambil data KPI Setting Type
+Vector kpiType = new Vector();
     try {
         if (oidKpiSettingType != 0) {
             String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
-            kpiType = PstKPI_Type.list(0, 1, query, "");
+            vKpiType = PstKPI_Type.list(0, 1, query, "");
+            for(int i = 0; i < vKpiType.size(); i++){
+                KPI_Type objKpiType = (KPI_Type) vKpiType.get(i);
+                kpiTypeName = objKpiType.getType_name();
+            }
+        }
+        
+        if(oidKpiSetting != 0){
+            // untuk mengambil data jabatan
+            String queryKpiSetting = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
+            vKpiSetting = PstKpiSetting.list(0, 1, queryKpiSetting, "");
+            for(int i = 0; i < vKpiSetting.size(); i++){
+                KpiSetting objKpiSetting = (KpiSetting) vKpiSetting.get(i);
+                companyOID = objKpiSetting.getCompanyId();
+                startD = objKpiSetting.getStartDate();
+                validD = objKpiSetting.getValidDate();
+                year = objKpiSetting.getTahun();
+            }
+            
+            // untuk mengambil data jabatan
+            vListPosisi = PstPosition.listWithJoinKpiSettingPosition(oidKpiSetting);
+            
+
+            // untuk mengambil data kpi group setting
+            String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
+            vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+        }
+        
+        if(companyOID != 0){ // untuk mengambil data company
+            String query = "GEN_ID = '" + companyOID + "'";
+            vCompany = PstCompany.list(0, 1, query, "");
+            for(int i = 0; i < vCompany.size(); i++){
+                Company objCompany = (Company) vCompany.get(i);
+                companyName = objCompany.getCompany();
+            }
         }
     } catch (Exception e) {
         System.out.println("Error fetch :" + e);
     }
+
 
 
 %>
@@ -349,26 +386,40 @@
                 <div class="content-main">
                     <div>&nbsp;</div>
                     <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-                    <%
-                        for (int i = 0; i < kpiType.size(); i++) {
-                            KPI_Type objKpiType = (KPI_Type) kpiType.get(i);
-                    %>
-                    <span><%= objKpiType.getType_name()%> - <%= PstCompany.getCompanyName(oidCompany)%></span>
-                    <% }%>
+                    <span><%= kpiTypeName %> - <%= companyName %></span>
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
-                    <div style="font-size: 15px">Jabatan: <%= oidCompany%>
-                        <%
-                            Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
-                            for (int i = 0; i < vListPosisi.size(); i++) {
-                                Position objPosition = (Position) vListPosisi.get(i);
-                        %>
-                        <%= objPosition.getPosition()%>,
-                        <%}%>
+                    <div class="row">
+                        <div class="col-2">
+                            <div style="font-size: 15px">Jabatan</div>
+                            <%
+                                for (int i = 0; i < vListPosisi.size() - 1; i++) {
+                            %>
+                                <div style="font-size: 15px;" class="text-white">S </div>
+
+                            <% } %>
+                            <div style="font-size: 15px">Status</div>
+                            <div style="font-size: 15px">Tanggal Mulai</div>
+                            <div style="font-size: 15px">Tanggal Selesai</div>
+                            <div style="font-size: 15px">Tahun</div>
+                        </div>
+                        <div class="col-10">
+                            <div style="font-size: 15px">:
+                                <%
+                                    for (int i = 0; i < vListPosisi.size(); i++) {
+                                        Position objPosition = (Position) vListPosisi.get(i);
+                                %>
+                                    <%= objPosition.getPosition() %>
+                                    <% if(i != vListPosisi.size() - 1){ %>
+                                        <br> &nbsp;
+                                    <% } %>
+                                <% } %>
+                            </div>
+                            <div style="font-size: 15px">: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
+                            <div style="font-size: 15px">: <%= startD %></div>
+                            <div style="font-size: 15px">: <%= validD %></div>
+                            <div style="font-size: 15px">: <%= year %></div>
+                        </div>
                     </div>
-                    <div style="font-size: 15px">Status: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
-                    <div style="font-size: 15px">Tanggal Mulai: <%= kpiSetting.getStartDate()%></div>
-                    <div style="font-size: 15px">Tanggal Selesai: <%= kpiSetting.getValidDate()%></div>
-                    <div style="font-size: 15px">Tahun: <%= kpiSetting.getTahun()%></div>
                     <div style="border-top: 1px solid #DDD;">&nbsp;</div>
                     <a href="javascript:cmdEdit()" style="color:#FFF;" class="btn-edit btn-edit1" >Edit Kpi Setting</a>
                     <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-simpan btn-simpan1" data-toggle="modal" data-target="#exampleModal"  >Tambah Group Baru  <strong><i class="fa fa-plus"></i></strong></a>
@@ -379,11 +430,14 @@
                 </div>  
             </form>
         </div>
-
+ <%
+            for(int i = 0; i < vKpiSettingGroup.size(); i++){
+               KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);    
+        %>
         <div class="box mb-5">
             <div class="formstyle">
                 <div class="d-flex justify-content-between">
-                    <span> KPI Group : </span>
+                    <span> <%= objKpiGroup.getGroup_title()%>  </span>
                     <div>
                         <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" data-toggle="modal" data-target="#exampleModal2" >Tambah KPI
                             <strong><i class="fa fa-plus"></i></strong>
@@ -501,6 +555,7 @@
                 </form>       
             </div>
         </div> 
+         <% } %>
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
