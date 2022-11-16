@@ -287,6 +287,31 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         return new Vector();
     }
     
+    public static Vector listWithJoinGroupAndSetting(String whereClause) {
+        Vector lists = new Vector();
+        DBResultSet dbrs = null;
+        try {
+            String sql = "SELECT hr_kpi_list.`KPI_LIST_ID`, hr_kpi_list.`KPI_TITLE`, hr_kpi_list_group.`KPI_GROUP_ID`, hr_kpi_setting_list.`KPI_SETTING_ID` FROM hr_kpi_list \n" +
+                            "LEFT JOIN hr_kpi_setting_list ON hr_kpi_list.KPI_LIST_ID = hr_kpi_setting_list.`KPI_LIST_ID` \n" +
+                            "LEFT JOIN hr_kpi_list_group ON hr_kpi_list.`KPI_LIST_ID` = hr_kpi_list_group.`KPI_LIST_ID` \n" +
+                            "WHERE " + whereClause;
+            dbrs = DBHandler.execQueryResult(sql);
+            ResultSet rs = dbrs.getResultSet();
+            while (rs.next()) { 
+                KPI_List entKpiList = new KPI_List();
+                resultToObject(rs, entKpiList);
+                lists.add(entKpiList);
+            }
+            rs.close();
+            return lists;
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            DBResultSet.close(dbrs);
+        }
+        return new Vector();
+    }
+    
     
     public static Vector listInnerJoinKPIEmpTarget(int limitStart, int recordToGet, String whereClause, String order) {
         Vector lists = new Vector();
