@@ -410,26 +410,36 @@
                             </thead>
                             <tbody>
                                 <%
-                                    for(int j = 0; j < vKpiSettingGroup.size(); j++){
-                                    KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(j);    
+                                    if(vKpiSettingGroup.size() > 0){ 
+                                        for(int j = 0; j < vKpiSettingGroup.size(); j++){
+                                            KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(j);
                                 %>
-                                    <tr>
-                                        <td class="p-3"> <%= objKpiGroup.getGroup_title() %> </td>
-                                        <td> - </td>
-                                        <td> - </td>
-                                        <td> - </td>
-                                        <td class="text-center">
-                                            <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
-                                        </td>
-                                        <td> - </td>
-                                        <td class="text-center">
-                                            <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                            <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                                            <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
-                                        </td>
-                                    </tr>
-                                <% } %>
+                                            <tr>
+                                                <td class="p-3"> <%= objKpiGroup.getGroup_title() %> </td>
+                                                <td> - </td>
+                                                <td> - </td>
+                                                <td> - </td>
+                                                <td class="text-center">
+                                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                                </td>
+                                                <td> - </td>
+                                                <td class="text-center">
+                                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                                    <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
+                                                    <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                                </td>
+                                            </tr>
+                                <% 
+                                        }
+                                    } else { 
+                                %>
+                                            <tr>
+                                                <td class="text-center" colspan="7"> Data tidak ditemukan. </td>
+                                            </tr>
+                                <%
+                                    } 
+                                %>
                             </tbody>
                         </table>
                     </form>
