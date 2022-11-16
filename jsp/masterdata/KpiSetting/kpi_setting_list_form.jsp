@@ -434,7 +434,7 @@ Vector kpiType = new Vector();
             for(int i = 0; i < vKpiSettingGroup.size(); i++){
                KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);    
         %>
-        <div class="box mb-5">
+        <div class="box mb-2">
             <div class="formstyle">
                 <div class="d-flex justify-content-between">
                     <span> <%= objKpiGroup.getGroup_title()%>  </span>
