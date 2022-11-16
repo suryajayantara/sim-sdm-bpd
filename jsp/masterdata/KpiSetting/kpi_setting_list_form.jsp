@@ -41,6 +41,7 @@
     Vector vCompany = new Vector();
     Vector vListPosisi = new Vector();
     Vector vKpiSettingGroup = new Vector();
+    Vector vKpiList = new Vector();
     int year = 0;
     long companyOID = 0;
     String kpiTypeName = "";    
@@ -152,7 +153,7 @@
     
 
     /*controlle untuk mengolah data kpi Setting Group*/
-Vector kpiType = new Vector();
+    Vector kpiType = new Vector();
     try {
         if (oidKpiSettingType != 0) {
             String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
@@ -430,7 +431,7 @@ Vector kpiType = new Vector();
                 </div>  
             </form>
         </div>
- <%
+        <%
             for(int i = 0; i < vKpiSettingGroup.size(); i++){
                KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);    
         %>
@@ -453,14 +454,21 @@ Vector kpiType = new Vector();
                     <div>&nbsp;</div>
                     <table class="tblStyle" style="width: 100%;">
                         <thead class="text-center">
-                            <tr>
-                                <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
-                                <th class="title_tbl">Distribution Option</th>
-                                <th class="title_tbl">Satuan Ukur</th>
-                                <th class="title_tbl">Target</th>
-                                <th class="title_tbl">Bobot</th>
-                                <th class="title_tbl">Action</th>
-                            </tr>
+                            <%
+                                String queryKpiList = "WHERE hr_kpi_list_group.`KPI_GROUP_ID` = '"+ objKpiGroup.getKpi_group_id() +"' AND  hr_kpi_setting_list.`KPI_SETTING_ID` = '"+ oidKpiSetting +"'";
+                                vKpiList = PstKPI_List.listWithJoinGroupAndSetting(queryKpiList);
+                                for(int j = 0; j < vKpiList.size(); j++){
+                                   KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
+                            %>
+                                <tr>
+                                    <th class="title_tbl" style="width: 20%;"> <%= objKpiList.getKpi_title() %> </th>
+                                    <th class="title_tbl">-</th>
+                                    <th class="title_tbl">-</th>
+                                    <th class="title_tbl">-</th>
+                                    <th class="title_tbl">-</th>
+                                    <th class="title_tbl">-</th>
+                                </tr>
+                            <% } %>
                         </thead>
                         <tbody>
                             
