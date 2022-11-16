@@ -28,9 +28,12 @@
 <!DOCTYPE html>
 
 
-<%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+<%    
+    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
+
+    Vector vKpiSettingGroup = new Vector();
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
     long kpiSettingId = FRMQueryString.requestLong(request, "kpi_setting_id");
@@ -159,6 +162,15 @@
             strDisable = "disabled=\"disabled\"";
         }
 
+    }
+
+    try {
+        if(oidKpiSetting != 0){// untuk mengambil data kpi group setting
+            String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
+            vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+        }
+    } catch (Exception e) {
+        System.out.println("Error fetch :" + e);
     }
 
 %>
@@ -360,271 +372,7 @@
             if (kpiSetting.getOID() > 0) {
         %>
         <!--Tampilan form setelah input data kpi type-->
-        <%
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+        <%           
             Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
             for (int i = 0; i < vKpiSetting.size(); i++) {
                 KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
@@ -661,29 +409,33 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="p-3">kpi group</td>
-                                    <td>KPI</td>
-                                    <td>distribution option</td>
-                                    <td>satuan ukur</td>
-                                    <td class="text-center">
-                                        <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                            <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
-                                    </td>
-                                    <td>bobot</td>
-                                    <td class="text-center">
-                                        <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                                        <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
-                                    </td>
-                                </tr>
+                                <%
+                                    for(int j = 0; j < vKpiSettingGroup.size(); j++){
+                                    KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(j);    
+                                %>
+                                    <tr>
+                                        <td class="p-3"> <%= objKpiGroup.getGroup_title() %> </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td> - </td>
+                                        <td class="text-center">
+                                            <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                        </td>
+                                        <td> - </td>
+                                        <td class="text-center">
+                                            <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                            <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
+                                            <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                        </td>
+                                    </tr>
+                                <% } %>
                             </tbody>
                         </table>
                     </form>
                 </div>
         <%
-                } else {
-
+            } else {
         %>
                 <div class="formstyle mb-3">
                     <table class="tblStyle" style="width: 100%;">
@@ -714,9 +466,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-
                     <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type</h5>
-
                 </div>
                 <div class="modal-body">
                     <form name="FRM_NAME_KPISETTINGTYPE" method ="post" action="">
@@ -744,15 +494,11 @@
                                         }
 
                                 %>
-
-                                <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option>
+                                    <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option>
                                 <%
                                     }
                                 %>
-
-
                             </select>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
