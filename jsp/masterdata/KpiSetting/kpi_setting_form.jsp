@@ -5,6 +5,8 @@
 --%>
 
 
+<%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
+<%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingList"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingList"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKPI_List"%>
@@ -32,6 +34,7 @@
     long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
+    long oidKpiSettingGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]);
 
     Vector vKpiSettingGroup = new Vector();
 
@@ -128,6 +131,16 @@
     if (iCommand == Command.EDIT && kpiSettingType != null && kpiSettingType.exists()) {
 
     }
+    
+    CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
+    if (typeform == 3) {
+        long iErrCode = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
+        if (iCommand == Command.SAVE) {
+            iCommand = 0;
+        }
+    }
+    KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
+
     /*end*/
 
     /*digunakan untuk button edit agar sesuai dengan oid tabel utama,
@@ -148,6 +161,7 @@
     }
     KpiSettingList kpiSettingList = ctrlKpiSettingList.getKpiSettingList();
 
+    
     if (oidCompany != 0) {
         kpiSetting.setCompanyId(oidCompany);
     } else {
@@ -257,7 +271,7 @@
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="typeform" value="1">
                 <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
-                <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getKpiSettingId()%>">
+                <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getKpiSettingId()%>">             
                 <input type="hidden" name="kpiSettingId" value="<%=oidKpiSetting%>">
                 <input type="hidden" name="delete_for">
                 <input type="hidden" name="urlBack" value="kpi_setting_form.jsp">
@@ -396,6 +410,8 @@
                         <input type="hidden" name="command" value="<%=iCommand%>">
                         <input type="hidden" name="typeform" value="3">
                         <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+                        <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId() %>">
+
                         <table class="tblStyle" style="width: 100%;">
                             <thead class="text-center">
                                 <tr>
@@ -415,7 +431,7 @@
                                             KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(j);
                                 %>
                                             <tr>
-                                                <td class="p-3"> <%= objKpiGroup.getGroup_title() %> </td>
+                                                <td class="p-3" value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title() %> </td>
                                                 <td> - </td>
                                                 <td> - </td>
                                                 <td> - </td>
@@ -427,7 +443,7 @@
                                                 <td class="text-center">
                                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                                                     <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                                                    <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                                    <a href="javascript:cmdDeleteKpiGroup('<%=objKpiGroup.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
                                                 </td>
                                             </tr>
                                 <% 
@@ -631,7 +647,15 @@
             document.FRM_NAME_KPISETTING.action = "kpi_setting_target.jsp";
             document.FRM_NAME_KPISETTING.submit();
         }
-        var popup;
+        
+        function cmdDeleteKpiGroup(oid) {
+                document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
+                document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.DELETE %>";
+                document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLIST.submit();
+            }
+        
+        var popup; 
 
         function init(oidKpiSetting, oidKpiType) {
             document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
@@ -655,14 +679,5 @@
             });
         })
     </script>
-
-    <script langueage="javascript">
-    //            function cmdBack() {
-    //                document.FRM_NAME_KPISETTING.command.value = "<%=Command.LIST%>";
-    //                document.FRM_NAME_KPISETTING.action = "kpi_setting_list.jsp";
-    //                document.FRM_NAME_KPISETTING.submit();
-    //            }
-    </script>
-
 </html>
 

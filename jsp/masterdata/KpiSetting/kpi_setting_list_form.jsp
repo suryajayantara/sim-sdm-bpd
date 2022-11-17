@@ -34,22 +34,22 @@
 <%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
-    long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]);
+    long oidKpiGroupBuatNambahGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_ID]);
 
-    Vector vKpiType = new Vector();    
+    Vector vKpiType = new Vector();
     Vector vKpiSetting = new Vector();
     Vector vCompany = new Vector();
     Vector vListPosisi = new Vector();
     Vector vKpiSettingGroup = new Vector();
     int year = 0;
     long companyOID = 0;
-    String kpiTypeName = "";    
+    String kpiTypeName = "";
     String companyName = "";
     String positionName = "";
     Date startD = null, validD = null;
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
-    long kpiSettingId = (FRMQueryString.requestLong(request, "kpi_setting_id") == 0)? oidKpiSetting : FRMQueryString.requestLong(request, "kpi_setting_id");
+    long kpiSettingId = (FRMQueryString.requestLong(request, "kpi_setting_id") == 0) ? oidKpiSetting : FRMQueryString.requestLong(request, "kpi_setting_id");
     int iCommand = FRMQueryString.requestCommand(request);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     long oidCompany = FRMQueryString.requestLong(request, "company");
@@ -94,20 +94,18 @@
     /* ADD Data Kpi Setting */
     //String sValidDate= FRMQueryString.requestString(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]);
     //sValidDate = sValidDate; 
-
     CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
-    if (typeform == 1){
-    long iErrCodeSetttingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiGroupBuatNambahGroup, request);
-    if (iCommand == Command.SAVE) {
-        iCommand = 0;
-    }
+    if (typeform == 1) {
+        long iErrCodeSetttingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiGroupBuatNambahGroup, request);
+        if (iCommand == Command.SAVE) {
+            iCommand = 0;
+        }
     }
     KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
 
-    
     /*controller untuk simpan data kpi setting*/
     CtrlKpiSetting ctrlKpiSetting = new CtrlKpiSetting(request);
-    if (typeform == 3){
+    if (typeform == 3) {
         long iErrCode = ctrlKpiSetting.action(iCommand, oidKpiSetting, request);
         if (iCommand == Command.SAVE) {
             iCommand = 0;
@@ -117,7 +115,7 @@
 
     /*controller untuk save data kpi setting list*/
     CtrlKpiSettingList ctrlKpiSettingList = new CtrlKpiSettingList(request);
-    if (typeform == 2){
+    if (typeform == 2) {
         long iErrCodeSetttingList = ctrlKpiSettingList.action(iCommand, oidKpiSettingList, request);
         if (iCommand == Command.SAVE) {
             iCommand = 0;
@@ -149,45 +147,42 @@
         validDate = Formater.formatDate(kpiSetting.getValidDate(), "yyyy-MM-dd");
     }
 
-    
-
     /*controlle untuk mengolah data kpi Setting Group*/
-Vector kpiType = new Vector();
+    Vector kpiType = new Vector();
     try {
         if (oidKpiSettingType != 0) {
             String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
             vKpiType = PstKPI_Type.list(0, 1, query, "");
-            for(int i = 0; i < vKpiType.size(); i++){
+            for (int i = 0; i < vKpiType.size(); i++) {
                 KPI_Type objKpiType = (KPI_Type) vKpiType.get(i);
                 kpiTypeName = objKpiType.getType_name();
             }
         }
-        
-        if(oidKpiSetting != 0){
+
+        if (oidKpiSetting != 0) {
             // untuk mengambil data jabatan
             String queryKpiSetting = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
             vKpiSetting = PstKpiSetting.list(0, 1, queryKpiSetting, "");
-            for(int i = 0; i < vKpiSetting.size(); i++){
+            for (int i = 0; i < vKpiSetting.size(); i++) {
                 KpiSetting objKpiSetting = (KpiSetting) vKpiSetting.get(i);
                 companyOID = objKpiSetting.getCompanyId();
                 startD = objKpiSetting.getStartDate();
                 validD = objKpiSetting.getValidDate();
                 year = objKpiSetting.getTahun();
             }
-            
+
             // untuk mengambil data jabatan
             vListPosisi = PstPosition.listWithJoinKpiSettingPosition(oidKpiSetting);
-            
 
             // untuk mengambil data kpi group setting
             String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
             vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
         }
-        
-        if(companyOID != 0){ // untuk mengambil data company
+
+        if (companyOID != 0) { // untuk mengambil data company
             String query = "GEN_ID = '" + companyOID + "'";
             vCompany = PstCompany.list(0, 1, query, "");
-            for(int i = 0; i < vCompany.size(); i++){
+            for (int i = 0; i < vCompany.size(); i++) {
                 Company objCompany = (Company) vCompany.get(i);
                 companyName = objCompany.getCompany();
             }
@@ -195,7 +190,6 @@ Vector kpiType = new Vector();
     } catch (Exception e) {
         System.out.println("Error fetch :" + e);
     }
-
 
 
 %>
@@ -279,44 +273,32 @@ Vector kpiType = new Vector();
             }
 
             function cmdAdd() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.ADD%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
+                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTING.submit();
             }
 
-            function cmdAddKpiSettingList() {
-                document.FRM_NAME_KPISETTINGLISTFORM.targetId.value = 0;
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.ADD%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
+
             function cmdSave() {
                 document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
-//            function cmdSaveKpiSettingGroup() {
-//                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
-//                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
-//                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-//            }
-            function cmdSaveKpiType() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
+
 
             function cmdSaveKpi() {
                 document.FRM_NAME_KPI.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPI.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPI.submit();
             }
+
             function cmdEdit(oid) {
                 document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.EDIT%>";
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_target.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
+
             var popup;
             function init() {
                 onload = "init()";
@@ -379,14 +361,14 @@ Vector kpiType = new Vector();
         <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
 
         <div class="box">
-            <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
+            <form name="FRM_NAME_KPISETTING" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="urlBack" value="kpi_setting_list_detail.jsp">
                 <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
                 <div class="content-main">
                     <div>&nbsp;</div>
                     <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-                    <span><%= kpiTypeName %> - <%= companyName %></span>
+                    <span><%= kpiTypeName%> - <%= companyName%></span>
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
                     <div class="row">
                         <div class="col-2">
@@ -394,7 +376,7 @@ Vector kpiType = new Vector();
                             <%
                                 for (int i = 0; i < vListPosisi.size() - 1; i++) {
                             %>
-                                <div style="font-size: 15px;" class="text-white">S </div>
+                            <div style="font-size: 15px;" class="text-white">S </div>
 
                             <% } %>
                             <div style="font-size: 15px">Status</div>
@@ -408,16 +390,16 @@ Vector kpiType = new Vector();
                                     for (int i = 0; i < vListPosisi.size(); i++) {
                                         Position objPosition = (Position) vListPosisi.get(i);
                                 %>
-                                    <%= objPosition.getPosition() %>
-                                    <% if(i != vListPosisi.size() - 1){ %>
-                                        <br> &nbsp;
-                                    <% } %>
+                                <%= objPosition.getPosition()%>
+                                <% if (i != vListPosisi.size() - 1) { %>
+                                <br> &nbsp;
                                 <% } %>
+                                <% }%>
                             </div>
                             <div style="font-size: 15px">: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
-                            <div style="font-size: 15px">: <%= startD %></div>
-                            <div style="font-size: 15px">: <%= validD %></div>
-                            <div style="font-size: 15px">: <%= year %></div>
+                            <div style="font-size: 15px">: <%= startD%></div>
+                            <div style="font-size: 15px">: <%= validD%></div>
+                            <div style="font-size: 15px">: <%= year%></div>
                         </div>
                     </div>
                     <div style="border-top: 1px solid #DDD;">&nbsp;</div>
@@ -430,26 +412,29 @@ Vector kpiType = new Vector();
                 </div>  
             </form>
         </div>
- <%
-            for(int i = 0; i < vKpiSettingGroup.size(); i++){
-               KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);    
+        <%
+            for (int i = 0; i < vKpiSettingGroup.size(); i++) {
+                KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);
         %>
-        <div class="box mb-2">
-            <div class="formstyle">
-                <div class="d-flex justify-content-between">
-                    <span> <%= objKpiGroup.getGroup_title()%>  </span>
-                    <div>
-                        <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" data-toggle="modal" data-target="#exampleModal2" >Tambah KPI
-                            <strong><i class="fa fa-plus"></i></strong>
-                        </a>
-                        <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
-                            <strong><i class="fa fa-trash"></i></strong>
-                        </a>
+        <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
+            <input type="hidden" name="command" value="<%=iCommand%>">
+            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+            <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingId() %>">
+            <input type="hidden" name="typeform" value="1">
+            <div class="box mb-5">
+                <div  class="formstyle">
+                    <div class="d-flex justify-content-between">
+                        <span value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title()%> </span>
+                        <div>
+                            <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" data-toggle="modal" data-target="#exampleModal2" >Tambah KPI
+                                <strong><i class="fa fa-plus"></i></strong>
+                            </a>
+                            <a href="javascript:cmdDeleteGroup('<%=objKpiGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                                <strong><i class="fa fa-trash"></i></strong>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
-                    <input type="hidden" name="command" value="<%=iCommand%>">
-                    <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+
                     <div>&nbsp;</div>
                     <table class="tblStyle" style="width: 100%;">
                         <thead class="text-center">
@@ -463,7 +448,7 @@ Vector kpiType = new Vector();
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             <tr>
                                 <td>
                                     <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
@@ -546,16 +531,16 @@ Vector kpiType = new Vector();
                             <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                             <div class="responsive-container">
                                 <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
-                                <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                <a href="" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
                             </div>
                         </td>
                         </tr>
                         </tbody>
-                    </table>
-                </form>       
-            </div>
-        </div> 
-         <% } %>
+                    </table>    
+                </div>
+            </div> 
+        </form> 
+        <% }%>
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -564,13 +549,13 @@ Vector kpiType = new Vector();
                     </div>                            
                     <div class="modal-body">
                         <form name="FRM_NAME_KPISETTINGGROUP" method ="post" action="">
-                            <input type="hidden" name="command" value="<%=Command.SAVE %>">
+                            <input type="hidden" name="command" value="<%= iCommand%>">
                             <input type="hidden" name="typeform" value="1">
-                            <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingGroupId() %>">
-                            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting %>">
+                            <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingGroupId()%>">
+                            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
                             <div class="form-group">
-                             <label for="exampleInputPassword">KPI Group</label>
-                            <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
+                                <label for="exampleInputPassword">KPI Group</label>
+                                <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
                                     <option value="">=Select=</option>
                                     <%
                                         Vector listKpiGroup = PstKPI_Group.list(0, 0, "", "");
@@ -588,26 +573,22 @@ Vector kpiType = new Vector();
 
                                     %>
 
-                                    <option value="<%=objKpiGroup.getOID()%>" <%=selected%>><%=objKpiGroup.getGroup_title() %></option>
+                                    <option value="<%=objKpiGroup.getOID()%>" <%=selected%>><%=objKpiGroup.getGroup_title()%></option>
                                     <%
                                         }
                                     %>
-
-
                                 </select>
-   
-                                
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <a href="javascript:cmdSaveKpiSettingGroup()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a href="javascript:cmdSaveKpiSettingGroup()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
+                                </div>
                             </div>
                         </form> 
                     </div>
                 </div>
             </div>
         </div>
-        </div>
-                                
+
         <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -616,10 +597,10 @@ Vector kpiType = new Vector();
                     </div>                            
                     <div class="modal-body">
                         <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
-                            <input type="hidden" name="command" value="<%=Command.SAVE %>">
+                            <input type="hidden" name="command" value="<%=Command.SAVE%>">
                             <input type="hidden" name="typeform" value="2">
-                            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getKpiSettingListId() %>">
-                            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting %>">
+                            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getKpiSettingListId()%>">
+                            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
 
                             <div class="form-group">
                                 <label for="exampleInputPassword">Kpi</label>
@@ -641,41 +622,38 @@ Vector kpiType = new Vector();
 
                                     %>
 
-                                    <option value="<%=objKpi.getOID()%>" <%=selected%>><%=objKpi.getKpi_title() %></option>
+                                    <option value="<%=objKpi.getOID()%>" <%=selected%>><%=objKpi.getKpi_title()%></option>
                                     <%
                                         }
                                     %>
-
-
                                 </select>
-
                             </div>
-                                    <div class="form-group">
-                                        <label>Distribution</label>
-                                        <select name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_DISTRIBUTION_ID]%>" style="width: 100%;" class="form-control form-control-sm custom-select">
-                                        <option>=Select=</option>
-                                        <%
-                                            Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
-                                            for (int i = 0; i < listKpiDistribution.size(); i++) {
-                                                KpiDistribution objKpiDistribution = (KpiDistribution) listKpiDistribution.get(i);
-                                                String selected = "";
-                                                if (oid_kpi_distribution != null) {
-                                                    for (int j = 0; j < oid_kpi_distribution.length; j++) {
-                                                        String oidKpiDistribution = "" + objKpiDistribution.getOID();
-                                                        if (oidKpiDistribution.equals("" + oid_kpi_distribution[j])) {
-                                                            selected = "selected";
-                                                        }
+                            <div class="form-group">
+                                <label>Distribution</label>
+                                <select name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_DISTRIBUTION_ID]%>" style="width: 100%;" class="form-control form-control-sm custom-select">
+                                    <option>=Select=</option>
+                                    <%
+                                        Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
+                                        for (int i = 0; i < listKpiDistribution.size(); i++) {
+                                            KpiDistribution objKpiDistribution = (KpiDistribution) listKpiDistribution.get(i);
+                                            String selected = "";
+                                            if (oid_kpi_distribution != null) {
+                                                for (int j = 0; j < oid_kpi_distribution.length; j++) {
+                                                    String oidKpiDistribution = "" + objKpiDistribution.getOID();
+                                                    if (oidKpiDistribution.equals("" + oid_kpi_distribution[j])) {
+                                                        selected = "selected";
                                                     }
                                                 }
-                                        %>
-
-                                        <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
-                                        <%
                                             }
-        
+                                    %>
+
+                                    <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
+                                    <%
+                                        }
+
                                     %>
                                 </select> 
-                                    </div>
+                            </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -686,25 +664,23 @@ Vector kpiType = new Vector();
                 </div>
             </div>
         </div>
-
-
         <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script language="JavaScript">
-            //var oBody = document.body;
-            //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+        //var oBody = document.body;
+        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-            $(function () {
-                //Initialize Select2 Elements
-                $('.select2').select2()
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
 
-                //Initialize Select2 Elements
+            //Initialize Select2 Elements
 
-                $('.select2bs4').select2({
-                    theme: 'bootstrap4'
-                })
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
             })
+        })
 
         </script>
         <script type="text/javascript">
@@ -732,14 +708,20 @@ Vector kpiType = new Vector();
         </script>
         <script>
             function cmdSaveKpiSettingGroup() {
-//                document.FRM_NAME_KPISETTINGGROUP.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGGROUP.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPISETTINGGROUP.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGGROUP.submit();
             }
-                function cmdSaveKpiSettingList() {
+            function cmdSaveKpiSettingList() {
 //                document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLIST.submit();
+            }
+            function cmdDeleteGroup(oid) {
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_ID]%>.value=oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
         </script>
 

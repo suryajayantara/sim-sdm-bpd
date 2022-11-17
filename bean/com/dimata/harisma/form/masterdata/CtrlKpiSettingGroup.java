@@ -192,8 +192,10 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
             case Command.DELETE:
                 if (oidKpiSettingGroup != 0) {
                     try {
-                        long oid = PstKpiSettingGroup.deleteExc(oidKpiSettingGroup);
-                        if (oid != 0) {
+                        PstKpiSettingGroup pstkpiSettingGroup = new PstKpiSettingGroup();
+                        long kpiSettingGroup = PstKpiSettingGroup.deleteByKpiGroup(oidKpiSettingGroup);
+                        if (kpiSettingGroup != 0) {
+                            long oid = PstKpiSettingGroup.deleteExc(oidKpiSettingGroup);
                             msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);
                             excCode = RSLT_OK;
                         } else {
