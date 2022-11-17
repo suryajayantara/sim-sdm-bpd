@@ -469,7 +469,10 @@
                                         KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
                             %>
                             <tr>
-                                <td> <%= objKpiList.getKpi_title()%> </td>
+                                <td>
+                                    <%= objKpiList.getKpi_title()%> 
+                                    <i class="fa fa-question-circle-o fa-lg" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-content="<%= objKpiList.getDescription() %>"></i>
+                                </td>
                                 <td></td>
                                 <td>
                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
@@ -638,7 +641,9 @@
         <script language="JavaScript">
             //var oBody = document.body;
             //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
-
+            $(document).ready(function(){
+              $('[data-toggle="popover"]').popover();
+            });
             $(function () {
                 //Initialize Select2 Elements
                 $('.select2').select2()
@@ -649,7 +654,6 @@
                     theme: 'bootstrap4'
                 })
             })
-
         </script>
         <script type="text/javascript">
             var config = {

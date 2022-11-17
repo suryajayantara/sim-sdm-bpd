@@ -290,7 +290,7 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         Vector lists = new Vector();
         DBResultSet dbrs = null;
         try {
-            String sql = "SELECT hr_kpi_list.`KPI_TITLE` FROM hr_kpi_setting \n"
+            String sql = "SELECT hr_kpi_list.`KPI_TITLE`, hr_kpi_list.`DESCRIPTION` FROM hr_kpi_setting \n"
                     + "INNER JOIN hr_kpi_setting_group ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_group.`KPI_SETTING_ID` \n"
                     + "INNER JOIN hr_kpi_setting_list ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_list.`KPI_SETTING_ID` \n"
                     + "INNER JOIN hr_kpi_list ON hr_kpi_setting_list.`KPI_LIST_ID` = hr_kpi_list.`KPI_LIST_ID` \n"
@@ -369,6 +369,7 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
     public static void resultToObjectGetTitle(ResultSet rs, KPI_List kPI_List) {
         try {
             kPI_List.setKpi_title(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_TITLE]));
+            kPI_List.setDescription(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_DESCRIPTION]));
         } catch (Exception e) {
             System.out.println(e);
         }
