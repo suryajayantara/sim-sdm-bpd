@@ -438,7 +438,7 @@
         <div class="box mb-2">
             <div class="formstyle">
                 <div class="d-flex justify-content-between">
-                    <span> <%= objKpiGroup.getGroup_title()%>  </span>
+                    <span> <%= objKpiGroup.getGroup_title()%> </span>
                     <div>
                         <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" data-toggle="modal" data-target="#exampleModal2" >Tambah KPI
                             <strong><i class="fa fa-plus"></i></strong>
@@ -455,7 +455,7 @@
                     <table class="tblStyle" style="width: 100%;">
                         <thead class="text-center">
                             <%
-                                String queryKpiList = "WHERE hr_kpi_list_group.`KPI_GROUP_ID` = '"+ objKpiGroup.getKpi_group_id() +"' AND  hr_kpi_setting_list.`KPI_SETTING_ID` = '"+ oidKpiSetting +"'";
+                                String queryKpiList = "hr_kpi_list_group.`KPI_GROUP_ID` = '"+ objKpiGroup.getOID() +"' AND  hr_kpi_setting_list.`KPI_SETTING_ID` = '"+ oidKpiSetting +"'";
                                 vKpiList = PstKPI_List.listWithJoinGroupAndSetting(queryKpiList);
                                 for(int j = 0; j < vKpiList.size(); j++){
                                    KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
