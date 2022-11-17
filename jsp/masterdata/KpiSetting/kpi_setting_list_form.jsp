@@ -196,9 +196,6 @@
     } catch (Exception e) {
         System.out.println("Error fetch :" + e);
     }
-
-
-
 %>
 <html>
     <head>
@@ -438,7 +435,7 @@
         <div class="box mb-2">
             <div class="formstyle">
                 <div class="d-flex justify-content-between">
-                    <span> <%= objKpiGroup.getGroup_title()%> </span>
+                    <span> <%= objKpiGroup.getGroup_title()%> - <%= objKpiGroup.getOID() %> </span>
                     <div>
                         <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" data-toggle="modal" data-target="#exampleModal2" >Tambah KPI
                             <strong><i class="fa fa-plus"></i></strong>
@@ -454,110 +451,41 @@
                     <div>&nbsp;</div>
                     <table class="tblStyle" style="width: 100%;">
                         <thead class="text-center">
-                            <%
-                                String queryKpiList = "hr_kpi_list_group.`KPI_GROUP_ID` = '"+ objKpiGroup.getOID() +"' AND  hr_kpi_setting_list.`KPI_SETTING_ID` = '"+ oidKpiSetting +"'";
-                                vKpiList = PstKPI_List.listWithJoinGroupAndSetting(queryKpiList);
-                                for(int j = 0; j < vKpiList.size(); j++){
-                                   KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
-                            %>
                                 <tr>
-                                    <th class="title_tbl" style="width: 20%;"> <%= objKpiList.getKpi_title() %> </th>
-                                    <th class="title_tbl">-</th>
-                                    <th class="title_tbl">-</th>
+                                    <th class="title_tbl" style="width: 20%;"> Kpi Performance </th>
+                                    <th class="title_tbl">Distribution Option</th>
+                                    <th class="title_tbl">Satuan Ukur</th>
                                     <th class="title_tbl">-</th>
                                     <th class="title_tbl">-</th>
                                     <th class="title_tbl">-</th>
                                 </tr>
-                            <% } %>
                         </thead>
                         <tbody>
-                            
+                            <%
+                                String queryKpiList = "hr_kpi_setting_group.`KPI_GROUP_ID`='"+ objKpiGroup.getOID() +"' AND hr_kpi_setting_list.`KPI_SETTING_ID` = '"+ oidKpiSetting +"'";
+                                vKpiList = PstKPI_List.listWithJoinSettingAndGroup(queryKpiList);
+                                for(int j = 0; j < vKpiList.size(); j++){
+                                   KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
+                            %>
                             <tr>
-                                <td>
-                                    <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                        <option>Select</option>
-                                        <%
-                                            Vector listKpi = PstKPI_List.list(0, 0, "", "");
-                                            for (int i = 0; i < listKpi.size(); i++) {
-                                                KPI_List objKpi = (KPI_List) listKpi.get(i);
-                                                String selected = "";
-                                                if (oid_kpi != null) {
-                                                    for (int j = 0; j < oid_kpi.length; j++) {
-                                                        String oidKpi = "" + objKpi.getOID();
-                                                        if (oidKpi.equals("" + oid_kpi[j])) {
-                                                            selected = "selected";
-                                                        }
-                                                    }
-                                            %>
-
-                                        <option value="<%=objKpi.getOID()%>" <%=selectedKpi%>><%=objKpi.getKpi_title()%></option>
-                                        <%
-                                            }
-        
-                                    %>
-        
-                                    <option value="<%=objKpi.getOID()%>" <%=selected%>><%=objKpi.getKpi_title()%></option>
-                                    <%
-                                        }
-                                    %>
-                                </select> --%>
-                                    Kpi Performance
-                                </td>
-                                <td>
-                                    <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                        <option>Select</option>
-                                        <%
-                                            Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
-                                            for (int i = 0; i < listKpiDistribution.size(); i++) {
-                                                KpiDistribution objKpiDistribution = (KpiDistribution) listKpiDistribution.get(i);
-                                                String selected = "";
-                                                if (oid_kpi != null) {
-                                                    for (int j = 0; j < oid_kpi.length; j++) {
-                                                        String oidKpiDistribution = "" + objKpiDistribution.getOID();
-                                                        if (oidKpiDistribution.equals("" + oid_kpi_distribution[j])) {
-                                                            selected = "selected";
-                                                        }
-                                                    }
-
-                                        %>
-
-                                        <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
-                                        <%
-                                            }
-        
-                                    %>
-        
-                                    <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
-                                    <%
-                                        }
-                                    %>
-                                </select> --%>
-                                    Distribution Option
-                                </td>
-                                <td>
-                                    <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                        <option value="">Select</option>
-                                        <option value="0">Persentase</option>
-                                        <option value="1">Waktu</option>
-                                        <option value="2">Jumlah</option>
-                                    </select> --%>
-                                    Satuan Ukur
-                                </td>
+                                <td> <%= objKpiList.getKpi_title()%> </td>
+                                <td></td>
                                 <td>
                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                        <center>
-                            <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
-                        </center>
-                        </td>
-                        <td>10</td>
-                        <td>
-                            <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                            <div class="responsive-container">
-                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
-                                <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
-                            </div>
-                        </td>
-                        </tr>
+                                    <center>
+                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                    </center>
+                                </td>
+                                <td>10</td>
+                                <td>
+                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                    <div class="responsive-container">
+                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
+                                        <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% } %>
                         </tbody>
                     </table>
                 </form>       

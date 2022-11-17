@@ -421,7 +421,7 @@
                                                 <td> - </td>
                                                 <td class="text-center">
                                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF" class="btn-edit btn-edit1">Edit</a>
                                                 </td>
                                                 <td> - </td>
                                                 <td class="text-center">
