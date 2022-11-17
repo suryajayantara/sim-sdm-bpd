@@ -41,6 +41,7 @@
     Vector vCompany = new Vector();
     Vector vListPosisi = new Vector();
     Vector vKpiSettingGroup = new Vector();
+    Vector vKpiList = new Vector();
     int year = 0;
     long companyOID = 0;
     String kpiTypeName = "";
@@ -190,8 +191,6 @@
     } catch (Exception e) {
         System.out.println("Error fetch :" + e);
     }
-
-
 %>
 <html>
     <head>
@@ -438,103 +437,52 @@
                     <div>&nbsp;</div>
                     <table class="tblStyle" style="width: 100%;">
                         <thead class="text-center">
-                            <tr>
-                                <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
-                                <th class="title_tbl">Distribution Option</th>
-                                <th class="title_tbl">Satuan Ukur</th>
-                                <th class="title_tbl">Target</th>
-                                <th class="title_tbl">Bobot</th>
-                                <th class="title_tbl">Action</th>
-                            </tr>
+                                <tr>
+                                    <th class="title_tbl" style="width: 20%;"> Kpi Performance </th>
+                                    <th class="title_tbl">Distribution Option</th>
+                                    <th class="title_tbl">Satuan Ukur</th>
+                                    <th class="title_tbl">-</th>
+                                    <th class="title_tbl">-</th>
+                                    <th class="title_tbl">-</th>
+                                </tr>
                         </thead>
                         <tbody>
-
+                            <%
+                                String queryKpiList = "hr_kpi_setting_group.`KPI_GROUP_ID`='"+ objKpiGroup.getOID() +"' AND hr_kpi_setting_list.`KPI_SETTING_ID` = '"+ oidKpiSetting +"'";
+                                vKpiList = PstKPI_List.listWithJoinSettingAndGroup(queryKpiList);
+                                if(vKpiList.size() > 0){
+                                    for(int j = 0; j < vKpiList.size(); j++){
+                                        KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
+                            %>
                             <tr>
                                 <td>
-                                    <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                        <option>Select</option>
-                                        <%
-                                            Vector listKpi = PstKPI_List.list(0, 0, "", "");
-                                            for (int i = 0; i < listKpi.size(); i++) {
-                                                KPI_List objKpi = (KPI_List) listKpi.get(i);
-                                                String selected = "";
-                                                if (oid_kpi != null) {
-                                                    for (int j = 0; j < oid_kpi.length; j++) {
-                                                        String oidKpi = "" + objKpi.getOID();
-                                                        if (oidKpi.equals("" + oid_kpi[j])) {
-                                                            selected = "selected";
-                                                        }
-                                                    }
-                                            %>
-
-                                        <option value="<%=objKpi.getOID()%>" <%=selectedKpi%>><%=objKpi.getKpi_title()%></option>
-                                        <%
-                                            }
-        
-                                    %>
-        
-                                    <option value="<%=objKpi.getOID()%>" <%=selected%>><%=objKpi.getKpi_title()%></option>
-                                    <%
-                                        }
-                                    %>
-                                </select> --%>
-                                    Kpi Performance
+                                    <%= objKpiList.getKpi_title()%> 
+                                    <i class="fa fa-question-circle-o fa-lg" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-content="<%= objKpiList.getDescription() %>"></i>
                                 </td>
-                                <td>
-                                    <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                        <option>Select</option>
-                                        <%
-                                            Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
-                                            for (int i = 0; i < listKpiDistribution.size(); i++) {
-                                                KpiDistribution objKpiDistribution = (KpiDistribution) listKpiDistribution.get(i);
-                                                String selected = "";
-                                                if (oid_kpi != null) {
-                                                    for (int j = 0; j < oid_kpi.length; j++) {
-                                                        String oidKpiDistribution = "" + objKpiDistribution.getOID();
-                                                        if (oidKpiDistribution.equals("" + oid_kpi_distribution[j])) {
-                                                            selected = "selected";
-                                                        }
-                                                    }
-
-                                        %>
-
-                                        <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
-                                        <%
-                                            }
-        
-                                    %>
-        
-                                    <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
-                                    <%
-                                        }
-                                    %>
-                                </select> --%>
-                                    Distribution Option
-                                </td>
-                                <td>
-                                    <%-- <select style="width: 100%;" class="form-control form-control-sm custom-select">
-                                        <option value="">Select</option>
-                                        <option value="0">Persentase</option>
-                                        <option value="1">Waktu</option>
-                                        <option value="2">Jumlah</option>
-                                    </select> --%>
-                                    Satuan Ukur
-                                </td>
+                                <td></td>
                                 <td>
                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                        <center>
-                            <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
-                        </center>
-                        </td>
-                        <td>10</td>
-                        <td>
-                            <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                            <div class="responsive-container">
-                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
-                                <a href="" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
-                            </div>
-                        </td>
-                        </tr>
+                                    <center>
+                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                    </center>
+                                </td>
+                                <td>10</td>
+                                <td>
+                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                    <div class="responsive-container">
+                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
+                                        <a href="javascript:cmdDelete('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <%    
+                                    }
+                               } else {
+                            %>
+                                <tr>
+                                    <td colspan="6" class="text-center">Data tidak ditemukan.</td>
+                                </tr>
+                            <% } %>
                         </tbody>
                     </table>    
                 </div>
@@ -668,20 +616,20 @@
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script language="JavaScript">
-        //var oBody = document.body;
-        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
-
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
+            //var oBody = document.body;
+            //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+            $(document).ready(function(){
+              $('[data-toggle="popover"]').popover();
+            });
+            $(function () {
+                //Initialize Select2 Elements
+                $('.select2').select2()
 
             //Initialize Select2 Elements
 
             $('.select2bs4').select2({
                 theme: 'bootstrap4'
             })
-        })
-
         </script>
         <script type="text/javascript">
             var config = {

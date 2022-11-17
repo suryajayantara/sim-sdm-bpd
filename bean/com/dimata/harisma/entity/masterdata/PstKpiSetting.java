@@ -43,8 +43,7 @@ public class PstKpiSetting extends DBHandler implements I_DBInterface, I_DBType,
         TYPE_INT,
         TYPE_DATE,
         TYPE_LONG,
-        TYPE_INT
-
+        TYPE_INT,
     };
 
     public PstKpiSetting() {

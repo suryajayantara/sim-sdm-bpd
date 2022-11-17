@@ -12,52 +12,48 @@ package com.dimata.harisma.entity.masterdata;
 import com.dimata.qdep.entity.Entity;
 import java.util.Date;
 
-
 public class KpiSetting extends Entity {
 
+    private long kpiSettingId = 0;
+    private Date validDate = null;
+    private int status = 0;
+    private Date startDate = null;
+    private long companyId = 0;
+    private int tahun = 0;
 
-private long kpiSettingId = 0;
-private Date validDate = null;
-private int status = 0;
-private Date startDate = null;
-private long companyId = 0;
-private int tahun = 0;
+    public long getKpiSettingId() {
+        return kpiSettingId;
+    }
 
+    public void setKpiSettingId(long kpiSettingId) {
+        this.kpiSettingId = kpiSettingId;
+    }
 
+    public Date getValidDate() {
+        return validDate;
+    }
 
-public long getKpiSettingId(){
-return kpiSettingId;
-}
+    public void setValidDate(Date validDate) {
+        this.validDate = validDate;
+    }
 
-public void setKpiSettingId(long kpiSettingId){
-this.kpiSettingId = kpiSettingId;
-}
+    public int getStatus() {
+        return status;
+    }
 
-public Date getValidDate(){
-return validDate;
-}
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
-public void setValidDate(Date validDate){
-this.validDate = validDate;
-}
+    public Date getStartDate() {
+        return startDate;
+    }
 
-public int getStatus(){
-return status;
-}
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-public void setStatus(int status){
-this.status = status;
-}
-
-public Date getStartDate(){
-    return startDate;
-}
-
-public void setStartDate(Date startDate){
-this.startDate = startDate;
-}
-
-   /**
+    /**
      * @return the companyId
      */
     public long getCompanyId() {
@@ -81,7 +77,4 @@ this.startDate = startDate;
     public void setTahun(int tahun) {
         this.tahun = tahun;
     }
-    
-
-
 }

@@ -12,22 +12,22 @@ import java.util.Vector;
  *
  * @author GUSWIK
  */
-public class KPI_List extends Entity{
+public class KPI_List extends Entity {
 
-    private long kpi_list_id ;
-    private long company_id ;
+    private long kpi_list_id;
+    private long company_id;
     private String kpi_title = "";
     private String description = "";
-    private Date valid_from ;
-    private Date valid_to ;  
+    private Date valid_from;
+    private Date valid_to;
     private String value_type;
-	private int inputType = 0;
-	private long parentId ;
+    private int inputType = 0;
+    private long parentId;
     private Vector<Long> arrkpigroup = new Vector();
-	private Vector<Long> arrkpiposition = new Vector();
-	private int korelasi = 0;
-        private float rangeStart = 0;
-        private float rangeEnd = 0;
+    private Vector<Long> arrkpiposition = new Vector();
+    private int korelasi = 0;
+    private float rangeStart = 0;
+    private float rangeEnd = 0;
 
     /**
      * @return the kpi_list_id
@@ -127,21 +127,20 @@ public class KPI_List extends Entity{
         this.value_type = value_type;
     }
 
-   
     public int getArrkpigroupSize() {
-        return arrkpigroup==null ? 0 : arrkpigroup.size();
+        return arrkpigroup == null ? 0 : arrkpigroup.size();
     }
 
-/**
+    /**
      * @return the arrMaritalId
      */
     public Long getArrkpigroup(int idx) {
         //return arrMaritalId;
-        
-         if((arrkpigroup==null)||(idx>=arrkpigroup.size())){
+
+        if ((arrkpigroup == null) || (idx >= arrkpigroup.size())) {
             return null;
         }
-         return arrkpigroup.get(idx);
+        return arrkpigroup.get(idx);
     }
 
     /**
@@ -149,32 +148,32 @@ public class KPI_List extends Entity{
      */
     public void addArrkpigroup(String[] arrkpigroup) {
         //this.arrMaritalId = arrMaritalId;
-        if(arrkpigroup!=null){
-            for(int i=0; i <  arrkpigroup.length ; i++){
-                try{
-                this.arrkpigroup.add(new Long( arrkpigroup[i]));
-                }catch(Exception e){
-                    
+        if (arrkpigroup != null) {
+            for (int i = 0; i < arrkpigroup.length; i++) {
+                try {
+                    this.arrkpigroup.add(new Long(arrkpigroup[i]));
+                } catch (Exception e) {
+
                 }
             }
-            
+
         }
     }
-	
-	public int getArrkpipositionSize() {
-        return arrkpiposition==null ? 0 : arrkpiposition.size();
+
+    public int getArrkpipositionSize() {
+        return arrkpiposition == null ? 0 : arrkpiposition.size();
     }
 
-/**
+    /**
      * @return the arrMaritalId
      */
     public Long getArrkpiposition(int idx) {
         //return arrMaritalId;
-        
-         if((arrkpiposition==null)||(idx>=arrkpiposition.size())){
+
+        if ((arrkpiposition == null) || (idx >= arrkpiposition.size())) {
             return null;
         }
-         return arrkpiposition.get(idx);
+        return arrkpiposition.get(idx);
     }
 
     /**
@@ -182,61 +181,60 @@ public class KPI_List extends Entity{
      */
     public void addArrkpiposition(String[] arrkpiposition) {
         //this.arrMaritalId = arrMaritalId;
-        if(arrkpiposition!=null){
-            for(int i=0; i <  arrkpiposition.length ; i++){
-                try{
-                this.arrkpiposition.add(new Long( arrkpiposition[i]));
-                }catch(Exception e){
-                    
+        if (arrkpiposition != null) {
+            for (int i = 0; i < arrkpiposition.length; i++) {
+                try {
+                    this.arrkpiposition.add(new Long(arrkpiposition[i]));
+                } catch (Exception e) {
+
                 }
             }
-            
+
         }
     }
 
-	/**
-	 * @return the inputType
-	 */
-	public int getInputType() {
-		return inputType;
-	}
+    /**
+     * @return the inputType
+     */
+    public int getInputType() {
+        return inputType;
+    }
 
-	/**
-	 * @param inputType the inputType to set
-	 */
-	public void setInputType(int inputType) {
-		this.inputType = inputType;
-	}
+    /**
+     * @param inputType the inputType to set
+     */
+    public void setInputType(int inputType) {
+        this.inputType = inputType;
+    }
 
-	/**
-	 * @return the parentId
-	 */
-	public long getParentId() {
-		return parentId;
-	}
+    /**
+     * @return the parentId
+     */
+    public long getParentId() {
+        return parentId;
+    }
 
-	/**
-	 * @param parentId the parentId to set
-	 */
-	public void setParentId(long parentId) {
-		this.parentId = parentId;
-	}
+    /**
+     * @param parentId the parentId to set
+     */
+    public void setParentId(long parentId) {
+        this.parentId = parentId;
+    }
 
-	/**
-	 * @return the korelasi
-	 */
-	public int getKorelasi() {
-		return korelasi;
-	}
+    /**
+     * @return the korelasi
+     */
+    public int getKorelasi() {
+        return korelasi;
+    }
 
-	/**
-	 * @param korelasi the korelasi to set
-	 */
-	public void setKorelasi(int korelasi) {
-		this.korelasi = korelasi;
-	}
-        
-        
+    /**
+     * @param korelasi the korelasi to set
+     */
+    public void setKorelasi(int korelasi) {
+        this.korelasi = korelasi;
+    }
+
     /**
      * @return the rangeStart
      */
@@ -264,4 +262,4 @@ public class KPI_List extends Entity{
     public void setRangeEnd(float rangeEnd) {
         this.rangeEnd = rangeEnd;
     }
-    }
+}
