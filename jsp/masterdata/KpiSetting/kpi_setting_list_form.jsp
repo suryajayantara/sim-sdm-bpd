@@ -435,7 +435,7 @@
         <div class="box mb-2">
             <div class="formstyle">
                 <div class="d-flex justify-content-between">
-                    <span> <%= objKpiGroup.getGroup_title()%> - <%= objKpiGroup.getOID() %> </span>
+                    <span> <%= objKpiGroup.getGroup_title()%> </span>
                     <div>
                         <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" data-toggle="modal" data-target="#exampleModal2" >Tambah KPI
                             <strong><i class="fa fa-plus"></i></strong>
@@ -464,8 +464,9 @@
                             <%
                                 String queryKpiList = "hr_kpi_setting_group.`KPI_GROUP_ID`='"+ objKpiGroup.getOID() +"' AND hr_kpi_setting_list.`KPI_SETTING_ID` = '"+ oidKpiSetting +"'";
                                 vKpiList = PstKPI_List.listWithJoinSettingAndGroup(queryKpiList);
-                                for(int j = 0; j < vKpiList.size(); j++){
-                                   KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
+                                if(vKpiList.size() > 0){
+                                    for(int j = 0; j < vKpiList.size(); j++){
+                                        KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
                             %>
                             <tr>
                                 <td> <%= objKpiList.getKpi_title()%> </td>
@@ -485,6 +486,13 @@
                                     </div>
                                 </td>
                             </tr>
+                            <%    
+                                    }
+                               } else {
+                            %>
+                                <tr>
+                                    <td colspan="6" class="text-center">Data tidak ditemukan.</td>
+                                </tr>
                             <% } %>
                         </tbody>
                     </table>
