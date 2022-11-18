@@ -298,14 +298,6 @@
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
 
-            var popup;
-            function init() {
-                onload = "init()";
-//                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("kpi_distribution.jsp?emp_department="
-                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
-                popup.focus();
-            }
             function masterKpiGroup() {
                 onload = "masterKpiGroup()";
 //                emp_department = document.frm_pay_emp_level.department.value;
@@ -425,7 +417,7 @@
                     <div class="d-flex justify-content-between">
                         <span value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title()%> </span>
                         <div>
-                            <a href="<%= approot %>/masterdata/KpiSetting/kpi_setting_list_add.jsp?FRM_FIELD_KPI_GROUP_ID=<%= objKpiGroup.getOID() %>" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2">Tambah KPI
+                            <a href="javascript:windowOpen('<%= objKpiGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2">Tambah KPI
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
                             <a href="javascript:cmdDeleteGroup('<%=objKpiGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
@@ -622,7 +614,7 @@
               $('[data-toggle="popover"]').popover();
             });
             $(function () {
-                //Initialize Select2 Elements
+                //Initialize Select2 Elementsf
                 $('.select2').select2()
 
             //Initialize Select2 Elements
@@ -630,6 +622,14 @@
             $('.select2bs4').select2({
                 theme: 'bootstrap4'
             })
+            
+            function windowOpen(oidKpiGroup) {
+    //            emp_department = document.frm_pay_emp_level.department.value;
+                popup = window.open(
+                    "kpi_setting_list_add.jsp?FRM_FIELD_KPI_GROUP_ID=" + oidKpiSetting + "&FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiGroup, "SelectEmployee", "height=500,width=1100,status=no,toolbar=no,menubar=no,location=no,scrollbars=yes"
+                );
+                popup.focus();
+            }
         </script>
         <script type="text/javascript">
             var config = {
