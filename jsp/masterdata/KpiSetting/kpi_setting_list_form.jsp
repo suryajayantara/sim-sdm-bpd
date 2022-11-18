@@ -233,87 +233,6 @@
         <!--end-->
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
-
-        <script language="JavaScript">
-
-            function pageLoad() {
-                $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
-            }
-
-//            function cmdUpdateDivision() {
-//                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-//                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-//                document.FRM_NAME_KPISETTING.submit();
-//            }
-            function cmdUpdateSec() {
-                document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
-            }
-
-            function cmdCancel() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = 0;
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            function cmdBack() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            function cmdEditDetail(oid) {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = oid;
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            function cmdAdd() {
-                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
-            }
-
-
-            function cmdSave() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-
-            function cmdSaveKpi() {
-                document.FRM_NAME_KPI.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPI.action = "kpi_setting_list_form.jsp";
-                document.FRM_NAME_KPI.submit();
-            }
-
-            function cmdEdit(oid) {
-                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_target.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            function masterKpiGroup() {
-                onload = "masterKpiGroup()";
-//                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("../kpi_group.jsp?emp_department="
-                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
-                popup.focus();
-            }
-            function masterKpi() {
-                onload = "masterKpi()";
-//                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("../kpi_list.jsp?emp_department="
-                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
-                popup.focus();
-            }
-
-        </script>
     </head>
     <body onload="prepare()" >
         <div class="header">
@@ -348,9 +267,7 @@
             </table>
         </div>
 
-
         <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-
         <div class="box">
             <form name="FRM_NAME_KPISETTING" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
@@ -403,6 +320,7 @@
                 </div>  
             </form>
         </div>
+
         <%
             for (int i = 0; i < vKpiSettingGroup.size(); i++) {
                 KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);
@@ -412,7 +330,7 @@
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingId() %>">
             <input type="hidden" name="typeform" value="1">
-            <div class="box mb-5">
+            <div class="box mb-2">
                 <div  class="formstyle">
                     <div class="d-flex justify-content-between">
                         <span value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title()%> </span>
@@ -635,6 +553,78 @@
             function cmdGet(){
                 document.frm.action="kpi_emp_search.jsp";
                 document.frm.submit();
+            }
+
+            function pageLoad() {
+                $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
+            }
+
+            function cmdUpdateSec() {
+                document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
+                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTING.submit();
+            }
+
+            function cmdCancel() {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = 0;
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function cmdBack() {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function cmdEditDetail(oid) {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function cmdAdd() {
+                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
+                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTING.submit();
+            }
+
+
+            function cmdSave() {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+
+            function cmdSaveKpi() {
+                document.FRM_NAME_KPI.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPI.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPI.submit();
+            }
+
+            function cmdEdit(oid) {
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_target.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function masterKpiGroup() {
+                onload = "masterKpiGroup()";
+                // emp_department = document.frm_pay_emp_level.department.value;
+                popup = window.open("../kpi_group.jsp?emp_department="
+                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+                popup.focus();
+            }
+            function masterKpi() {
+                onload = "masterKpi()";
+                // emp_department = document.frm_pay_emp_level.department.value;
+                popup = window.open("../kpi_list.jsp?emp_department="
+                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+                popup.focus();
             }
         </script>
 </html>
