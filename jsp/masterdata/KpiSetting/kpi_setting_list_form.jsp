@@ -533,7 +533,7 @@
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel2">KPI Group : <span id="kpi-group-name"></span></h5>
+                        <h5 class="modal-title" id="exampleModalLabel2"><span id="kpi-group-name"></span></h5>
                     </div>                            
                     <div id="kpi-list-body" class="modal-body" style="max-height: 500px;">
 
