@@ -403,7 +403,7 @@
                     </div>
                     <div style="border-top: 1px solid #DDD;">&nbsp;</div>
                     <a href="javascript:cmdEdit()" style="color:#FFF;" class="btn-edit btn-edit1" >Edit Kpi Setting</a>
-                    <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-simpan btn-simpan1" data-toggle="modal" data-target="#exampleModal"  >Tambah Group Baru  <strong><i class="fa fa-plus"></i></strong></a>
+                    &nbsp;<a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-simpan btn-simpan1" data-toggle="modal" data-target="#exampleModal"  >Tambah Group Baru  <strong><i class="fa fa-plus"></i></strong></a>
                     &nbsp;<a href="javascript:masterKpiGroup()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" >Master Data Kpi Group <strong><i class="fa fa-plus"></i></strong></a>
                     &nbsp;<a href="javascript:masterKpi()" style="color:#FFF;" class="btn-add btn-add1">Master Data Kpi <strong><i class="fa fa-plus"></i></strong></a>
                     &nbsp;<a href="javascript:init()"  style="color:#FFF;" class="btn-add btn-add1" >Master Data Distribusi <strong><i class="fa fa-plus"></i></strong></a>
