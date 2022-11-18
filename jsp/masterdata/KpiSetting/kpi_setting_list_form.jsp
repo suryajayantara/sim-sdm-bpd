@@ -425,7 +425,7 @@
                     <div class="d-flex justify-content-between">
                         <span value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title()%> </span>
                         <div>
-                            <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" data-toggle="modal" data-target="#exampleModal2" >Tambah KPI
+                            <a href="<%= approot %>/masterdata/KpiSetting/kpi_setting_list_add.jsp?FRM_FIELD_KPI_GROUP_ID=<%= objKpiGroup.getOID() %>" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2">Tambah KPI
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
                             <a href="javascript:cmdDeleteGroup('<%=objKpiGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
@@ -457,7 +457,7 @@
                             <tr>
                                 <td>
                                     <%= objKpiList.getKpi_title()%> 
-                                    <i class="fa fa-question-circle-o fa-lg" aria-hidden="true" data-toggle="popover" data-trigger="hover" data-content="<%= objKpiList.getDescription() %>"></i>
+                                    <%-- <i class="fa fa-question-circle-o fa-lg" aria-hidden="true" data-toggle="popover" data-trigger="click" data-content="<%= objKpiList.getDescription() %>"></i> --%>
                                 </td>
                                 <td></td>
                                 <td>
