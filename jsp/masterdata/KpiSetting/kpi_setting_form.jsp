@@ -662,7 +662,7 @@
             onload = "init()";
             //emp_department = document.frm_pay_emp_level.department.value;
             popup = window.open(
-                "kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting + "&FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiType, "SelectEmployee", "height=600,width=1200,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes"
+                "kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting + "&FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiType, "SelectEmployee", "height=600,width=1200,status=yes,toolbar=yes,menubar=yes,location=no,scrollbars=yes"
             );
             popup.focus();
         }
