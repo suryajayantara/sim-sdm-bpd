@@ -36,7 +36,7 @@
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     long oidKpiSettingGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]);
 
-    Vector vKpiSettingGroup = new Vector();
+    Vector vKpiGroup = new Vector();
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
     long kpiSettingId = FRMQueryString.requestLong(request, "kpi_setting_id");
@@ -177,16 +177,6 @@
         }
 
     }
-
-    try {
-        if(oidKpiSetting != 0){// untuk mengambil data kpi group setting
-            String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
-            vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
-        }
-    } catch (Exception e) {
-        System.out.println("Error fetch :" + e);
-    }
-
 %>
 <html>
     <head>
@@ -346,8 +336,13 @@
                                     %>
                                     <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_STATUS], "custom-select form-select-sm", null, "" + kpiSetting.getStatus(), val_status, key_status, "style='width : 20%' id='status'")%> 
                                 </div>
-                                <div id="caption">Dari Tanggal</div>
+                                
+                                <div id="caption">Tahun</div>
+                                <div id="divinput" >
+                                    <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_TAHUN], "custom-select form-select-sm", null, "" + kpiSetting.getTahun(), valTahun, keyTahun, "style='width : 20%'")%> 
+                                </div>
 
+                                <div id="caption">Dari Tanggal</div>
                                 <div id="divinput">
                                     <input style="width: 20%;" type="date" id="startDate" class="mydate form-control col-3" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_START_DATE]%>" value="<%= (startDate.equals("") ? strDateNow : startDate)%>"/>
                                     <span id="info1"></span>
@@ -358,11 +353,6 @@
 
                                 <div id="divinput">
                                     <input type="date" id="validDate" class="mydate form-control" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_VALID_DATE]%>" value="<%= validDate%>" style="width: 20%;" />
-                                </div>
-
-                                <div id="caption">Tahun</div>
-                                <div id="divinput" >
-                                    <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_TAHUN], "custom-select form-select-sm", null, "" + kpiSetting.getTahun(), valTahun, keyTahun, "style='width : 20%'")%> 
                                 </div>
                             </td>
                         </tr>
@@ -426,9 +416,11 @@
                             </thead>
                             <tbody>
                                 <%
-                                    if(vKpiSettingGroup.size() > 0){ 
-                                        for(int j = 0; j < vKpiSettingGroup.size(); j++){
-                                            KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(j);
+                                    String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID`='"+ oidKpiSetting +"' AND hr_kpi_setting_type.`KPI_TYPE_ID`='"+ kpiType.getOID() +"'";
+                                    vKpiGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
+                                    if(vKpiGroup.size() > 0){
+                                        for(int j = 0; j < vKpiGroup.size(); j++){
+                                            KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
                                 %>
                                             <tr>
                                                 <td class="p-3" value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title() %> </td>

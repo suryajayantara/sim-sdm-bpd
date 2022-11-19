@@ -177,7 +177,7 @@
 
             // untuk mengambil data kpi group setting
             String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
-            vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+            vKpiSettingGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
         }
 
         if (companyOID != 0) { // untuk mengambil data company
@@ -447,7 +447,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="kpi-list-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="kpi-list-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
