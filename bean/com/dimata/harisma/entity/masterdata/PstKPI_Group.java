@@ -227,14 +227,16 @@ public class PstKPI_Group extends DBHandler implements I_DBInterface, I_DBType, 
         return new Vector();
     }
     
-    public static Vector listWithJoinSetting(String whereClause) {
+    public static Vector listWithJoinSettingAndType(String whereClause) {
         Vector lists = new Vector();
         DBResultSet dbrs = null;
         try {
-            String sql = "SELECT hr_kpi_group.`KPI_GROUP_ID`, hr_kpi_group.`KPI_TYPE_ID`, hr_kpi_group.`GROUP_TITLE`, hr_kpi_group.`DESCRIPTION`, hr_kpi_group.`NUMBER_INDEX` FROM hr_kpi_group \n" +
-                            "INNER JOIN hr_kpi_setting_group ON hr_kpi_group.`KPI_GROUP_ID` = hr_kpi_setting_group.`KPI_GROUP_ID` \n" +
-                            "INNER JOIN hr_kpi_setting ON hr_kpi_setting_group.`KPI_SETTING_ID` = hr_kpi_setting.`KPI_SETTING_ID` \n" +
-                            "WHERE "+ whereClause ;
+            String sql = "SELECT hr_kpi_group.`KPI_GROUP_ID`, hr_kpi_group.`KPI_TYPE_ID`, hr_kpi_group.`GROUP_TITLE`, hr_kpi_group.`DESCRIPTION`, hr_kpi_group.`NUMBER_INDEX` \n" + 
+                            "FROM hr_kpi_setting \n" +
+                            "INNER JOIN hr_kpi_setting_group ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_group.`KPI_SETTING_ID` \n" +
+                            "INNER JOIN hr_kpi_setting_type ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_type.`KPI_SETTING_ID` \n" +
+                            "INNER JOIN hr_kpi_group ON hr_kpi_setting_group.`KPI_GROUP_ID` = hr_kpi_group.`KPI_GROUP_ID` \n" +
+                            "WHERE " + whereClause;
             dbrs = DBHandler.execQueryResult(sql);
             ResultSet rs = dbrs.getResultSet();
             while (rs.next()) { 

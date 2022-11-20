@@ -177,7 +177,7 @@
 
             // untuk mengambil data kpi group setting
             String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
-            vKpiSettingGroup = PstKPI_Group.listWithJoinSetting(kpiGroupQuery);
+            vKpiSettingGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
         }
 
         if (companyOID != 0) { // untuk mengambil data company
@@ -233,95 +233,6 @@
         <!--end-->
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
-
-        <script language="JavaScript">
-
-            function pageLoad() {
-                $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
-            }
-
-//            function cmdUpdateDivision() {
-//                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-//                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-//                document.FRM_NAME_KPISETTING.submit();
-//            }
-            function cmdUpdateSec() {
-                document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
-            }
-
-            function cmdCancel() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = 0;
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            function cmdBack() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            function cmdEditDetail(oid) {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = oid;
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            function cmdAdd() {
-                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTING.submit();
-            }
-
-
-            function cmdSave() {
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-
-            function cmdSaveKpi() {
-                document.FRM_NAME_KPI.command.value = "<%=Command.SAVE%>";
-                document.FRM_NAME_KPI.action = "kpi_setting_list_form.jsp";
-                document.FRM_NAME_KPI.submit();
-            }
-
-            function cmdEdit(oid) {
-                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.EDIT%>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_target.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
-            var popup;
-            function init() {
-                onload = "init()";
-//                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("kpi_distribution.jsp?emp_department="
-                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
-                popup.focus();
-            }
-            function masterKpiGroup() {
-                onload = "masterKpiGroup()";
-//                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("../kpi_group.jsp?emp_department="
-                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
-                popup.focus();
-            }
-            function masterKpi() {
-                onload = "masterKpi()";
-//                emp_department = document.frm_pay_emp_level.department.value;
-                popup = window.open("../kpi_list.jsp?emp_department="
-                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
-                popup.focus();
-            }
-
-        </script>
     </head>
     <body onload="prepare()" >
         <div class="header">
@@ -356,9 +267,7 @@
             </table>
         </div>
 
-
         <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-
         <div class="box">
             <form name="FRM_NAME_KPISETTING" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
@@ -411,6 +320,7 @@
                 </div>  
             </form>
         </div>
+
         <%
             for (int i = 0; i < vKpiSettingGroup.size(); i++) {
                 KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);
@@ -420,12 +330,12 @@
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingId() %>">
             <input type="hidden" name="typeform" value="1">
-            <div class="box mb-5">
+            <div class="box mb-2">
                 <div  class="formstyle">
                     <div class="d-flex justify-content-between">
                         <span value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title()%> </span>
                         <div>
-                            <a href="<%= approot %>/masterdata/KpiSetting/kpi_setting_list_add.jsp?FRM_FIELD_KPI_GROUP_ID=<%= objKpiGroup.getOID() %>" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2">Tambah KPI
+                            <a href="javascript:openModal('<%= objKpiGroup.getOID() %>', '<%= objKpiGroup.getGroup_title() %>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2">Tambah KPI
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
                             <a href="javascript:cmdDeleteGroup('<%=objKpiGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
@@ -493,7 +403,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Group</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Pilih KPI</h5>
                     </div>                            
                     <div class="modal-body">
                         <form name="FRM_NAME_KPISETTINGGROUP" method ="post" action="">
@@ -537,101 +447,54 @@
             </div>
         </div>
 
-        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade" id="kpi-list-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel2">Pilih Kpi</h5>
+                        <h5 class="modal-title" id="exampleModalLabel2"><span id="kpi-group-name"></span></h5>
                     </div>                            
-                    <div class="modal-body">
-                        <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
-                            <input type="hidden" name="command" value="<%=Command.SAVE%>">
-                            <input type="hidden" name="typeform" value="2">
-                            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getKpiSettingListId()%>">
-                            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
+                    <div id="kpi-list-body" class="modal-body" style="max-height: 500px;">
 
-                            <div class="form-group">
-                                <label for="exampleInputPassword">Kpi</label>
-                                <select name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
-                                    <option value="">=Select=</option>
-                                    <%
-                                        Vector listKpi = PstKPI_List.list(0, 0, "", "");
-                                        for (int i = 0; i < listKpi.size(); i++) {
-                                            KPI_List objKpi = (KPI_List) listKpi.get(i);
-                                            String selected = "";
-                                            if (oid_kpi != null) {
-                                                for (int j = 0; j < oid_kpi.length; j++) {
-                                                    String oidKpi = "" + objKpi.getOID();
-                                                    if (oidKpi.equals("" + oid_kpi[j])) {
-                                                        selected = "selected";
-                                                    }
-                                                }
-                                            }
-
-                                    %>
-
-                                    <option value="<%=objKpi.getOID()%>" <%=selected%>><%=objKpi.getKpi_title()%></option>
-                                    <%
-                                        }
-                                    %>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Distribution</label>
-                                <select name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_DISTRIBUTION_ID]%>" style="width: 100%;" class="form-control form-control-sm custom-select">
-                                    <option>=Select=</option>
-                                    <%
-                                        Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
-                                        for (int i = 0; i < listKpiDistribution.size(); i++) {
-                                            KpiDistribution objKpiDistribution = (KpiDistribution) listKpiDistribution.get(i);
-                                            String selected = "";
-                                            if (oid_kpi_distribution != null) {
-                                                for (int j = 0; j < oid_kpi_distribution.length; j++) {
-                                                    String oidKpiDistribution = "" + objKpiDistribution.getOID();
-                                                    if (oidKpiDistribution.equals("" + oid_kpi_distribution[j])) {
-                                                        selected = "selected";
-                                                    }
-                                                }
-                                            }
-                                    %>
-
-                                    <option value="<%=objKpiDistribution.getOID()%>" <%=selected%>><%=objKpiDistribution.getDistribution()%></option>
-                                    <%
-                                        }
-
-                                    %>
-                                </select> 
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <a href="javascript:cmdSaveKpiSettingList()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
-                            </div>
-                        </form> 
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" onclick="javascript:check()">Check All</button>
+                        <button class="btn btn-primary" onclick="javascript:uncheck()">Uncheck All</button>
+                        <button class="btn btn-primary" onclick="javascript:cmdGet()">Get Data</button>
+                    </div> 
                 </div>
             </div>
         </div>
+
         <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script language="JavaScript">
-            //var oBody = document.body;
-            //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
             $(document).ready(function(){
-              $('[data-toggle="popover"]').popover();
-            });
-            $(function () {
-                //Initialize Select2 Elements
+                $('[data-toggle="popover"]').popover();
                 $('.select2').select2()
+                $('.select2bs4').select2({
+                    theme: 'bootstrap4'
+                })
+            });
 
-            //Initialize Select2 Elements
+            function openModal(oidKpiGroup, groupName) {
+                var strUrl = "";
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        document.getElementById("kpi-list-body").innerHTML = xmlhttp.responseText;
+                        $("#kpi-group-name").html(groupName);
+                        $("#kpi-list-modal").modal("show");
+                    }
+                }
+                strUrl = "list_kpi_by_group.jsp";
+                strUrl += "?FRM_FIELD_KPI_GROUP_ID="+oidKpiGroup;
+                
+                xmlhttp.open("GET", strUrl, true);
+                xmlhttp.send();
+            }
 
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-        </script>
-        <script type="text/javascript">
             var config = {
                 '.chosen-select': {},
                 '.chosen-select-deselect': {allow_single_deselect: true},
@@ -639,11 +502,11 @@
                 '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
                 '.chosen-select-width': {width: "100%"}
             }
+
             for (var selector in config) {
                 $(selector).chosen(config[selector]);
             }
-        </script>   
-        <script>
+
             $(function () {
                 $('#only-number').on('keydown', '#number', function (e) {
                     -1 !== $
@@ -653,15 +516,14 @@
                             && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
                 });
             })
-        </script>
-        <script>
+
             function cmdSaveKpiSettingGroup() {
                 document.FRM_NAME_KPISETTINGGROUP.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPISETTINGGROUP.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGGROUP.submit();
             }
             function cmdSaveKpiSettingList() {
-//                document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.SAVE%>";
+                // document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLIST.submit();
             }
@@ -671,6 +533,98 @@
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
-        </script>
 
+            function check() {
+                checkboxes = document.getElementsByName('KPI_ID');  
+                for(var i = 0; i < checkboxes.length; i++){  
+                    if(checkboxes[i].type=='checkbox')  
+                        checkboxes[i].checked = true;  
+                }
+            }
+            
+            function uncheck() {
+                checkboxes = document.getElementsByName('KPI_ID');  
+                for(var i = 0; i < checkboxes.length; i++){  
+                    if(checkboxes[i].type=='checkbox')  
+                        checkboxes[i].checked = false;  
+                }
+            }
+
+            function cmdGet(){
+                document.frm.action="kpi_emp_search.jsp";
+                document.frm.submit();
+            }
+
+            function pageLoad() {
+                $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
+            }
+
+            function cmdUpdateSec() {
+                document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
+                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTING.submit();
+            }
+
+            function cmdCancel() {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = 0;
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function cmdBack() {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function cmdEditDetail(oid) {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.oidKpiSetting.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function cmdAdd() {
+                document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
+                document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTING.submit();
+            }
+
+
+            function cmdSave() {
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+
+            function cmdSaveKpi() {
+                document.FRM_NAME_KPI.command.value = "<%=Command.SAVE%>";
+                document.FRM_NAME_KPI.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPI.submit();
+            }
+
+            function cmdEdit(oid) {
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%= Command.EDIT%>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_target.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+
+            function masterKpiGroup() {
+                onload = "masterKpiGroup()";
+                // emp_department = document.frm_pay_emp_level.department.value;
+                popup = window.open("../kpi_group.jsp?emp_department="
+                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+                popup.focus();
+            }
+            function masterKpi() {
+                onload = "masterKpi()";
+                // emp_department = document.frm_pay_emp_level.department.value;
+                popup = window.open("../kpi_list.jsp?emp_department="
+                        , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+                popup.focus();
+            }
+        </script>
 </html>

@@ -167,7 +167,7 @@
         <div id="menu_utama">
             <span id="menu_title">Daftar KPI Setting</span>
         </div>
-        <form name="frm" metdod="post" action="">
+        <form name="frm" metdod="get" action="">
             <input type="hidden" name="command" value="<%= iCommand%>"> -
             <input type="hidden" name="typeform" value="1"> 
             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
