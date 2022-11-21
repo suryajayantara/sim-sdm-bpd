@@ -89,12 +89,37 @@ Vector listEmployee = PstEmployee.list(0, 0, whereClause, PstEmployee.fieldNames
                         <td>
                             <input type="checkbox" id="myCheck" name="emp_check" value="<%= emp.getOID() %>" />&nbsp;
                         </td>
-                        <td>
+                        <td style="border-right: 1px solid black" width="50%">
                             <div><strong><%= emp.getEmployeeNum() %> | <%= emp.getFullName() %></strong></div>
                             <div><%= changeValue.getPositionName(emp.getPositionId())  %></div>
                         </td>
                         <td>
-                            <input type="text" name="emp_bobot_<%=emp.getOID()%>" placeholder="Bobot Distribusi" />&nbsp;
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="" placeholder="Bobot Penilaian KPI" />&nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="emp_bobot_<%=emp.getOID()%>" placeholder="Nilai Target" />&nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        
+                                        <div id="caption">Date From</div>
+                                        <div id="divinput">
+                                            <input type="date" name="" placeholder="Date From" />&nbsp;
+                                        </div>
+                                        
+                                        <div id="caption">Date To</div>
+                                        <div id="divinput">
+                                            <input type="date" name="" placeholder="Date To" />&nbsp;
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>
