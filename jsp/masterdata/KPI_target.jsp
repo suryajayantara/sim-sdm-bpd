@@ -46,6 +46,8 @@
  int status = FRMQueryString.requestInt(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_SECTION_ID]);
  int deleteFor = FRMQueryString.requestInt(request, "delete_for");
  
+ boolean weightValue = false;
+ 
  if (iCommand == Command.DELETE && deleteFor == 1){
 	try {
 		PstKpiTargetDetailEmployee.deleteExc(detailId);
@@ -528,170 +530,224 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
 				<%if (iCommand == Command.ASSIGN || (iCommand == Command.EDIT && oidTargetDetail > 0)){%>
 				<div class="formstyle">
 					<input type="hidden" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_TARGET_ID]%>" value="<%=oidTarget%>">
-					<div id="caption">KPI Group</div>
-					<div id="divinput">
-						<%
-							Vector group_value = new Vector(1, 1);
-							Vector group_key = new Vector(1, 1);
-							Vector listGroup = PstKPI_Group.list(0, 0, "", PstKPI_Group.fieldNames[PstKPI_Group.FLD_GROUP_TITLE]);
-							group_value.add(""+0);
-							group_key.add("Select...");
-							for (int i = 0; i < listGroup.size(); i++) {
-								KPI_Group group = (KPI_Group) listGroup.get(i);
-								group_key.add(group.getGroup_title());
-								group_value.add(String.valueOf(group.getOID()));
-							}
-
-							%>
-							<%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_GROUP_ID],"chosen-select", null, "" + groupId, group_value, group_key, "onchange='javascript:loadKpi(this.value)' data-placeholder='Select Group...'")%>    
-					</div>
-					<div id="caption">KPI</div>
-					<div id="divinput">
-						<%
-							Vector kpi_value = new Vector(1, 1);
-							Vector kpi_key = new Vector(1, 1);
-							String whereKPI = PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
-								" IN ( SELECT "+PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_LIST_ID]+
-								" FROM "+PstKPI_List_Group.TBL_HR_KPI_LIST_GROUP+" WHERE "+
-								PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_GROUP_ID]+"="+groupId+") AND "+
-								PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"=0 AND "+
-                                                                PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
-								" NOT IN ( SELECT "+PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+
-								" FROM "+PstKPI_List.TBL_HR_KPI_LIST+")";
-							Vector listKpi = PstKPI_List.list(0, 0, whereKPI, PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_TITLE]);
-							kpi_value.add(""+0);
-							kpi_key.add("Select...");
-							for (int i = 0; i < listKpi.size(); i++) {
-								KPI_List kpiList = (KPI_List) listKpi.get(i);
-								String titleX = "";
-								if (kpiList.getKpi_title().length()>100){
-                                                                    titleX = kpiList.getKpi_title().substring(0,97)+"...";
-								} else {
-                                                                    titleX = kpiList.getKpi_title();
-								}
-								Vector listChild = PstKPI_List.list(0, 0, 
-                                                                    PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"="+kpiList.getOID()+" AND "+
-                                                                    PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"<> 0"
-                                                                    , "");
-								if (listChild.size()>0){
-                                                                    kpi_key.add(titleX);
-                                                                    kpi_value.add(String.valueOf(-1));
-                                                                    for (int x = 0; x < listChild.size(); x++) {
-                                                                        KPI_List kpiList1 = (KPI_List) listChild.get(x);
-                                                                        String titleX1 = "";
-                                                                        if (kpiList1.getKpi_title().length()>100){
-                                                                                titleX1 = kpiList1.getKpi_title().substring(0,97)+"...";
-                                                                        } else {
-                                                                                titleX1 = kpiList1.getKpi_title();
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div id="caption">KPI Group</div>
+                                <div id="divinput">
+                                    <%
+                                        Vector group_value = new Vector(1, 1);
+                                        Vector group_key = new Vector(1, 1);
+                                        Vector listGroup = PstKPI_Group.list(0, 0, "", PstKPI_Group.fieldNames[PstKPI_Group.FLD_GROUP_TITLE]);
+                                        group_value.add(""+0);
+                                        group_key.add("Select...");
+                                        for (int i = 0; i < listGroup.size(); i++) {
+                                            KPI_Group group = (KPI_Group) listGroup.get(i);
+                                            group_key.add(group.getGroup_title());
+                                            group_value.add(String.valueOf(group.getOID()));
+                                        }
+            
+                                        %>
+                                        <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_GROUP_ID],"chosen-select", null, "" + groupId, group_value, group_key, "onchange='javascript:loadKpi(this.value)' style='width: 90%' data-placeholder='Select Group...'")%>    
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <div id="caption">KPI</div>
+                                <div id="divinput">
+                                    <%
+                                        Vector kpi_value = new Vector(1, 1);
+                                        Vector kpi_key = new Vector(1, 1);
+                                        String whereKPI = PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
+                                            " IN ( SELECT "+PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_LIST_ID]+
+                                            " FROM "+PstKPI_List_Group.TBL_HR_KPI_LIST_GROUP+" WHERE "+
+                                            PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_GROUP_ID]+"="+groupId+") AND "+
+                                            PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"=0 AND "+
+                                                                            PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
+                                            " NOT IN ( SELECT "+PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+
+                                            " FROM "+PstKPI_List.TBL_HR_KPI_LIST+")";
+                                        Vector listKpi = PstKPI_List.list(0, 0, whereKPI, PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_TITLE]);
+                                        kpi_value.add(""+0);
+                                        kpi_key.add("Select...");
+                                        for (int i = 0; i < listKpi.size(); i++) {
+                                            KPI_List kpiList = (KPI_List) listKpi.get(i);
+                                            String titleX = "";
+                                            if (kpiList.getKpi_title().length()>100){
+                                                                                titleX = kpiList.getKpi_title().substring(0,97)+"...";
+                                            } else {
+                                                                                titleX = kpiList.getKpi_title();
+                                            }
+                                            Vector listChild = PstKPI_List.list(0, 0, 
+                                                                                PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"="+kpiList.getOID()+" AND "+
+                                                                                PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"<> 0"
+                                                                                , "");
+                                            if (listChild.size()>0){
+                                                                                kpi_key.add(titleX);
+                                                                                kpi_value.add(String.valueOf(-1));
+                                                                                for (int x = 0; x < listChild.size(); x++) {
+                                                                                    KPI_List kpiList1 = (KPI_List) listChild.get(x);
+                                                                                    String titleX1 = "";
+                                                                                    if (kpiList1.getKpi_title().length()>100){
+                                                                                            titleX1 = kpiList1.getKpi_title().substring(0,97)+"...";
+                                                                                    } else {
+                                                                                            titleX1 = kpiList1.getKpi_title();
+                                                                                    }
+                                                                                    kpi_key.add(titleX1);
+                                                                                    kpi_value.add(String.valueOf(kpiList1.getOID()));
+                                                                                }
+                                            } else {
+                                                                                kpi_key.add(titleX);
+                                                                                kpi_value.add(String.valueOf(kpiList.getOID()));
+                                            }
+                                        }
+                                                                    whereKPI = PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
+                                            " IN ( SELECT "+PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_LIST_ID]+
+                                            " FROM "+PstKPI_List_Group.TBL_HR_KPI_LIST_GROUP+" WHERE "+
+                                            PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_GROUP_ID]+"="+groupId+") AND "+
+                                            PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"=0 AND "+
+                                                                            PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
+                                            " IN ( SELECT "+PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+
+                                            " FROM "+PstKPI_List.TBL_HR_KPI_LIST+")";
+                                        listKpi = PstKPI_List.list(0, 0, whereKPI, PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_TITLE]);
+                                        for (int i = 0; i < listKpi.size(); i++) {
+                                            KPI_List kpiList = (KPI_List) listKpi.get(i);
+                                            String titleX = "";
+                                            if (kpiList.getKpi_title().length()>100){
+                                                                                titleX = kpiList.getKpi_title().substring(0,97)+"...";
+                                            } else {
+                                                                                titleX = kpiList.getKpi_title();
+                                            }
+                                            Vector listChild = PstKPI_List.list(0, 0, 
+                                                                                PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"="+kpiList.getOID()+" AND "+
+                                                                                PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"<> 0"
+                                                                                , "");
+                                            if (listChild.size()>0){
+                                                                                kpi_key.add(titleX);
+                                                                                kpi_value.add(String.valueOf(-1));
+                                                                                for (int x = 0; x < listChild.size(); x++) {
+                                                                                    KPI_List kpiList1 = (KPI_List) listChild.get(x);
+                                                                                    String titleX1 = "";
+                                                                                    if (kpiList1.getKpi_title().length()>100){
+                                                                                            titleX1 = kpiList1.getKpi_title().substring(0,97)+"...";
+                                                                                    } else {
+                                                                                            titleX1 = kpiList1.getKpi_title();
+                                                                                    }
+                                                                                    kpi_key.add(titleX1);
+                                                                                    kpi_value.add(String.valueOf(kpiList1.getOID()));
+                                                                                }
+                                            } else {
+                                                                                kpi_key.add(titleX);
+                                                                                kpi_value.add(String.valueOf(kpiList.getOID()));
+                                            }
+                                        }
+                                        String[] kpiIdList = {
+                                            ""+kpiId
+                                        };
+                                        %>
+                                        <%=ControlCombo.drawStringArraySelectedOptGroup(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_ID],"chosen-select", null, kpiIdList, kpi_key, kpi_value, null , "onchange='javascript:loadKpi(this.value)' data-placeholder='Select Group...'")%>    
+                                        <%
+                                                                        if (groupId > 0){
+                                                                            %> <a href="javascript:cmdAddKPI()" class="btn-small" style="color:#FFF;">Tambah KPI</a> <%
                                                                         }
-                                                                        kpi_key.add(titleX1);
-                                                                        kpi_value.add(String.valueOf(kpiList1.getOID()));
-                                                                    }
-								} else {
-                                                                    kpi_key.add(titleX);
-                                                                    kpi_value.add(String.valueOf(kpiList.getOID()));
-								}
-							}
-                                                        whereKPI = PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
-								" IN ( SELECT "+PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_LIST_ID]+
-								" FROM "+PstKPI_List_Group.TBL_HR_KPI_LIST_GROUP+" WHERE "+
-								PstKPI_List_Group.fieldNames[PstKPI_List_Group.FLD_KPI_GROUP_ID]+"="+groupId+") AND "+
-								PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"=0 AND "+
-                                                                PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]+
-								" IN ( SELECT "+PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+
-								" FROM "+PstKPI_List.TBL_HR_KPI_LIST+")";
-							listKpi = PstKPI_List.list(0, 0, whereKPI, PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_TITLE]);
-							for (int i = 0; i < listKpi.size(); i++) {
-								KPI_List kpiList = (KPI_List) listKpi.get(i);
-								String titleX = "";
-								if (kpiList.getKpi_title().length()>100){
-                                                                    titleX = kpiList.getKpi_title().substring(0,97)+"...";
-								} else {
-                                                                    titleX = kpiList.getKpi_title();
-								}
-								Vector listChild = PstKPI_List.list(0, 0, 
-                                                                    PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"="+kpiList.getOID()+" AND "+
-                                                                    PstKPI_List.fieldNames[PstKPI_List.FLD_PARENT_ID]+"<> 0"
-                                                                    , "");
-								if (listChild.size()>0){
-                                                                    kpi_key.add(titleX);
-                                                                    kpi_value.add(String.valueOf(-1));
-                                                                    for (int x = 0; x < listChild.size(); x++) {
-                                                                        KPI_List kpiList1 = (KPI_List) listChild.get(x);
-                                                                        String titleX1 = "";
-                                                                        if (kpiList1.getKpi_title().length()>100){
-                                                                                titleX1 = kpiList1.getKpi_title().substring(0,97)+"...";
-                                                                        } else {
-                                                                                titleX1 = kpiList1.getKpi_title();
-                                                                        }
-                                                                        kpi_key.add(titleX1);
-                                                                        kpi_value.add(String.valueOf(kpiList1.getOID()));
-                                                                    }
-								} else {
-                                                                    kpi_key.add(titleX);
-                                                                    kpi_value.add(String.valueOf(kpiList.getOID()));
-								}
-							}
-							String[] kpiIdList = {
-								""+kpiId
-							};
-							%>
-							<%=ControlCombo.drawStringArraySelectedOptGroup(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_ID],"chosen-select", null, kpiIdList, kpi_key, kpi_value, null , "onchange='javascript:loadKpi(this.value)' data-placeholder='Select Group...'")%>    
-							<%
-                                                            if (groupId > 0){
-                                                                %> <a href="javascript:cmdAddKPI()">Tambah KPI</a> <%
-                                                            }
-							%>
-					</div>
-					<% if (kpiId > 0) { 
-						KPI_List kPI_List = new KPI_List();
-						try {
-							kPI_List = PstKPI_List.fetchExc(kpiId);
-						} catch (Exception exc){}
-					%>
-					<div id="caption">Periode</div>
-					<div id="divinput">
-						<%
-							Vector periode_value = new Vector(1, 1);
-							Vector periode_key = new Vector(1, 1);
-							for (int i = 0; i < PstKpiTargetDetail.period.length; i++) {
-								periode_key.add(PstKpiTargetDetail.period[i]);
-								periode_value.add(String.valueOf(i));
-							}
+                                        %>
+                                </div>
+                                <% if (kpiId > 0) { 
+                                    KPI_List kPI_List = new KPI_List();
+                                    try {
+                                        kPI_List = PstKPI_List.fetchExc(kpiId);
+                                    } catch (Exception exc){}
+                                %>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td width="10%">
+                                <div id="caption">Periode</div>
+                                <div id="divinput">
+                                    <%
+                                        Vector periode_value = new Vector(1, 1);
+                                        Vector periode_key = new Vector(1, 1);
+                                        for (int i = 0; i < PstKpiTargetDetail.period.length; i++) {
+                                            periode_key.add(PstKpiTargetDetail.period[i]);
+                                            periode_value.add(String.valueOf(i));
+                                        }
+            
+                                        %>
+                                        <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD],"chosen-select", null, ""+kpiTargetDetail.getPeriod(), periode_value, periode_key, " data-placeholder='Select Group...'")%> 
+                                </div>
+                            </td>
+                            <td width="10%">
+                                <div id="caption">Periode Index</div>
+                                <div id="divinput">                                    
+                                    <input type="text" name="" id="" placeholder="Periode Index">    
+                                </div>
+                            </td>
+                            <td width="10%">
+                                <div id="caption">Date From</div>
+                                <div id="divinput">                                    
+                                    <input type="date" name="" id="">    
+                                </div>
+                            </td>
+                            <td>
+                                <div id="caption">Date To</div>
+                                <div id="divinput">                                    
+                                    <input type="date" name="" id="">    
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td width="10%">
+                                <%
+                                    switch(kPI_List.getInputType()){
+                                        case PstKPI_List.TYPE_WAKTU:
+                                            weightValue = true;
+                                            %>
+                                            <div id="caption">Target (Waktu)</div>
+                                            <div id="divinput">
+                                                <input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_FROM]%>" id="date_from" class="datepicker" value="<%=Formater.formatDate((kpiTargetDetail.getDateFrom() != null ? kpiTargetDetail.getDateFrom() : new Date()), "yyyy-MM-dd")%>" /> to 
+                                                <input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_TO]%>" id="date_to" class="datepicker" value="<%=Formater.formatDate((kpiTargetDetail.getDateTo()!= null ? kpiTargetDetail.getDateTo() : new Date()), "yyyy-MM-dd")%>"/>
+                                            </div>
+                                            <%
+                                        break;
+                                        case PstKPI_List.TYPE_JUMLAH:
+                                            weightValue = true;
+                                            %>
+                                            <div id="caption">Target (Jumlah)</div>
+                                            <div id="divinput">
+                                                <input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT]%>" value="<%=kpiTargetDetail.getAmount()%>"/>
+                                            </div>
+                                            <%
+                                        break;
+                                        case PstKPI_List.TYPE_PERSENTASE:
+                                            weightValue = true;
+                                            %>
+                                            <div id="caption">Target (Persentase)</div>
+                                            <div id="divinput">
+                                                <input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT]%>" value="<%=kpiTargetDetail.getAmount()%>"/>
+                                            </div>
+                                            <%
+                                        break;
+                                    }
+                                %>
+                                <% } %>
+                            </td>
 
-							%>
-							<%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD],"chosen-select", null, ""+kpiTargetDetail.getPeriod(), periode_value, periode_key, " data-placeholder='Select Group...'")%>    
-					</div>
-					<%
-						switch(kPI_List.getInputType()){
-							case PstKPI_List.TYPE_WAKTU:
-								%>
-								<div id="caption">Target (Waktu)</div>
-								<div id="divinput">
-									<input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_FROM]%>" id="date_from" class="datepicker" value="<%=Formater.formatDate((kpiTargetDetail.getDateFrom() != null ? kpiTargetDetail.getDateFrom() : new Date()), "yyyy-MM-dd")%>" /> to 
-									<input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_TO]%>" id="date_to" class="datepicker" value="<%=Formater.formatDate((kpiTargetDetail.getDateTo()!= null ? kpiTargetDetail.getDateTo() : new Date()), "yyyy-MM-dd")%>"/>
-								</div>
-								<%
-							break;
-							case PstKPI_List.TYPE_JUMLAH:
-								%>
-								<div id="caption">Target (Jumlah)</div>
-								<div id="divinput">
-									<input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT]%>" value="<%=kpiTargetDetail.getAmount()%>"/>
-								</div>
-								<%
-							break;
-							case PstKPI_List.TYPE_PERSENTASE:
-								%>
-								<div id="caption">Target (Persentase)</div>
-								<div id="divinput">
-									<input type="text" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT]%>" value="<%=kpiTargetDetail.getAmount()%>"/>
-								</div>
-								<%
-							break;
-						}
-					%>
-					<% } %>
+                            <% if(weightValue) { %>
+                            <td>
+                                <div id="caption">Weight Value</div>
+                                <div id="divinput">                                    
+                                    <input type="text" name="" id="" placeholder="Weight Value">    
+                                </div>
+                            </td>
+                            <% } %>
+                        </tr>
+                    </table>
 					<div style="border-top: 1px solid #DDD;">&nbsp;</div>
 						<a href="javascript:cmdSaveDetail()" style="color:#FFF;" class="btn">Simpan Detail</a>
 						<a href="javascript:cmdCancel()" style="color:#FFF;" class="btn-red">Batal</a>
