@@ -22,6 +22,9 @@
     String appendData = "";
     boolean isSave = false;
     String kpiName = "";
+    long oidKpiGroup = 0;
+    KPI_Group kpiGroup = new KPI_Group();
+    
     if (empCheck != null) {
         for (int i = 0; i < empCheck.length; i++) {
             double empBobot = FRMQueryString.requestDouble(request, "emp_bobot_" + empCheck[i]);
@@ -56,6 +59,19 @@
         for(int i = 0; i < vKpiList.size(); i++){
             KPI_List objKpiList = (KPI_List) vKpiList.get(i);
             kpiName = objKpiList.getKpi_title();
+        }
+    }
+    
+    if (oidTargetDetail > 0) {
+        Vector vKpiTargetDetail = new Vector();
+        String queryTargetDetail = PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_TARGET_DETAIL_ID] + " = " + oidTargetDetail;
+        vKpiTargetDetail = PstKpiTargetDetail.list(0, 1, queryTargetDetail, "");
+        for(int i = 0; i < vKpiTargetDetail.size(); i++){
+            KpiTargetDetail objKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
+            oidKpiGroup = objKpiTargetDetail.getKpiGroupId();
+        }
+        if(oidKpiGroup > 0){
+            kpiGroup =  PstKPI_Group.fetchExc(oidKpiGroup);
         }
     }
 
@@ -340,7 +356,7 @@
     <body onload="pageLoad()">
         <div class="header">
             <h2 style="color:#999">Pencarian Karyawan</h2>
-            <h4 style="color:#999">Kpi Group : </h4>
+            <h4 style="color:#999">Kpi Group : <%=  kpiGroup.getGroup_title() %> </h4>
             <h4 style="color:#999">Kpi : <%= kpiName %> </h4>
             <%
                 if (oidInsert != 0) {
