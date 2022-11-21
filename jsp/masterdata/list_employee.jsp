@@ -3,6 +3,7 @@
     Created on : Nov 27, 2019, 2:29:38 PM
     Author     : IanRizky
 --%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.dimata.harisma.entity.log.ChangeValue"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ include file = "../main/javainit.jsp" %>
@@ -18,8 +19,8 @@ long oidTargetDetail = FRMQueryString.requestLong(request,"oidTargetDetail");
 
 double nilaiTarget = FRMQueryString.requestDouble(request,"nilaiTarget");
 
-Date dateFrom = FRMQueryString.requestDate(request,"dateFrom");
-Date dateTo = FRMQueryString.requestDate(request,"dateTo");
+String dateFrom = FRMQueryString.requestString(request,"date_from");
+String dateTo = FRMQueryString.requestString(request,"date_to");
 
 String empNum = FRMQueryString.requestString(request, "emp_num");
 String empName = FRMQueryString.requestString(request, "emp_name");

@@ -691,13 +691,13 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                             <td width="10%">
                                 <div id="caption">Date From</div>
                                 <div id="divinput">                                    
-                                    <input type="date" name="" id="">    
+                                    <input type="date" id="" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_FROM]%>" value="<%=kpiTargetDetail.getDateFrom()%>">    
                                 </div>
                             </td>
                             <td>
                                 <div id="caption">Date To</div>
                                 <div id="divinput">                                    
-                                    <input type="date" name="" id="">    
+                                    <input type="date" id="" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_TO]%>" value="<%=kpiTargetDetail.getDateTo()%>">    
                                 </div>
                             </td>
                         </tr>
@@ -744,7 +744,7 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                             <td>
                                 <div id="caption">Weight Value</div>
                                 <div id="divinput">                                    
-                                    <input type="text" name="" id="" placeholder="Weight Value">    
+                                    <input type="text" id="" placeholder="Weight Value" name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_WEIGHT_VALUE]%>" value="<%=kpiTargetDetail.getWeightValue()%>">    
                                 </div>
                             </td>
                             <% } %>
