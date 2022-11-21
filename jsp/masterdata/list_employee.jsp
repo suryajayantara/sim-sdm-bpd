@@ -12,14 +12,17 @@ long companyId = FRMQueryString.requestLong(request, "company");
 long divisionId = FRMQueryString.requestLong(request, "division");
 long departmentId = FRMQueryString.requestLong(request, "department");
 long sectionId = FRMQueryString.requestLong(request, "section");
-
 long positionId = FRMQueryString.requestLong(request, "position");
 long empCategoryId = FRMQueryString.requestLong(request, "category");
+long oidTargetDetail = FRMQueryString.requestLong(request,"oidTargetDetail");
+
+double nilaiTarget = FRMQueryString.requestDouble(request,"nilaiTarget");
+
+Date dateFrom = FRMQueryString.requestDate(request,"dateFrom");
+Date dateTo = FRMQueryString.requestDate(request,"dateTo");
 
 String empNum = FRMQueryString.requestString(request, "emp_num");
 String empName = FRMQueryString.requestString(request, "emp_name");
-
-long oidTargetDetail = FRMQueryString.requestLong(request,"oidTargetDetail");
     
 String whereClause = "";
 ChangeValue changeValue = new ChangeValue();
@@ -102,7 +105,7 @@ Vector listEmployee = PstEmployee.list(0, 0, whereClause, PstEmployee.fieldNames
                                 </tr>
                                 <tr>
                                     <td>
-                                        <input type="text" name="emp_bobot_<%=emp.getOID()%>" placeholder="Nilai Target" />&nbsp;
+                                        <input type="text" name="emp_bobot_<%=emp.getOID()%>" placeholder="Nilai Target" value="<%= nilaiTarget %>" />&nbsp;
                                     </td>
                                 </tr>
                                 <tr>
@@ -110,12 +113,12 @@ Vector listEmployee = PstEmployee.list(0, 0, whereClause, PstEmployee.fieldNames
                                         
                                         <div id="caption">Date From</div>
                                         <div id="divinput">
-                                            <input type="date" name="" placeholder="Date From" />&nbsp;
+                                            <input type="date" name="" placeholder="Date From" value="<%= dateFrom %>"/>&nbsp;
                                         </div>
                                         
                                         <div id="caption">Date To</div>
                                         <div id="divinput">
-                                            <input type="date" name="" placeholder="Date To" />&nbsp;
+                                            <input type="date" name="" placeholder="Date To" value="<%= dateTo %>"/>&nbsp;
                                         </div>
                                     </td>
                                 </tr>

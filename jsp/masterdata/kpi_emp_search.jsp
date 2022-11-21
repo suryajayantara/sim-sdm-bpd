@@ -26,6 +26,8 @@
     KPI_Group kpiGroup = new KPI_Group();
     KpiTarget kpiTarget = new KpiTarget();
     KpiTargetDetail kpiTargetDetail = new KpiTargetDetail();
+    Date dateFrom = null;
+    Date dateTo = null;
     
     if (empCheck != null) {
         for (int i = 0; i < empCheck.length; i++) {
@@ -62,6 +64,8 @@
     if (oidTargetDetail > 0) {
         kpiTargetDetail = PstKpiTargetDetail.fetchExc(oidTargetDetail);
         oidKpiGroup = kpiTargetDetail.getKpiGroupId();
+        dateFrom = kpiTargetDetail.getDateFrom();
+        dateTo = kpiTargetDetail.getDateTo();
 
         if(oidKpiGroup > 0){
             kpiGroup =  PstKPI_Group.fetchExc(oidKpiGroup);
@@ -293,6 +297,9 @@
                     var sect = document.getElementById("section").value;
                     var posi = document.getElementById("position").value;
                     var cate = document.getElementById("category").value;
+                    var dateFrom = document.getElementById("dateFrom").value;
+                    var dateTo = document.getElementById("dateTo").value;
+                    var nilaiTarget = document.getElementById("nilaiTarget").value;
 
                     var oidTargetDetail = document.getElementById("oidTargetDetail").value;
 
@@ -319,8 +326,9 @@
                     strUrl += "&category=" + cate;
                     strUrl += "&emp_num=" + empNum;
                     strUrl += "&emp_name=" + empName;
-                    strUrl += "&date_from =" + kpiTargetDetail.getDateFrom();
-                    strUrl += "&date_to =" + kpiTargetDetail.getDateTo();
+                    strUrl += "&date_from=" + dateFrom;
+                    strUrl += "&date_to=" + dateTo;
+                    strUrl += "&nilaiTarget=" + nilaiTarget;
 
                     strUrl += "&oidTargetDetail=" + oidTargetDetail;
 
@@ -348,7 +356,7 @@
     </head>
     <body onload="pageLoad()">
         <div class="header">
-            <h2 style="color:#999">Pencarian Karyawan</h2>
+            <h2 style="color:#999">Pencarian Karyawan <%= kpiTargetDetail.getDateFrom() %></h2>
             <h4 style="color:#999">Kpi Group : <%=  kpiGroup.getGroup_title() %> </h4>
             <h4 style="color:#999">Kpi : <%= kpiName %> </h4>
             <%
@@ -363,6 +371,9 @@
             <form name="frm" method="post" action="">
                 <input type="hidden" id="oidTargetDetail" name="oidTargetDetail" value="<%= oidTargetDetail%>" />
                 <input type="hidden" id="targetId" name="targetId" value="<%= oidTarget%>" />
+                <input type="hidden" id="dateFrom" value="<%= dateFrom %>" />
+                <input type="hidden" id="dateTo" value="<%= dateTo %>" />
+                <input type="hidden" id="nilaiTarget" value="<%= kpiTargetDetail.getAmount() %>" />
                 <table width="100%">
                     <tr>
                         <td valign="top" width="50%">
