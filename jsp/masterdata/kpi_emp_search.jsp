@@ -24,6 +24,8 @@
     String kpiName = "";
     long oidKpiGroup = 0;
     KPI_Group kpiGroup = new KPI_Group();
+    KpiTarget kpiTarget = new KpiTarget();
+    KpiTargetDetail kpiTargetDetail = new KpiTargetDetail();
     
     if (empCheck != null) {
         for (int i = 0; i < empCheck.length; i++) {
@@ -53,23 +55,14 @@
     }
 
     if (oidKpi > 0) {
-        Vector vKpiList = new Vector();
-        String query = PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID] + " = " + oidKpi;
-        vKpiList = PstKPI_List.list(0, 1, query, "");
-        for(int i = 0; i < vKpiList.size(); i++){
-            KPI_List objKpiList = (KPI_List) vKpiList.get(i);
-            kpiName = objKpiList.getKpi_title();
-        }
+        KPI_List objKpiList = PstKPI_List.fetchExc(oidKpi);
+        kpiName = objKpiList.getKpi_title();
     }
     
     if (oidTargetDetail > 0) {
-        Vector vKpiTargetDetail = new Vector();
-        String queryTargetDetail = PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_TARGET_DETAIL_ID] + " = " + oidTargetDetail;
-        vKpiTargetDetail = PstKpiTargetDetail.list(0, 1, queryTargetDetail, "");
-        for(int i = 0; i < vKpiTargetDetail.size(); i++){
-            KpiTargetDetail objKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
-            oidKpiGroup = objKpiTargetDetail.getKpiGroupId();
-        }
+        kpiTargetDetail = PstKpiTargetDetail.fetchExc(oidTargetDetail);
+        oidKpiGroup = kpiTargetDetail.getKpiGroupId();
+
         if(oidKpiGroup > 0){
             kpiGroup =  PstKPI_Group.fetchExc(oidKpiGroup);
         }
@@ -290,8 +283,6 @@
             <%}%>
                 }
 
-
-
                 function cmdSearch() {
                     var strUrl = "";
                     var empNum = document.getElementById("emp_num").value;
@@ -328,6 +319,8 @@
                     strUrl += "&category=" + cate;
                     strUrl += "&emp_num=" + empNum;
                     strUrl += "&emp_name=" + empName;
+                    strUrl += "&date_from =" + kpiTargetDetail.getDateFrom();
+                    strUrl += "&date_to =" + kpiTargetDetail.getDateTo();
 
                     strUrl += "&oidTargetDetail=" + oidTargetDetail;
 
