@@ -16,6 +16,7 @@ import com.dimata.qdep.entity.Entity;
     private String type_name = "";
     private String description = "";
     private int indexing = 0;
+    private long kpi_setting_type_id = 0;
 
     public long getKpi_type_id() {
         return kpi_type_id;
@@ -47,6 +48,14 @@ import com.dimata.qdep.entity.Entity;
 
     public void setIndexing(int indexing) {
         this.indexing = indexing;
+    }
+    
+    public long getKpiSettingTypeId() {
+        return kpi_setting_type_id;
+    }
+
+    public void setKpiSettingTypeId(long kpi_setting_type_id) {
+        this.kpi_setting_type_id = kpi_setting_type_id;
     }
 
 }

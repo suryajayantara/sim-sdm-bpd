@@ -150,6 +150,10 @@
         <servlet-name>AjaxCompetencyOption</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.competency.AjaxCompetencyOption</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AjaxDeleteKpiSettingType</servlet-name>
+        <servlet-class>com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingType</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AchievementPdf</servlet-name>
         <url-pattern>/servlet/com.dimata.harisma.report.employee.AchievementPdf</url-pattern>
@@ -1614,6 +1618,10 @@
     <servlet-mapping>
         <servlet-name>AjaxCompetencyOption</servlet-name>
         <url-pattern>/AjaxCompetencyOption</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AjaxDeleteKpiSettingType</servlet-name>
+        <url-pattern>/AjaxDeleteKpiSettingType</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
