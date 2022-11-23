@@ -5,7 +5,13 @@
  */
 package com.dimata.harisma.ajax.kpisetting;
 
+import com.dimata.harisma.entity.masterdata.KPI_Group;
+import com.dimata.harisma.entity.masterdata.PstKPI_Group;
+import com.dimata.harisma.entity.masterdata.PstKpiSetting;
+import com.dimata.harisma.entity.masterdata.PstKpiSettingGroup;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingType;
+import com.dimata.harisma.form.masterdata.FrmKPI_Type;
+import com.dimata.harisma.form.masterdata.FrmKpiSetting;
 import com.dimata.harisma.form.masterdata.FrmKpiSettingType;
 import com.dimata.qdep.form.FRMQueryString;
 import com.dimata.util.Command;
@@ -36,12 +42,23 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int isFormKpiSettingType = FRMQueryString.requestInt(request, "isFormKpiSettingType");
         long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
+        long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+        long oidKpiType = FRMQueryString.requestLong(request, FrmKPI_Type.fieldNames[FrmKPI_Type.FRM_FIELD_KPI_TYPE_ID]);
         int iCommand = FRMQueryString.requestCommand(request);
 
         try {
             if(iCommand == Command.DELETE){
                 if((oidKpiSettingType != 0) && (isFormKpiSettingType == 1)){
-                     long oidDelete  = PstKpiSettingType.deleteExc(oidKpiSettingType); 
+                    long oidDeleteKpiSettingType  = PstKpiSettingType.deleteExc(oidKpiSettingType);
+                     
+                    String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID`='"+ oidKpiSetting +"' AND hr_kpi_setting_type.`KPI_TYPE_ID`='"+ oidKpiType +"'";
+                    Vector vKpiGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
+                    if(vKpiGroup.size() > 0){
+                        for(int j = 0; j < vKpiGroup.size(); j++){
+                            KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
+                            long oidDeleteKpiGroup = PstKpiSettingGroup.deleteByKpiGroup(objKpiGroup.getOID());
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
