@@ -393,7 +393,7 @@
                                     <a href="javascript:init('<%=kpiSetting.getOID()%>', '<%=kpiType.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
                                         <strong><i class="fa fa-plus"></i></strong>
                                     </a>
-                                    <a href="javascript:cmdDeleteKpiType('<%= kpiType.getKpiSettingTypeId() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                                    <a href="javascript:cmdDeleteKpiType('<%= kpiType.getKpiSettingTypeId() %>', '<%= oidKpiSetting %>', '<%= kpiType.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
                                         <strong><i class="fa fa-trash"></i></strong>
                                     </a>
                                 </div>
@@ -501,7 +501,8 @@
                             <label for="exampleInputPassword1">Kpi Type</label>
                             <select name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" id="kpiTypeId" class="select2" style="width: 100%;">
                                 <option value="">=Select=</option>
-                                <%
+                                <%        
+                                    boolean showKpi = true;
                                     Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
                                     for (int i = 0; i < listKpiType.size(); i++) {
                                         KPI_Type objKpiType = (KPI_Type) listKpiType.get(i);
@@ -510,13 +511,12 @@
                                             for (int j = 0; j < oid_kpi_type.length; j++) {
                                                 String oidKpiType = "" + objKpiType.getOID();
                                                 if (oidKpiType.equals("" + oid_kpi_type[j])) {
-                                                    selected = "selected";
+                                                    selected = "disabled";
                                                 }
                                             }
                                         }
-
                                 %>
-                                    <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option>
+                                    <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option> 
                                 <%
                                     }
                                 %>
@@ -660,28 +660,26 @@
             document.FRM_NAME_KPISETTINGLIST.submit();
         }
         
-        function cmdDeleteKpiType(oid) {
-//            const FRM_NAME_KPISETTINGTYPE = document.getElementById("FRM_NAME_KPISETTINGTYPE_" + oid);
-//            FRM_NAME_KPISETTINGTYPE.<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>.value = oid;
-//            FRM_NAME_KPISETTINGTYPE.command.value = "<%=Command.DELETE %>";
-//            FRM_NAME_KPISETTINGTYPE.action = "kpi_setting_form.jsp";
-//            FRM_NAME_KPISETTINGTYPE.submit();
-            
-            var strUrl = "";
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    alert("Success");
-                    window.location.reload();
+        function cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType) {
+            if(confirm("Data KPI Type dan KPI Group akan terhapus, anda yakin?")){
+                var strUrl = "";
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        alert("Data berhasil dihapus");
+                        window.location.reload();
+                    }
                 }
-            }
-            strUrl = "<%= approot %>/AjaxDeleteKpiSettingType";
-            strUrl += "?FRM_FIELD_KPI_SETTING_TYPE_ID="+oid;
-            strUrl += "&isFormKpiSettingType=1";
-            strUrl += "&command=<%=Command.DELETE %>";
+                strUrl = "<%= approot %>/AjaxDeleteKpiSettingType";
+                strUrl += "?FRM_FIELD_KPI_SETTING_TYPE_ID="+oidKpiSettingType;
+                strUrl += "&FRM_FIELD_KPI_SETTING_ID="+oidKpiSetting;
+                strUrl += "&FRM_FIELD_KPI_TYPE_ID="+oidKpiType;
+                strUrl += "&isFormKpiSettingType=1";
+                strUrl += "&command=<%=Command.DELETE %>";
 
-            xmlhttp.open("GET", strUrl, true);
-            xmlhttp.send();
+                xmlhttp.open("GET", strUrl, true);
+                xmlhttp.send();
+            }
         }
         
         var popup; 
