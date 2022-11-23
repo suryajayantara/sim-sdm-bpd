@@ -320,16 +320,17 @@
                 </div>  
             </form>
         </div>
-        <%
-            for (int i = 0; i < vKpiSettingGroup.size(); i++) {
-                KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);
-        %>
+        <div>
         <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
             <input type="hidden" name="command" value="<%=iCommand%>">
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
             <input type="hidden" name="typeform" value="1">
+              <%
+            for (int i = 0; i < vKpiSettingGroup.size(); i++) {
+                KPI_Group objKpiGroup = (KPI_Group) vKpiSettingGroup.get(i);
+        %>
             <div class="box mb-2">
                 <div  class="formstyle">
                     <div class="d-flex justify-content-between">
@@ -369,7 +370,9 @@
                                     <%= objKpiList.getKpi_title()%> 
                                     <%-- <i class="fa fa-question-circle-o fa-lg" aria-hidden="true" data-toggle="popover" data-trigger="click" data-content="<%= objKpiList.getDescription() %>"></i> --%>
                                 </td>
-                                <td></td>
+                                <td>
+                                    p
+                                </td>
                                 <td>
                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                                     <center>
@@ -378,10 +381,9 @@
                                 </td>
                                 <td>10</td>
                                 <td>
-                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                                     <div class="responsive-container">
                                         <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
-                                        <a href="" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                        <a href="javascript:cmdDeleteKpiSettingList('<%=objKpiList.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
                                     </div>
                                 </td>
                             </tr>
@@ -397,8 +399,10 @@
                     </table>    
                 </div>
             </div> 
-        </form> 
-        <% }%>
+                        <% }%>
+        </form>
+       </div>
+        
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -488,7 +492,20 @@
             function cmdDeleteGroup(oid) {
                 document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
                 document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+            function cmdDeleteKpiSettingList(oid) {
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+            }
+            
+           function cmdDeleteGroup(oid) {
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
 
