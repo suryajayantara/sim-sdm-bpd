@@ -3,6 +3,7 @@
     Created on : Nov 27, 2019, 2:29:38 PM
     Author     : IanRizky
 --%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.dimata.harisma.entity.log.ChangeValue"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ include file = "../main/javainit.jsp" %>
@@ -12,14 +13,17 @@ long companyId = FRMQueryString.requestLong(request, "company");
 long divisionId = FRMQueryString.requestLong(request, "division");
 long departmentId = FRMQueryString.requestLong(request, "department");
 long sectionId = FRMQueryString.requestLong(request, "section");
-
 long positionId = FRMQueryString.requestLong(request, "position");
 long empCategoryId = FRMQueryString.requestLong(request, "category");
+long oidTargetDetail = FRMQueryString.requestLong(request,"oidTargetDetail");
+
+double nilaiTarget = FRMQueryString.requestDouble(request,"nilaiTarget");
+
+String dateFrom = FRMQueryString.requestString(request,"date_from");
+String dateTo = FRMQueryString.requestString(request,"date_to");
 
 String empNum = FRMQueryString.requestString(request, "emp_num");
 String empName = FRMQueryString.requestString(request, "emp_name");
-
-long oidTargetDetail = FRMQueryString.requestLong(request,"oidTargetDetail");
     
 String whereClause = "";
 ChangeValue changeValue = new ChangeValue();
@@ -89,12 +93,37 @@ Vector listEmployee = PstEmployee.list(0, 0, whereClause, PstEmployee.fieldNames
                         <td>
                             <input type="checkbox" id="myCheck" name="emp_check" value="<%= emp.getOID() %>" />&nbsp;
                         </td>
-                        <td>
+                        <td style="border-right: 1px solid black" width="50%">
                             <div><strong><%= emp.getEmployeeNum() %> | <%= emp.getFullName() %></strong></div>
                             <div><%= changeValue.getPositionName(emp.getPositionId())  %></div>
                         </td>
                         <td>
-                            <input type="text" name="emp_bobot_<%=emp.getOID()%>" placeholder="Bobot Distribusi" />&nbsp;
+                            <table>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="" placeholder="Bobot Penilaian KPI" />&nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="emp_bobot_<%=emp.getOID()%>" placeholder="Nilai Target" value="<%= nilaiTarget %>" />&nbsp;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        
+                                        <div id="caption">Date From</div>
+                                        <div id="divinput">
+                                            <input type="date" name="" placeholder="Date From" value="<%= dateFrom %>"/>&nbsp;
+                                        </div>
+                                        
+                                        <div id="caption">Date To</div>
+                                        <div id="divinput">
+                                            <input type="date" name="" placeholder="Date To" value="<%= dateTo %>"/>&nbsp;
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>

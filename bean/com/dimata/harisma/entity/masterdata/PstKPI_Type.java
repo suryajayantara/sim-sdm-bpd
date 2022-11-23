@@ -227,7 +227,8 @@ public class PstKPI_Type extends DBHandler implements I_DBInterface, I_DBType, I
 "	`hr_kpi_setting`.`KPI_SETTING_ID`,\n" +
 "	`hr_kpi_type`.`KPI_TYPE_ID`,\n" +
 "	`hr_kpi_type`.`NUMBER_INDEX`,\n" +
-"	`hr_kpi_type`.`DESCRIPTION`\n" +
+"	`hr_kpi_type`.`DESCRIPTION`, \n" +
+"       `hr_kpi_setting_type`.KPI_SETTING_TYPE_ID \n"+
 "	\n" +
 "	 FROM `hr_kpi_setting`\n" +
 "	 LEFT JOIN `hr_kpi_setting_type`\n" +
@@ -240,7 +241,7 @@ public class PstKPI_Type extends DBHandler implements I_DBInterface, I_DBType, I
             ResultSet rs = dbrs.getResultSet();
             while (rs.next()) {
                 KPI_Type kPI_Type = new KPI_Type();
-                resultToObject(rs, kPI_Type);
+                resultToObjectJoinKpiSettingAndType(rs, kPI_Type);
                 lists.add(kPI_Type);
             }
             rs.close();
@@ -282,12 +283,23 @@ public class PstKPI_Type extends DBHandler implements I_DBInterface, I_DBType, I
     
     
     
-      public static void resultToObject(ResultSet rs, KPI_Type kPI_Type) {
+    public static void resultToObject(ResultSet rs, KPI_Type kPI_Type) {
         try {
             kPI_Type.setOID(rs.getLong(PstKPI_Type.fieldNames[PstKPI_Type.FLD_KPI_TYPE_ID]));
             kPI_Type.setType_name(rs.getString(PstKPI_Type.fieldNames[PstKPI_Type.FLD_TYPE_NAME]));
             kPI_Type.setDescription(rs.getString(PstKPI_Type.fieldNames[PstKPI_Type.FLD_DESCRIPTION]));
             kPI_Type.setIndexing(rs.getInt(PstKPI_Type.fieldNames[PstKPI_Type.FLD_INDEXING]));                 
+        } catch (Exception e) {
+        }
+    }
+    
+    public static void resultToObjectJoinKpiSettingAndType(ResultSet rs, KPI_Type kPI_Type) {
+        try {
+            kPI_Type.setOID(rs.getLong(PstKPI_Type.fieldNames[PstKPI_Type.FLD_KPI_TYPE_ID]));
+            kPI_Type.setType_name(rs.getString(PstKPI_Type.fieldNames[PstKPI_Type.FLD_TYPE_NAME]));
+            kPI_Type.setDescription(rs.getString(PstKPI_Type.fieldNames[PstKPI_Type.FLD_DESCRIPTION]));
+            kPI_Type.setIndexing(rs.getInt(PstKPI_Type.fieldNames[PstKPI_Type.FLD_INDEXING]));                 
+            kPI_Type.setKpiSettingTypeId(rs.getLong("KPI_SETTING_TYPE_ID"));                 
         } catch (Exception e) {
         }
     }

@@ -382,19 +382,23 @@
                 if(kpiType.getOID() > 0){
         %>
                 <div class="formstyle mb-3">
-                    <div class="row mb-3">
-                        <div class="col d-flex justify-content-between">
-                            <span> <%= kpiType.getType_name() %> </span>
-                            <div>
-                                <a href="javascript:init('<%=kpiSetting.getOID()%>', '<%=kpiType.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
-                                    <strong><i class="fa fa-plus"></i></strong>
-                                </a>
-                                <a href="#" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
-                                    <strong><i class="fa fa-trash"></i></strong>
-                                </a>
+                    <form name="<%= FrmKpiSettingType.FRM_NAME_KPISETTINGTYPE %>_<%= kpiType.getKpiSettingTypeId() %>" method="get" id="FRM_NAME_KPISETTINGTYPE_<%= kpiType.getKpiSettingTypeId() %>">
+                        <input type="hidden" name="command" value="<%= iCommand %>">
+                        <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%= kpiType.getOID() %>">
+                        <div class="row mb-3">
+                            <div class="col d-flex justify-content-between">
+                                <span> <%= kpiType.getType_name() %> </span>
+                                <div>
+                                    <a href="javascript:init('<%=kpiSetting.getOID()%>', '<%=kpiType.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
+                                        <strong><i class="fa fa-plus"></i></strong>
+                                    </a>
+                                    <a href="javascript:cmdDeleteKpiType('<%= kpiType.getKpiSettingTypeId() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                                        <strong><i class="fa fa-trash"></i></strong>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </div>      
+                    </form>
                     <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
                         <input type="hidden" name="command" value="<%=iCommand%>">
                         <input type="hidden" name="typeform" value="3">
@@ -494,7 +498,7 @@
                         <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
                         <div class="form-group">
                             <label for="exampleInputPassword1">Kpi Type</label>
-                            <select name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" id="kpiTypeId" class="select2" style="width: 100%;" multiple>
+                            <select name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" id="kpiTypeId" class="select2" style="width: 100%;">
                                 <option value="">=Select=</option>
                                 <%
                                     Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
@@ -561,8 +565,7 @@
                 theme: 'bootstrap4'
             })
         })
-    </script>
-    <script type="text/javascript">
+        
         var config = {
             '.chosen-select': {},
             '.chosen-select-deselect': {allow_single_deselect: true},
@@ -573,6 +576,16 @@
         for (var selector in config) {
             $(selector).chosen(config[selector]);
         }
+        
+        $(function () {
+            $('#only-number').on('keydown', '#number', function (e) {
+                -1 !== $
+                        .inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || /65|67|86|88/
+                        .test(e.keyCode) && (!0 === e.ctrlKey || !0 === e.metaKey)
+                        || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode)
+                        && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
+            });
+        })
     </script>
 
     <script language="JavaScript">
@@ -640,11 +653,35 @@
         }
         
         function cmdDeleteKpiGroup(oid) {
-                document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
-                document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.DELETE %>";
-                document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_form.jsp";
-                document.FRM_NAME_KPISETTINGLIST.submit();
+            document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
+            document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.DELETE %>";
+            document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_form.jsp";
+            document.FRM_NAME_KPISETTINGLIST.submit();
+        }
+        
+        function cmdDeleteKpiType(oid) {
+//            const FRM_NAME_KPISETTINGTYPE = document.getElementById("FRM_NAME_KPISETTINGTYPE_" + oid);
+//            FRM_NAME_KPISETTINGTYPE.<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>.value = oid;
+//            FRM_NAME_KPISETTINGTYPE.command.value = "<%=Command.DELETE %>";
+//            FRM_NAME_KPISETTINGTYPE.action = "kpi_setting_form.jsp";
+//            FRM_NAME_KPISETTINGTYPE.submit();
+            
+            var strUrl = "";
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    alert("Success");
+                    window.location.reload();
+                }
             }
+            strUrl = "<%= approot %>/AjaxDeleteKpiSettingType";
+            strUrl += "?FRM_FIELD_KPI_SETTING_TYPE_ID="+oid;
+            strUrl += "&isFormKpiSettingType=1";
+            strUrl += "&command=<%=Command.DELETE %>";
+
+            xmlhttp.open("GET", strUrl, true);
+            xmlhttp.send();
+        }
         
         var popup; 
 
@@ -658,17 +695,5 @@
             popup.focus();
         }
     </script>  
-
-    <script>
-        $(function () {
-            $('#only-number').on('keydown', '#number', function (e) {
-                -1 !== $
-                        .inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || /65|67|86|88/
-                        .test(e.keyCode) && (!0 === e.ctrlKey || !0 === e.metaKey)
-                        || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode)
-                        && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
-            });
-        })
-    </script>
 </html>
 

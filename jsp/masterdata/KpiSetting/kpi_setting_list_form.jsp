@@ -459,7 +459,7 @@
                         <h5 class="modal-title" id="exampleModalLabel2"><span id="kpi-group-name"></span></h5>
                     </div>                            
                     <div id="kpi-list-body" class="modal-body" style="max-height: 500px;">
-
+                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

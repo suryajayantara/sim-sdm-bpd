@@ -122,14 +122,14 @@ public class CtrlKpiSettingType extends Control implements I_Language {
                     try { 
                         /*ini berfungsi untuk menyimpan data multiple, dengan 1 jsp tetapi isi beberapa form dengan table berbeda dari form yang lain*/
                         //long oid = pstKpiSettingType.insertExc(this.entKpiSettingType);
-                        PstKpiSettingType.deleteByKpiSetting(this.entKpiSettingType.getKpiSettingId());
+//                        PstKpiSettingType.deleteByKpiSetting(this.entKpiSettingType.getKpiSettingId());
                         Vector<Long> vOidKpiType = frmKpiSettingType.getvOidKpiType();
                           if (vOidKpiType != null){
                               for(int ux = 0 ; ux < vOidKpiType.size();ux++){
-                              KpiSettingType objKpiSettingType = new KpiSettingType();
-                              objKpiSettingType.setKpiSettingId(entKpiSettingType.getKpiSettingId());
-                              objKpiSettingType.setKpiTypeId(vOidKpiType.get(ux));
-                              PstKpiSettingType.insertExc(objKpiSettingType);
+                                  KpiSettingType objKpiSettingType = new KpiSettingType();
+                                  objKpiSettingType.setKpiSettingId(entKpiSettingType.getKpiSettingId());
+                                  objKpiSettingType.setKpiTypeId(vOidKpiType.get(ux));
+                                  PstKpiSettingType.insertExc(objKpiSettingType);
                               }
                           }
                        
@@ -144,7 +144,7 @@ public class CtrlKpiSettingType extends Control implements I_Language {
 
                 } else {
                     try {
-                        PstKpiSettingType.deleteByKpiSetting(this.entKpiSettingType.getOID());
+//                        PstKpiSettingType.deleteByKpiSetting(this.entKpiSettingType.getOID());
                         this.oidKpiSettingType = oidKpiSettingType;
                         Vector<Long> vOidKpiType = frmKpiSettingType.getvOidKpiType();
                         if (vOidKpiType != null) {
