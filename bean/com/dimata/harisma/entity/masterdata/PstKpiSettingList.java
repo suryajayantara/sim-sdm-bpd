@@ -356,5 +356,24 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
         }
         return result;
     }
+    
+    public static long deleteByKpiList(long kpi_setting_list_id) {
+        DBResultSet dbrs = null;
+        try {
+            String sql = "DELETE FROM " + PstKpiSettingList.TBL_KPISETTINGLIST
+                    + " WHERE " + PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_LIST_ID]
+                    + " = '" + kpi_setting_list_id + "'";
+
+            int status = DBHandler.execUpdate(sql);
+            return kpi_setting_list_id;
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            DBResultSet.close(dbrs);
+        }
+
+        return 0;
+        
+    }
 
 }

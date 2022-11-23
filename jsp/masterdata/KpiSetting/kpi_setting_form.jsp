@@ -94,7 +94,7 @@
     int endYear = calNow.get(Calendar.YEAR) + 3;
 
     valTahun.add("Select..");
-    keyTahun.add("0");
+    keyTahun.add("select");
     for (int i = startYear; i <= endYear; i++) {
         valTahun.add("" + i);
         keyTahun.add("" + i);
@@ -114,7 +114,6 @@
         }
     }
     KpiSetting kpiSetting = ctrlKpiSetting.getKpiSetting();
-
 
     /*controller untuk simpan data kpi setting type*/
     CtrlKpiSettingType ctrlKpiSettingType = new CtrlKpiSettingType(request);
@@ -295,7 +294,7 @@
                                 </div>
                                 <div id="caption">Jabatan</div>
                                 <div id="divinput">
-                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_POSITION_ID]%>" style="width: 20%;" data-placeholder='Select Jabatan...'  multiple="multiple" class="select2 custom-select form-select-sm col-6" valie="<%=oidKpiSetting%>">
+                                    <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_POSITION_ID]%>" style="width: 20%;" data-placeholder='Select Jabatan...'  multiple="multiple" class="select2 custom-select form-select-sm col-6" value="<%=oidKpiSetting%>">
                                         <%
                                             Vector listPosition = PstPosition.list(0, 0, "", "");
                                             for (int i = 0; i < listPosition.size(); i++) {

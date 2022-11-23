@@ -530,7 +530,7 @@ function cmdUpdateView(){
                                                                                                                 </tr>
                                                                                                                 <tr align="left" valign="top">
                                                                                                                     <td valign="top" width="17%">
-                                                                                                                        KPI List</td>
+                                                                                                                        Company</td>
                                                                                                                     <td width="83%">
                                                                                                                         <%
                                                                                                                             Vector comp_value1 = new Vector(1, 1);
