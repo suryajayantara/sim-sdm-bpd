@@ -229,6 +229,10 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                 document.frmKPI_Company_Target.action = "KPI_target.jsp";
                 document.frmKPI_Company_Target.submit();
             }
+            
+            function cmdAddDetailByKpiSetting() {
+                
+            }
 
             function cmdDep(divId) {
                 document.frmKPI_Company_Target.command.value = "<%=Command.EDIT%>";
@@ -523,6 +527,7 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                         if (kpiTarget.getOID() > 0) {
                     %>
                     <a href="javascript:cmdAddDetail()" style="color:#FFF;" class="btn">Tambah Detail</a>
+                    <a href="javascript:cmdAddDetailByKpiSetting()" style="color:#FFF;" class="btn">Tambah Detail Berdasarkan KPI Setting</a>
                     <%
                         }
                     %>

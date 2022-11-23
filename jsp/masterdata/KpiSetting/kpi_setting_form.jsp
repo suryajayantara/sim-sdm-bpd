@@ -420,7 +420,7 @@
                             </thead>
                             <tbody>
                                 <%
-                                    String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID`='"+ oidKpiSetting +"' AND hr_kpi_setting_type.`KPI_TYPE_ID`='"+ kpiType.getOID() +"'";
+                                    String kpiGroupQuery = "hr_kpi_setting_type.`KPI_SETTING_ID`='"+oidKpiSetting+"' AND hr_kpi_setting_type.`KPI_TYPE_ID`='"+kpiType.getOID()+"'";
                                     vKpiGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
                                     if(vKpiGroup.size() > 0){
                                         for(int j = 0; j < vKpiGroup.size(); j++){

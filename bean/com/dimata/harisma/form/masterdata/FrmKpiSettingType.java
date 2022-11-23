@@ -25,18 +25,21 @@ public class FrmKpiSettingType extends FRMHandler implements I_FRMInterface, I_F
   public static final int FRM_FIELD_KPI_SETTING_TYPE_ID = 0;
   public static final int FRM_FIELD_KPI_SETTING_ID = 1;
   public static final int FRM_FIELD_KPI_TYPE_ID = 2;
+  public static final int FRM_FIELD_KPI_GROUP_ID = 3;
 
 
 public static String[] fieldNames = {
     "FRM_FIELD_KPI_SETTING_TYPE_ID",
     "FRM_FIELD_KPI_SETTING_ID",
-    "FRM_FIELD_KPI_TYPE_ID"
+    "FRM_FIELD_KPI_TYPE_ID",
+    "FRM_FIELD_KPI_GROUP_ID"
 };
 
 public static int[] fieldTypes = {
     TYPE_LONG,
     TYPE_LONG,
-    TYPE_VECTOR_LONG
+    TYPE_VECTOR_LONG,
+    TYPE_LONG,
 };
 
 public FrmKpiSettingType() {
