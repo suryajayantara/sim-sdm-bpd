@@ -391,14 +391,15 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         }
     }
     
+    /*eidt by suryawan*/
     public static void resultToObjectGetTitle(ResultSet rs, KPI_List kPI_List) {
         try {
-            kPI_List.setKpi_title(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]));
+            kPI_List.setOID(rs.getLong(PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]));
             kPI_List.setKpi_title(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_TITLE]));
             kPI_List.setDescription(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_DESCRIPTION]));
         } catch (Exception e) {
             System.out.println(e);
-        }
+        } 
     }
 
     public static boolean checkOID(long kPI_ListId) {

@@ -16,6 +16,7 @@ import com.dimata.qdep.system.*;
 import com.dimata.qdep.form.*;
 import com.dimata.qdep.db.*;
 import com.dimata.harisma.entity.masterdata.*;
+import java.util.Vector;
 
 /*
 Description : Controll KpiSettingList
@@ -118,8 +119,17 @@ public class CtrlKpiSettingList extends Control implements I_Language {
 
                 if (entKpiSettingList.getOID() == 0) {
                     try {
-                        long oid = pstKpiSettingList.insertExc(this.entKpiSettingList);
-                        msgString = FRMMessage.getMessage(FRMMessage.MSG_SAVED);
+//                        PstKpiSettingList.deleteByKpiSetting(this.entKpiSettingType.getKpiSettingId());
+                        Vector<Long> vOidKpiList = frmKpiSettingList.getvOidKpiList();
+                          if (vOidKpiList != null){
+                              for(int i = 0 ; i < vOidKpiList.size();i++){
+                              KpiSettingList objKpiSettingList = new KpiSettingList();
+                              objKpiSettingList.setKpiSettingId(entKpiSettingList.getKpiSettingId());
+                              objKpiSettingList.setKpiDistributionId(entKpiSettingList.getKpiDistributionId());
+                              objKpiSettingList.setKpiListId(vOidKpiList.get(i));
+                              PstKpiSettingList.insertExc(objKpiSettingList);
+                              }
+                          }
                     } catch (DBException dbexc) {
                         excCode = dbexc.getErrorCode();
                         msgString = getSystemMessage(excCode);

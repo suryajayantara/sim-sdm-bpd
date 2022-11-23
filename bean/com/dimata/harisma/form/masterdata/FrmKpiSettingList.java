@@ -13,11 +13,16 @@ import com.dimata.harisma.entity.masterdata.KpiSettingList;
 import com.dimata.qdep.form.FRMHandler;
 import com.dimata.qdep.form.I_FRMInterface;
 import com.dimata.qdep.form.I_FRMType;
+import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 public class FrmKpiSettingList extends FRMHandler implements I_FRMInterface, I_FRMType {
 
+    public Vector <Long> getvOidKpiList() {
+        return vOidKpiList;
+    }
     private KpiSettingList entKpiSettingList;
+    public Vector <Long> vOidKpiList = null;
     public static final String FRM_NAME_KPISETTINGLIST = "FRM_NAME_KPISETTINGLIST";
     public static final int FRM_FIELD_KPI_SETTING_LIST_ID = 0;
     public static final int FRM_FIELD_KPI_SETTING_ID = 1;
@@ -75,7 +80,7 @@ public class FrmKpiSettingList extends FRMHandler implements I_FRMInterface, I_F
             this.requestParam();
             entKpiSettingList.setKpiSettingListId(getLong(FRM_FIELD_KPI_SETTING_LIST_ID));
             entKpiSettingList.setKpiSettingId(getLong(FRM_FIELD_KPI_SETTING_ID));
-            entKpiSettingList.setKpiListId(getLong(FRM_FIELD_KPI_LIST_ID));
+            vOidKpiList = getVectorLong(fieldNames[FRM_FIELD_KPI_LIST_ID]);
             entKpiSettingList.setKpiDistributionId(getLong(FRM_FIELD_KPI_DISTRIBUTION_ID));
         } catch (Exception e) {
             System.out.println("Error on requestEntityObject : " + e.toString());
