@@ -34,7 +34,12 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
     public static final int FLD_KORELASI = 9;
     public static final int FLD_RANGE_START = 10;
     public static final int FLD_RANGE_END = 11;
+    
+    
+    public static final int FLD_DISTRIBUTION_ID = 12;
+    
 
+    
     public static final String[] fieldNames = {
         "KPI_LIST_ID",
         "COMPANY_ID",
@@ -47,7 +52,11 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         "PARENT_ID",
         "KORELASI",
         "RANGE_START",
-        "RANGE_END"
+        "RANGE_END",
+        
+        
+        "DISTRIBUTION_ID"
+            
     };
     public static final int[] fieldTypes = {
         TYPE_LONG + TYPE_PK + TYPE_ID,
@@ -61,7 +70,9 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         TYPE_LONG,
         TYPE_INT,
         TYPE_FLOAT,
-        TYPE_FLOAT
+        TYPE_FLOAT,
+        
+        TYPE_LONG
     };
 
     public static final int KORELASI_POSITIF = 0;
@@ -171,6 +182,7 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
             kPI_List.setKorelasi(pstKPI_List.getInt(FLD_KORELASI));
             kPI_List.setRangeStart(pstKPI_List.getfloat(FLD_RANGE_START));
             kPI_List.setRangeEnd(pstKPI_List.getfloat(FLD_RANGE_END));
+            
             return kPI_List;
 
         } catch (DBException dbe) {
@@ -290,10 +302,13 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         Vector lists = new Vector();
         DBResultSet dbrs = null;
         try {
-            String sql = "SELECT hr_kpi_list.`KPI_LIST_ID`, hr_kpi_list.`KPI_TITLE`, hr_kpi_list.`DESCRIPTION` FROM hr_kpi_setting \n"
-                    + "INNER JOIN hr_kpi_setting_group ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_group.`KPI_SETTING_ID` \n"
-                    + "INNER JOIN hr_kpi_setting_list ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_list.`KPI_SETTING_ID` \n"
-                    + "INNER JOIN hr_kpi_list ON hr_kpi_setting_list.`KPI_LIST_ID` = hr_kpi_list.`KPI_LIST_ID` \n"
+            String sql = "SELECT hr_kpi_list.`KPI_TITLE`, hr_kpi_distribution.`DISTRIBUTION` FROM hr_kpi_setting_group\n" +
+                    "INNER JOIN `hr_kpi_setting` ON `hr_kpi_setting_group`.`KPI_SETTING_ID` = `hr_kpi_setting`.`KPI_SETTING_ID`\n" +
+                    "INNER JOIN hr_kpi_group ON hr_kpi_setting_group.`KPI_GROUP_ID` = hr_kpi_group.`KPI_GROUP_ID`\n" +
+                    "INNER JOIN hr_kpi_list_group ON hr_kpi_group.`KPI_GROUP_ID` = hr_kpi_list_group.`KPI_GROUP_ID`\n" +
+                    "INNER JOIN hr_kpi_list ON hr_kpi_list_group.`KPI_LIST_ID` = hr_kpi_list.`KPI_LIST_ID`\n" +
+                    "INNER JOIN hr_kpi_setting_list ON hr_kpi_list.`KPI_LIST_ID` = hr_kpi_setting_list.`KPI_LIST_ID`\n" +
+                    "INNER JOIN hr_kpi_distribution ON hr_kpi_setting_list.`KPI_DISTRIBUTION_ID` = hr_kpi_distribution.`KPI_DISTRIBUTION_ID`\n" 
                     + "WHERE " + whereClause;
             dbrs = DBHandler.execQueryResult(sql);
             ResultSet rs = dbrs.getResultSet();
