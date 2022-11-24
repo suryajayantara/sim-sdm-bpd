@@ -133,8 +133,15 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
                                   Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, "");
                                   for(int j = 0; j < vKpiSettingType.size(); j++){
                                       KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(j);
-                                      entKpiSettingType.setKpiGroupId(objKpiSettingGroup.getKpiGroupId());
-                                      PstKpiSettingType.updateExc(entKpiSettingType);
+                                      if(entKpiSettingType.getKpiGroupId() == 0){
+                                          entKpiSettingType.setKpiGroupId(objKpiSettingGroup.getKpiGroupId());
+                                          PstKpiSettingType.updateExc(entKpiSettingType);
+                                      } else {
+                                          entKpiSettingType.setKpiSettingId(entKpiSettingGroup.getKpiSettingId());
+                                          entKpiSettingType.setKpiTypeId(oidKpiType);
+                                          entKpiSettingType.setKpiGroupId(objKpiSettingGroup.getKpiGroupId());
+                                          PstKpiSettingType.insertExc(entKpiSettingType);
+                                      }
                                   }
                               }
                           }

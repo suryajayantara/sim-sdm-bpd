@@ -377,9 +377,11 @@
         <!--Tampilan form setelah input data kpi type-->
         <%           
             Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
+            long lastKpiTypeOID = 0;
             for (int i = 0; i < vKpiSetting.size(); i++) {
                 KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
                 if(kpiType.getOID() > 0){
+                    if(kpiType.getOID() != lastKpiTypeOID){
         %>
                 <div class="formstyle mb-3">
                     <form name="<%= FrmKpiSettingType.FRM_NAME_KPISETTINGTYPE %>_<%= kpiType.getKpiSettingTypeId() %>" method="get" id="FRM_NAME_KPISETTINGTYPE_<%= kpiType.getKpiSettingTypeId() %>">
@@ -456,7 +458,9 @@
                     </form>
                 </div>
         <%
-            } else {
+                    }
+                    lastKpiTypeOID = kpiType.getOID();
+                } else {
         %>
                 <div class="formstyle mb-3">
                     <table class="tblStyle" style="width: 100%;">

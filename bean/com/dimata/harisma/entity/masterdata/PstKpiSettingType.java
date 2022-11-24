@@ -184,7 +184,9 @@ public class PstKpiSettingType extends DBHandler implements I_DBInterface, I_DBT
 			PstKpiSettingType pstKpiSettingType = new PstKpiSettingType(0);
 			pstKpiSettingType.setLong(FLD_KPI_SETTING_ID, entKpiSettingType.getKpiSettingId());
 			pstKpiSettingType.setLong(FLD_KPI_TYPE_ID, entKpiSettingType.getKpiTypeId());
-//			pstKpiSettingType.setLong(FLD_KPI_GROUP_ID, entKpiSettingType.getKpiGroupId());
+                        if(entKpiSettingType.getKpiGroupId() > 0){
+                            pstKpiSettingType.setLong(FLD_KPI_GROUP_ID, entKpiSettingType.getKpiGroupId());
+                        }
 			pstKpiSettingType.insert();
 			entKpiSettingType.setOID(pstKpiSettingType.getLong(FLD_KPI_SETTING_TYPE_ID));
 		} catch (DBException dbe) {
