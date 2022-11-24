@@ -6,6 +6,7 @@
 package com.dimata.harisma.ajax.kpisetting;
 
 import com.dimata.harisma.entity.masterdata.KPI_Group;
+import com.dimata.harisma.entity.masterdata.KpiSettingType;
 import com.dimata.harisma.entity.masterdata.PstKPI_Group;
 import com.dimata.harisma.entity.masterdata.PstKpiSetting;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingGroup;
@@ -49,14 +50,19 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
         try {
             if(iCommand == Command.DELETE){
                 if((oidKpiSettingType != 0) && (isFormKpiSettingType == 1)){
-                    long oidDeleteKpiSettingType  = PstKpiSettingType.deleteExc(oidKpiSettingType);
+                    String whereClause = "KPI_TYPE_ID = '"+ oidKpiType +"'";
+                    Vector vKpiList = PstKpiSettingType.list(0, 0, whereClause, "");
+                    for(int i = 0; i < vKpiList.size(); i++){
+                        KpiSettingType objKpiSettingType = (KpiSettingType) vKpiList.get(i);
+                        PstKpiSettingType.deleteExc(objKpiSettingType.getKpiSettingTypeId());
+                    }
                      
                     String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID`='"+ oidKpiSetting +"' AND hr_kpi_setting_type.`KPI_TYPE_ID`='"+ oidKpiType +"'";
                     Vector vKpiGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
                     if(vKpiGroup.size() > 0){
                         for(int j = 0; j < vKpiGroup.size(); j++){
                             KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
-                            long oidDeleteKpiGroup = PstKpiSettingGroup.deleteByKpiGroup(objKpiGroup.getOID());
+                            PstKpiSettingGroup.deleteByKpiGroup(objKpiGroup.getOID());
                         }
                     }
                 }

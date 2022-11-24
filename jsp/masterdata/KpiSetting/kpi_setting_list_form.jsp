@@ -420,7 +420,7 @@
                             <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiTypeOid%>">
                             <div class="form-group">
                                 <label for="exampleInputPassword">KPI Group</label>
-                                <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
+                                <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select select2">
                                     <option value="">=Select=</option>
                                     <%
                                         Vector listKpiGroup = PstKPI_Group.list(0, 0, "", "");
