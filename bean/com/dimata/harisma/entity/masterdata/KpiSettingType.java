@@ -13,32 +13,41 @@ import com.dimata.qdep.entity.Entity;
 
 public class KpiSettingType extends Entity {
 
-private long kpiSettingTypeId = 0;
-private long kpiSettingId = 0;
-private long kpiTypeId = 0;
+    private long kpiSettingTypeId = 0;
+    private long kpiSettingId = 0;
+    private long kpiTypeId = 0;
+    private long kpiGroupId = 0;
 
-public long getKpiSettingTypeId(){
-return kpiSettingTypeId;
-}
+    public long getKpiSettingTypeId() {
+        return kpiSettingTypeId;
+    }
 
-public void setKpiSettingTypeId(long kpiSettingTypeId){
-this.kpiSettingTypeId = kpiSettingTypeId;
-}
+    public void setKpiSettingTypeId(long kpiSettingTypeId) {
+        this.kpiSettingTypeId = kpiSettingTypeId;
+    }
 
-public long getKpiSettingId(){
-return kpiSettingId;
-}
+    public long getKpiSettingId() {
+        return kpiSettingId;
+    }
 
-public void setKpiSettingId(long kpiSettingId){
-this.kpiSettingId = kpiSettingId;
-}
+    public void setKpiSettingId(long kpiSettingId) {
+        this.kpiSettingId = kpiSettingId;
+    }
 
-public long getKpiTypeId(){
-return kpiTypeId;
-}
+    public long getKpiTypeId() {
+        return kpiTypeId;
+    }
 
-public void setKpiTypeId(long kpiTypeId){
-this.kpiTypeId = kpiTypeId;
-}
+    public void setKpiTypeId(long kpiTypeId) {
+        this.kpiTypeId = kpiTypeId;
+    }
+    
+    public long getKpiGroupId() {
+        return kpiGroupId;
+    }
+
+    public void setKpiGroupId(long kpiGroupId) {
+        this.kpiGroupId = kpiGroupId;
+    }
 
 }

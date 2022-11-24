@@ -33,15 +33,18 @@ public class PstKpiSettingType extends DBHandler implements I_DBInterface, I_DBT
         public static final int FLD_KPI_SETTING_TYPE_ID = 0;
         public static final int FLD_KPI_SETTING_ID = 1;
 	public static final int FLD_KPI_TYPE_ID = 2;
+	public static final int FLD_KPI_GROUP_ID = 3;
 
 	public static String[] fieldNames = {
 		"KPI_SETTING_TYPE_ID",
 		"KPI_SETTING_ID",
-		"KPI_TYPE_ID"
+		"KPI_TYPE_ID",
+		"KPI_GROUP_ID"
 	};
 
 	public static int[] fieldTypes = {
 		TYPE_LONG + TYPE_PK + TYPE_ID,
+		TYPE_LONG,
 		TYPE_LONG,
 		TYPE_LONG
 	};
@@ -104,6 +107,23 @@ public class PstKpiSettingType extends DBHandler implements I_DBInterface, I_DBT
 			entKpiSettingType.setOID(oid);
                         entKpiSettingType.setKpiSettingId(pstKpiSettingType.getLong(FLD_KPI_SETTING_ID));
 			entKpiSettingType.setKpiTypeId(pstKpiSettingType.getLong(FLD_KPI_TYPE_ID));
+			entKpiSettingType.setKpiGroupId(pstKpiSettingType.getLong(FLD_KPI_GROUP_ID));
+			return entKpiSettingType;
+		} catch (DBException dbe) {
+			throw dbe;
+		} catch (Exception e) {
+			throw new DBException(new PstKpiSettingType(0), DBException.UNKNOWN);
+		}
+	}
+        
+        public static KpiSettingType fetchBySettingId(long oid) throws DBException {
+		try {
+			KpiSettingType entKpiSettingType = new KpiSettingType();
+			PstKpiSettingType pstKpiSettingType = new PstKpiSettingType(oid);
+			entKpiSettingType.setOID(oid);
+                        entKpiSettingType.setKpiSettingId(pstKpiSettingType.getLong(FLD_KPI_SETTING_ID));
+			entKpiSettingType.setKpiTypeId(pstKpiSettingType.getLong(FLD_KPI_TYPE_ID));
+			entKpiSettingType.setKpiGroupId(pstKpiSettingType.getLong(FLD_KPI_GROUP_ID));
 			return entKpiSettingType;
 		} catch (DBException dbe) {
 			throw dbe;
@@ -120,12 +140,13 @@ public class PstKpiSettingType extends DBHandler implements I_DBInterface, I_DBT
 
 	public static synchronized long updateExc(KpiSettingType entKpiSettingType) throws DBException {
 		try {
-			if (entKpiSettingType.getOID() != 0) {
-				PstKpiSettingType pstKpiSettingType = new PstKpiSettingType(entKpiSettingType.getOID());
+			if (entKpiSettingType.getKpiSettingTypeId() != 0) {
+				PstKpiSettingType pstKpiSettingType = new PstKpiSettingType(entKpiSettingType.getKpiSettingTypeId());
 				pstKpiSettingType.setLong(FLD_KPI_SETTING_ID, entKpiSettingType.getKpiSettingId());
 				pstKpiSettingType.setLong(FLD_KPI_TYPE_ID, entKpiSettingType.getKpiTypeId());
+				pstKpiSettingType.setLong(FLD_KPI_GROUP_ID, entKpiSettingType.getKpiGroupId());
 				pstKpiSettingType.update();
-				return entKpiSettingType.getOID();
+				return entKpiSettingType.getKpiSettingTypeId();
 			}
 		} catch (DBException dbe) {
 			throw dbe;
@@ -163,6 +184,9 @@ public class PstKpiSettingType extends DBHandler implements I_DBInterface, I_DBT
 			PstKpiSettingType pstKpiSettingType = new PstKpiSettingType(0);
 			pstKpiSettingType.setLong(FLD_KPI_SETTING_ID, entKpiSettingType.getKpiSettingId());
 			pstKpiSettingType.setLong(FLD_KPI_TYPE_ID, entKpiSettingType.getKpiTypeId());
+                        if(entKpiSettingType.getKpiGroupId() > 0){
+                            pstKpiSettingType.setLong(FLD_KPI_GROUP_ID, entKpiSettingType.getKpiGroupId());
+                        }
 			pstKpiSettingType.insert();
 			entKpiSettingType.setOID(pstKpiSettingType.getLong(FLD_KPI_SETTING_TYPE_ID));
 		} catch (DBException dbe) {
@@ -179,9 +203,10 @@ public class PstKpiSettingType extends DBHandler implements I_DBInterface, I_DBT
 
 	public static void resultToObject(ResultSet rs, KpiSettingType entKpiSettingType) {
 		try {
-			entKpiSettingType.setOID(rs.getLong(PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_TYPE_ID]));
+			entKpiSettingType.setKpiSettingTypeId(rs.getLong(PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_TYPE_ID]));
 			entKpiSettingType.setKpiSettingId(rs.getLong(PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID]));
 			entKpiSettingType.setKpiTypeId(rs.getLong(PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID]));
+                        entKpiSettingType.setKpiGroupId(rs.getLong(PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_GROUP_ID]));
 		} catch (Exception e) {
 		}
 	}

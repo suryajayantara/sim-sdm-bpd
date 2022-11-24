@@ -45,6 +45,7 @@
     int year = 0;
     long companyOID = 0;
     String kpiTypeName = "";
+    long kpiTypeOid = 0;
     String companyName = "";
     String positionName = "";
     Date startD = null, validD = null;
@@ -157,6 +158,7 @@
             for (int i = 0; i < vKpiType.size(); i++) {
                 KPI_Type objKpiType = (KPI_Type) vKpiType.get(i);
                 kpiTypeName = objKpiType.getType_name();
+                kpiTypeOid = objKpiType.getOID();
             }
         }
 
@@ -176,7 +178,7 @@
             vListPosisi = PstPosition.listWithJoinKpiSettingPosition(oidKpiSetting);
 
             // untuk mengambil data kpi group setting
-            String kpiGroupQuery = "hr_kpi_setting.`KPI_SETTING_ID` = '" + oidKpiSetting + "'";
+            String kpiGroupQuery = "hr_kpi_setting_type.`KPI_SETTING_ID`='"+oidKpiSetting+"' AND hr_kpi_setting_type.`KPI_TYPE_ID`='"+kpiTypeOid+"'";
             vKpiSettingGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
         }
 
@@ -276,7 +278,7 @@
                 <div class="content-main">
                     <div>&nbsp;</div>
                     <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-                    <span><%= kpiTypeName%> - <%= companyName%></span>
+                    <span><%= kpiTypeName %> - <%= companyName%></span>
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
                     <div class="row">
                         <div class="col-2">
@@ -415,6 +417,7 @@
                             <input type="hidden" name="typeform" value="1">
                             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingGroupId()%>">
                             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
+                            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiTypeOid%>">
                             <div class="form-group">
                                 <label for="exampleInputPassword">KPI Group</label>
                                 <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select">
@@ -432,7 +435,6 @@
                                                     }
                                                 }
                                             }
-
                                     %>
 
                                     <option value="<%=objKpiGroup.getOID()%>" <%=selected%>><%=objKpiGroup.getGroup_title()%></option>

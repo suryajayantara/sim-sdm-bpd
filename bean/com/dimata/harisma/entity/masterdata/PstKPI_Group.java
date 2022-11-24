@@ -231,11 +231,10 @@ public class PstKPI_Group extends DBHandler implements I_DBInterface, I_DBType, 
         Vector lists = new Vector();
         DBResultSet dbrs = null;
         try {
-            String sql = "SELECT hr_kpi_group.`KPI_GROUP_ID`, hr_kpi_group.`KPI_TYPE_ID`, hr_kpi_group.`GROUP_TITLE`, hr_kpi_group.`DESCRIPTION`, hr_kpi_group.`NUMBER_INDEX` \n" + 
-                            "FROM hr_kpi_setting \n" +
-                            "INNER JOIN hr_kpi_setting_group ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_group.`KPI_SETTING_ID` \n" +
-                            "INNER JOIN hr_kpi_setting_type ON hr_kpi_setting.`KPI_SETTING_ID` = hr_kpi_setting_type.`KPI_SETTING_ID` \n" +
-                            "INNER JOIN hr_kpi_group ON hr_kpi_setting_group.`KPI_GROUP_ID` = hr_kpi_group.`KPI_GROUP_ID` \n" +
+            String sql = "SELECT hr_kpi_group.* FROM hr_kpi_setting_type \n" +
+                            "INNER JOIN hr_kpi_type ON hr_kpi_setting_type.`KPI_TYPE_ID` = hr_kpi_type.`KPI_TYPE_ID` \n" +
+                            "INNER JOIN hr_kpi_setting ON hr_kpi_setting_type.`KPI_SETTING_ID` = hr_kpi_setting.`KPI_SETTING_ID` \n" +
+                            "INNER JOIN hr_kpi_group ON hr_kpi_setting_type.`KPI_GROUP_ID` = hr_kpi_group.`KPI_GROUP_ID` \n" +
                             "WHERE " + whereClause;
             dbrs = DBHandler.execQueryResult(sql);
             ResultSet rs = dbrs.getResultSet();

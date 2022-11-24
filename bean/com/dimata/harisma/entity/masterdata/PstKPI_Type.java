@@ -235,7 +235,7 @@ public class PstKPI_Type extends DBHandler implements I_DBInterface, I_DBType, I
 "	 ON `hr_kpi_setting`.`KPI_SETTING_ID` = `hr_kpi_setting_type`.`KPI_SETTING_ID`\n" +
 "	 LEFT JOIN `hr_kpi_type`\n" +
 "	 ON `hr_kpi_setting_type`.`KPI_TYPE_ID` = `hr_kpi_type`.`KPI_TYPE_ID`\n" +
-"	 WHERE `hr_kpi_setting`.`KPI_SETTING_ID`="+ oidKpiSetting ;
+"	 WHERE `hr_kpi_setting`.`KPI_SETTING_ID`="+ oidKpiSetting +" ORDER BY `hr_kpi_setting_type`.`KPI_TYPE_ID` ASC";
             
             dbrs = DBHandler.execQueryResult(sql);
             ResultSet rs = dbrs.getResultSet();
