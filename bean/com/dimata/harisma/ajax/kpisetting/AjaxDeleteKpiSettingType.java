@@ -71,7 +71,11 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
             
         }
     }
-
+    
+    public static String tes(){
+        String data = "tes";
+        return data;
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

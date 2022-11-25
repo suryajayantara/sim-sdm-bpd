@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingType"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingList"%>
@@ -43,6 +44,7 @@
     int iCommand = FRMQueryString.requestCommand(request);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     long oidCompany = FRMQueryString.requestLong(request, "company");
+    int iCommandInUrl = iCommand; // untuk menyimpan value iCommand yang ada di url
 
     /*untuk memisah controller satu dengan lainnya, jadi ketika menyimpan data atau perlu action di controller berbeda, maka action akan diarahkan ke controller yang sesuai*/
     long typeform = FRMQueryString.requestLong(request, "typeform");
@@ -62,6 +64,7 @@
     String validDate = FRMQueryString.requestString(request, "valid_date");
 
     Long dtReq = FRMQueryString.requestLong(request, "requestDateDaily");
+    
     java.util.Date requestDate = new Date();
     if (dtReq != 0) {
         requestDate = new Date(dtReq.longValue());
@@ -176,6 +179,7 @@
         }
 
     }
+    AjaxDeleteKpiSettingType.tes();
 %>
 <html>
     <head>
@@ -491,10 +495,10 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type <%=iCommand%></h5>
                 </div>
                 <div class="modal-body">
-                    <form name="FRM_NAME_KPISETTINGTYPE" method ="post" action="">
+                    <form name="FRM_NAME_KPISETTINGTYPE" method ="GET" action="">
                         <input type="hidden" name="command" value="<%=iCommand%>">
                         <input type="hidden" name="typeform" value="2">
                         <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getOID()%>">
@@ -551,7 +555,7 @@
         <%}%>
     </table>
 </div>
-
+    
     <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
     <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
     <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
@@ -568,6 +572,14 @@
             $('.select2bs4').select2({
                 theme: 'bootstrap4'
             })
+            
+            // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
+            <% if(iCommandInUrl == Command.SAVE){ %>
+                let url = new URL(window.location.href);
+                let params = new URLSearchParams(url.search);
+                params.set('command', <%= Command.EDIT %>);
+                window.history.pushState( {} , '', '?' +  params.toString());
+            <% } %>
         })
         
         var config = {
@@ -663,6 +675,8 @@
             document.FRM_NAME_KPISETTINGLIST.submit();
         }
         
+       
+        
         function cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType) {
             if(confirm("Data KPI Type dan KPI Group akan terhapus, anda yakin?")){
                 var strUrl = "";
@@ -696,6 +710,6 @@
             );
             popup.focus();
         }
-    </script>  
+    </script> 
 </html>
 
