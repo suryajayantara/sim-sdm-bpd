@@ -211,6 +211,18 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
                         PstKpiSettingGroup pstkpiSettingGroup = new PstKpiSettingGroup();
                         long kpiSettingGroup = PstKpiSettingGroup.deleteByKpiGroup(oidKpiSettingGroup);
                         if (kpiSettingGroup != 0) {
+                            long oidKpiType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]);
+                                  String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
+                                  Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, ""); 
+                                  KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(0);
+                                  long oidKpiSettingId = entKpiSettingType.getKpiSettingId();
+                                  long kpiSettingTypeId = entKpiSettingType.getKpiTypeId();
+                                  long kpiSettingType = PstKpiSettingType.deleteByKpiGroup(oidKpiSettingGroup);
+                                        entKpiSettingType.setKpiSettingId(oidKpiSettingId);
+                                        entKpiSettingType.setKpiTypeId(kpiSettingTypeId);
+                                        entKpiSettingType.setKpiGroupId(0); 
+                                        PstKpiSettingType.insertExc(entKpiSettingType);
+
                             long oid = PstKpiSettingGroup.deleteExc(oidKpiSettingGroup);
                             msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);
                             excCode = RSLT_OK;

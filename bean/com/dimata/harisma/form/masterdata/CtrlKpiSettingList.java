@@ -92,7 +92,7 @@ public class CtrlKpiSettingList extends Control implements I_Language {
     public int getStart() {
         return start;
     }
-
+ 
     public int action(int cmd, long oidKpiSettingList, HttpServletRequest request) {
         msgString = "";
 
