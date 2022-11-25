@@ -50,7 +50,7 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
         try {
             if(iCommand == Command.DELETE){
                 if((oidKpiSettingType != 0) && (isFormKpiSettingType == 1)){
-                    String whereClause = "KPI_TYPE_ID = '"+ oidKpiType +"'";
+                    String whereClause = "KPI_TYPE_ID = '"+ oidKpiType +"' AND KPI_SETTING_ID ='"+ oidKpiSetting +"'";
                     Vector vKpiList = PstKpiSettingType.list(0, 0, whereClause, "");
                     for(int i = 0; i < vKpiList.size(); i++){
                         KpiSettingType objKpiSettingType = (KpiSettingType) vKpiList.get(i);
