@@ -374,7 +374,7 @@
                                     <%-- <i class="fa fa-question-circle-o fa-lg" aria-hidden="true" data-toggle="popover" data-trigger="click" data-content="<%= objKpiList.getDescription() %>"></i> --%>
                                 </td>
                                 <td>
-                                    p
+                                    <%= objKpiList.getKpiDistributionName()%> 
                                 </td>
                                 <td>
                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
@@ -491,7 +491,6 @@
             for(int j = 0; j < vKpiList.size(); j++){
             KPI_List objKpiList = (KPI_List) vKpiList. get(j);  
         %>
-        <%=objKpiList.getOID() %>
         <%}%>
        </form>
        

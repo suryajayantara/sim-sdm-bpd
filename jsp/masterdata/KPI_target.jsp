@@ -158,6 +158,8 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Target & Distribusi</title>
         <link rel="stylesheet" href="../styles/main.css" type="text/css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        
         <script src="../javascripts/jquery.min-1.6.2.js" type="text/javascript"></script>
         <link rel="stylesheet" href="<%=approot%>/javascripts/datepicker/themes/jquery.ui.all.css">
         <script src="<%=approot%>/javascripts/jquery.js"></script>
@@ -165,6 +167,7 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
         <script src="<%=approot%>/javascripts/datepicker/jquery.ui.widget.js"></script>
         <script src="<%=approot%>/javascripts/datepicker/jquery.ui.datepicker.js"></script>
         <script src="../javascripts/chosen.jquery.js" type="text/javascript"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             $(function () {
                 $(".datepicker").datepicker({dateFormat: "yy-mm-dd"});

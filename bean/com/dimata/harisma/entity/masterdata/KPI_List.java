@@ -31,6 +31,7 @@ public class KPI_List extends Entity {
     private float rangeStart = 0;
     private float rangeEnd = 0;
     private long kpiDistributionId;
+    private String kpiDistributionName;
 
     /**
      * @return the kpi_list_id
@@ -278,5 +279,16 @@ public class KPI_List extends Entity {
      */
     public void setKpiDistributionId(long kpiDistributionId) {
         this.kpiDistributionId = kpiDistributionId;
+    }
+    
+    public String getKpiDistributionName() {
+        return kpiDistributionName;
+    }
+
+    /**
+     * @param kpiDistributionId the kpiDistributionId to set
+     */
+    public void setKpiDistributionName(String kpiDistributionName) {
+        this.kpiDistributionName = kpiDistributionName;
     }
 }

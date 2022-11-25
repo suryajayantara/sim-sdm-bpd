@@ -290,7 +290,7 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         Vector lists = new Vector();
         DBResultSet dbrs = null;
         try {
-            String sql = "SELECT hr_kpi_list.`KPI_TITLE`, hr_kpi_distribution.`DISTRIBUTION` FROM hr_kpi_setting_group\n" +
+            String sql = "SELECT hr_kpi_list.`KPI_LIST_ID`, hr_kpi_list.`KPI_TITLE`, hr_kpi_distribution.`DISTRIBUTION` FROM hr_kpi_setting_group\n" +
                     "INNER JOIN `hr_kpi_setting` ON `hr_kpi_setting_group`.`KPI_SETTING_ID` = `hr_kpi_setting`.`KPI_SETTING_ID`\n" +
                     "INNER JOIN hr_kpi_group ON hr_kpi_setting_group.`KPI_GROUP_ID` = hr_kpi_group.`KPI_GROUP_ID`\n" +
                     "INNER JOIN hr_kpi_list_group ON hr_kpi_group.`KPI_GROUP_ID` = hr_kpi_list_group.`KPI_GROUP_ID`\n" +
@@ -399,7 +399,8 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         try {
             kPI_List.setOID(rs.getLong(PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_LIST_ID]));
             kPI_List.setKpi_title(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_KPI_TITLE]));
-            kPI_List.setDescription(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_DESCRIPTION]));
+            kPI_List.setKpiDistributionName(rs.getString("DISTRIBUTION"));
+//            kPI_List.setDescription(rs.getString(PstKPI_List.fieldNames[PstKPI_List.FLD_DESCRIPTION]));
         } catch (Exception e) {
             System.out.println(e);
         } 
