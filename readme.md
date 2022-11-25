@@ -2,7 +2,7 @@
 
 <img src="{https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white}" />
 
-**Latest Update : 24 November 2022**
+**Latest Update : 25 November 2022**
 
 > Aplikasi yang dibuat menggunakan Framework QDEP Berbasiskan bahasa Java
 
