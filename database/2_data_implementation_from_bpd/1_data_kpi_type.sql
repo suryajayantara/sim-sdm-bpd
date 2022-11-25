@@ -1,3 +1,18 @@
 INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005001', 'Sasaran Kinerja', '', '', '1'); 
 INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005002', 'Sasaran Kinerja Berdasarkan Tugas Pokok', '', '', '2'); 
 INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005003', 'Sasaran Kinerja Berdasarkan Inisiatif Strategis atau Tugas Ad-hoc', '', '', '3'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005004', 'Divisi Kepatuhan', '', '', '4'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005005', 'Divisi Dana & Jasa', '', '', '5'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005006', 'Divisi Kredit', '', '', '6'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005007', 'Divisi Manajemen Risiko', '', '', '7'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005008', 'Divisi Sumber Daya Manusia', '', '', '8'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005009', 'Divisi Treasury', '', '', '9'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005010', 'Divisi Umum & Kesekretariatan', '', '', '10'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005011', 'Divisi Teknologi Informasi', '', '', '11'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005012', 'KC Kelas 1-2', '', '', '12'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005013', 'KC Kelas 3 - 4', '', '', '13'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005014', 'KCP Kelas 1-2', '', '', '14'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005015', 'KCP Kelas 3-4 ', '', '', '15'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005016', 'Divisi Operasional Keuangan&Akuntansi', '', '', '16'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005017', 'Divisi Perencanaan Strategis', '', '', '17'); 
+INSERT INTO `hr_kpi_type` (`KPI_TYPE_ID`, `TYPE_NAME`,`DESCRIPTION`, `COMPANY`,`NUMBER_INDEX`) VALUES ('20221005018', 'Divisi Satuan Kerja Audit Intern dan Anti Fraud', '', '', '18'); 
