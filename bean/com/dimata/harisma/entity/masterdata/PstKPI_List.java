@@ -34,12 +34,7 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
     public static final int FLD_KORELASI = 9;
     public static final int FLD_RANGE_START = 10;
     public static final int FLD_RANGE_END = 11;
-    
-    
-    public static final int FLD_DISTRIBUTION_ID = 12;
-    
 
-    
     public static final String[] fieldNames = {
         "KPI_LIST_ID",
         "COMPANY_ID",
@@ -52,11 +47,7 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         "PARENT_ID",
         "KORELASI",
         "RANGE_START",
-        "RANGE_END",
-        
-        
-        "DISTRIBUTION_ID"
-            
+        "RANGE_END"
     };
     public static final int[] fieldTypes = {
         TYPE_LONG + TYPE_PK + TYPE_ID,
@@ -70,9 +61,7 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
         TYPE_LONG,
         TYPE_INT,
         TYPE_FLOAT,
-        TYPE_FLOAT,
-        
-        TYPE_LONG
+        TYPE_FLOAT
     };
 
     public static final int KORELASI_POSITIF = 0;
@@ -182,7 +171,6 @@ public class PstKPI_List extends DBHandler implements I_DBInterface, I_DBType, I
             kPI_List.setKorelasi(pstKPI_List.getInt(FLD_KORELASI));
             kPI_List.setRangeStart(pstKPI_List.getfloat(FLD_RANGE_START));
             kPI_List.setRangeEnd(pstKPI_List.getfloat(FLD_RANGE_END));
-            
             return kPI_List;
 
         } catch (DBException dbe) {
