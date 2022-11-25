@@ -14,6 +14,8 @@ import java.util.Vector;
  */
 public class KPI_List extends Entity {
 
+
+
     private long kpi_list_id;
     private long company_id;
     private String kpi_title = "";
@@ -28,6 +30,7 @@ public class KPI_List extends Entity {
     private int korelasi = 0;
     private float rangeStart = 0;
     private float rangeEnd = 0;
+    private long kpiDistributionId;
 
     /**
      * @return the kpi_list_id
@@ -261,5 +264,19 @@ public class KPI_List extends Entity {
      */
     public void setRangeEnd(float rangeEnd) {
         this.rangeEnd = rangeEnd;
+    }
+    
+        /**
+     * @return the kpiDistributionId
+     */
+    public long getKpiDistributionId() {
+        return kpiDistributionId;
+    }
+
+    /**
+     * @param kpiDistributionId the kpiDistributionId to set
+     */
+    public void setKpiDistributionId(long kpiDistributionId) {
+        this.kpiDistributionId = kpiDistributionId;
     }
 }

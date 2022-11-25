@@ -33,7 +33,7 @@
 <!DOCTYPE html>
 <%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
-    long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
+    long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]);
     long oidKpiSettingGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]);
 
     Vector vKpiType = new Vector();
@@ -365,7 +365,7 @@
                                 vKpiList = PstKPI_List.listWithJoinSettingAndGroup(queryKpiList);
                                 if(vKpiList.size() > 0){
                                     for(int j = 0; j < vKpiList.size(); j++){
-                                        KPI_List objKpiList = (KPI_List) vKpiList.get(j);    
+                                        KPI_List objKpiList = (KPI_List) vKpiList. get(j);    
                             %>
                             <tr>
                                 <td value="<%=objKpiList.getOID() %>">
@@ -477,7 +477,22 @@
             </div>
         </div>
        </form>
-            
+       
+       <!--ini untuk form delete kpi setting list, karena letak button delete kpi setting list berada pada form yang sama dengan delete kpi setting group, jadi aku bikinin form baru ya, kalo nemu cara yang lebih praktis dan rapi, silakan di ubah sendiri-->
+       <form name="FRM_NAME_KPISETTINGLIST2" method ="post" action="">
+            <input type="hidden" name="command" value="<%=iCommand%>">
+            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
+            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId() %>">
+            <input type="hidden" name="typeform" value="2">
+             <%
+            for(int j = 0; j < vKpiList.size(); j++){
+            KPI_List objKpiList = (KPI_List) vKpiList. get(j);  
+        %>
+        <%=objKpiList.getOID() %>
+        <%}%>
+       </form>
+       
         <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
@@ -491,17 +506,17 @@
             });
             
             /*kumpulan tombol delete*/
-            function cmdDeleteGroup(oid) {
+            function cmdDeleteGroup(oid) { 
                 document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
                 document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdDeleteKpiSettingList(oid) {
-                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>.value = oid;
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
+                document.FRM_NAME_KPISETTINGLISTFORM2.<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>.value = oid;
+                document.FRM_NAME_KPISETTINGLISTFORM2.command.value = "<%=Command.DELETE %>";
+                document.FRM_NAME_KPISETTINGLISTFORM2.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM2.submit();
             }
             
            function cmdDeleteGroup(oid) {
@@ -659,4 +674,5 @@
                 popup.focus();
             }
         </script>
+        
 </html>

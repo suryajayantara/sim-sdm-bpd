@@ -577,6 +577,9 @@ flyout.addMenuFlyOut("performance.jsp", "Performance Management", "Master Data",
 flyout.addMenuFlyOut("performance.jsp", "Performance Management", "Master Data", true, "KPI Achieve Score", "company", "#", ""+approot+"/masterdata/kpi_achiev_score.jsp", userSession.checkPrivilege(AppObjInfo.composeCode(
              AppObjInfo.composeObjCode(AppObjInfo.G1_EMPLOYEE, AppObjInfo.G2_PERFORMANCE, AppObjInfo.OBJ_KPI_ACHIEV_SCORE), 
              AppObjInfo.COMMAND_VIEW)));
+flyout.addMenuFlyOut("performance.jsp", "Performance Management", "Master Data", true, "Distribution", "company", "#", ""+approot+"/masterdata/KpiSetting/kpi_distribution.jsp", userSession.checkPrivilege(AppObjInfo.composeCode(
+             AppObjInfo.composeObjCode(AppObjInfo.G1_EMPLOYEE, AppObjInfo.G2_PERFORMANCE, AppObjInfo.OBJ_KPI_ACHIEV_SCORE), 
+             AppObjInfo.COMMAND_VIEW)));
 flyout.addMenuFlyOut("performance.jsp", "Performance Management", "Master Data", true, "KPI Setting", "company", "#", ""+approot+"/masterdata/KpiSetting/kpi_setting_list.jsp", userSession.checkPrivilege(AppObjInfo.composeCode(
              AppObjInfo.composeObjCode(AppObjInfo.G1_EMPLOYEE, AppObjInfo.G2_PERFORMANCE, AppObjInfo.OBJ_KPI_ACHIEV_SCORE), 
              AppObjInfo.COMMAND_VIEW)));
