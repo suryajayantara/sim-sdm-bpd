@@ -55,6 +55,7 @@
     int iCommand = FRMQueryString.requestCommand(request);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     long oidCompany = FRMQueryString.requestLong(request, "company");
+    int iCommandInUrl = iCommand;
 
     /*untuk memisah controller satu dengan lainnya, jadi ketika menyimpan data atau perlu action di controller berbeda, maka action akan diarahkan ke controller yang sesuai*/
     long typeform = FRMQueryString.requestLong(request, "typeform");
@@ -412,12 +413,13 @@
                         <h5 class="modal-title" id="exampleModalLabel">Pilih KPI Group</h5>
                     </div>                            
                     <div class="modal-body">
-                        <form name="FRM_NAME_KPISETTINGGROUP" method ="post" action="">
+                        <form name="FRM_NAME_KPISETTINGGROUP" method ="get" action="">
                             <input type="hidden" name="command" value="<%= iCommand%>">
                             <input type="hidden" name="typeform" value="1">
                             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiSettingGroupId()%>">
                             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
                             <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiTypeOid%>">
+                            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=oidKpiSettingType%>">
                             <div class="form-group">
                                 <label for="exampleInputPassword">KPI Group</label>
                                 <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select select2">
@@ -499,10 +501,18 @@
         <script language="JavaScript">
             $(document).ready(function(){
                 $('[data-toggle="popover"]').popover();
-                $('.select2').select2()
+                $('.select2').select2();
                 $('.select2bs4').select2({
                     theme: 'bootstrap4'
-                })
+                });
+                
+                // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
+                <% if(iCommandInUrl == Command.SAVE){ %>
+                    let url = new URL(window.location.href);
+                    let params = new URLSearchParams(url.search);
+                    params.set('command', <%= Command.EDIT %>);
+                    window.history.pushState( {} , '', '?' +  params.toString());
+                <% } %>
             });
             
             /*kumpulan tombol delete*/
