@@ -179,7 +179,6 @@
         }
 
     }
-    AjaxDeleteKpiSettingType.tes();
 %>
 <html>
     <head>
