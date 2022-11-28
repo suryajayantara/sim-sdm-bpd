@@ -3,6 +3,8 @@
     Created on : Sep 24, 2018, 11:34:12 AM
     Author     : dimata005
 --%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.dimata.qdep.entity.I_DocStatus"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiTargetDetail"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiTargetDetail"%>
@@ -143,15 +145,16 @@ if (!privViewAllDivision && appUserSess.getAdminStatus() != 1){
 Vector listDetail = PstKpiTargetDetail.listJoinKpi(0, 0,
                 "DET."+PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_TARGET_ID]+"="+kpiTarget.getOID(), "LST.PARENT_ID");
            
-
+String whereClause = "COMPANY_ID = '" + oidCompany + "'";
 Vector valTahun = new Vector();
+Vector vKpiSetting = PstKpiSetting.list(0, 0, whereClause, "");
+Vector listCompany = PstCompany.list(0, 0, "", PstCompany.fieldNames[PstCompany.FLD_COMPANY]);
+Company entCompany = PstCompany.fetchExc(oidCompany);
 
 Calendar calNow = Calendar.getInstance();
 for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
     valTahun.add(""+i);
 }
-
-    
 %>
 <html>
     <head>
@@ -328,6 +331,20 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                 document.frmKPI_Company_Target.detail_employee_id.value = 0;
                 document.frmKPI_Company_Target.submit();
             }
+            function showKpiSettingDetail(chosen){
+                var strUrl = "";
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        document.getElementById("detailKpiSetting").innerHTML = xmlhttp.responseText;
+                    }
+                }
+                strUrl = "ajax_kpi_setting_detail.jsp";
+                strUrl += "?kpi_setting_id="+chosen;
+                xmlhttp.open("GET", strUrl, true);
+                xmlhttp.send();
+            }
+
         </script>
     </head>
     <body onload="prepare()" >
@@ -385,8 +402,6 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                                     <select name="<%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_COMPANY_ID]%>" id="company" class="chosen-select" data-placeholder='Select Company...' onchange="javascript:cmdUpdateSec()" <%= strDisable%> >
                                         <option value="0">-select-</option>
                                         <%
-
-                                            Vector listCompany = PstCompany.list(0, 0, "", PstCompany.fieldNames[PstCompany.FLD_COMPANY]);
                                             if (listCompany != null && listCompany.size() > 0) {
                                                 for (int i = 0; i < listCompany.size(); i++) {
                                                     Company comp = (Company) listCompany.get(i);
@@ -525,12 +540,12 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                     </table>
                     <div style="border-top: 1px solid #DDD;">&nbsp;</div>
                     <a href="javascript:cmdSave()" style="color:#FFF;" class="btn">Simpan</a>
-                    <a href="javascript:cmdBack()" style="color:#FFF;" class="btn-red">Kembali</a>
+                    <a href="javascript:cmdBack()" style="color:#FFF;" class="btn btn-red">Kembali</a>
                     <%
                         if (kpiTarget.getOID() > 0) {
                     %>
-                    <a href="javascript:cmdAddDetail()" style="color:#FFF;" class="btn">Tambah Detail</a>
-                    <a href="javascript:cmdAddDetailByKpiSetting()" style="color:#FFF;" class="btn">Tambah Detail Berdasarkan KPI Setting</a>
+                    <a href="javascript:cmdAddDetail()" style="color:#FFF;" class="btn btn-add">Tambah Detail</a>
+                    <a href="javascript:cmdAddDetailByKpiSetting()" style="color:#FFF;" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#modal-copy-kpi-setting">Tambah Detail Berdasarkan KPI Setting</a>
                     <%
                         }
                     %>
@@ -959,7 +974,59 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
             for (var selector in config) {
                 $(selector).chosen(config[selector]);
             }
-        </script>          
+        </script>
+        
+        <!-- Modal Copy Kpi Setting -->
+        <div class="modal fade" id="modal-copy-kpi-setting" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Kpi Setting</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+                <form>
+                  <div class="modal-body">
+                      <div class="mb-3">
+                        <label for="exampleInputEmail1" class="form-label">Pilih Kpi Setting</label>
+                        <select class="form-control" id="kpiSettingId" onchange="showKpiSettingDetail(this.options[this.selectedIndex].value)">
+                            <% for(int i = 0; i < vKpiSetting.size(); i++){ 
+                                KpiSetting entKpiSetting = (KpiSetting) vKpiSetting.get(i);
+                                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        
+                                Date objStartDate = entKpiSetting.getStartDate();
+                                Date objValidDate = entKpiSetting.getValidDate();
+
+                                String startDate = dateFormat.format(objStartDate);  
+                                String validDate = dateFormat.format(objValidDate);  
+                            %>
+                                <option value="<%= entKpiSetting.getOID() %>">KPI Setting <%= entKpiSetting.getTahun() %> (<%= startDate %> s/d <%= validDate %>)</option>
+                            <% } %>
+                        </select>
+                      </div>
+                      
+                          <div class="row">
+                            <div class="col-md-2">
+                                <h6>Company</h6>
+                                <h6>Position</h6>
+                                <h6>Status</h6>
+                                <h6>Periode</h6>
+                            </div>
+                            <div class="col-md-10">
+                                <h6>: <%= entCompany.getCompany()%></h6>
+                                <div id="detailKpiSetting">
+                                    
+                                </div>
+                            </div>
+                          </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-red" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn">Simpan</button>
+                  </div>
+                </form>
+            </div>
+          </div>
+        </div>
     </body>
 </html>
 
