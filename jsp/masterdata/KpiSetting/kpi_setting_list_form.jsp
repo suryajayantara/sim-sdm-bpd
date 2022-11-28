@@ -425,7 +425,8 @@
                                 <select name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>"style="width: 100%;" class="form-control form-control-sm custom-select select2">
                                     <option value="">=Select=</option>
                                     <%
-                                        Vector listKpiGroup = PstKPI_Group.list(0, 0, "", "");
+                                        String kpiGroupQuery = "KPI_TYPE_ID = '" + kpiTypeOid + "'";
+                                        Vector listKpiGroup = PstKPI_Group.list(0, 0, kpiGroupQuery, "GROUP_TITLE");
                                         for (int i = 0; i < listKpiGroup.size(); i++) {
                                             KPI_Group objKpiGroup = (KPI_Group) listKpiGroup.get(i);
                                             String selected = "";
@@ -471,8 +472,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" onclick="javascript:check()">Check All</button>
-                        <button class="btn btn-primary" onclick="javascript:uncheck()">Uncheck All</button>
+                        <a class="btn btn-primary" href="javascript:check()">Check All</a>
+                        <a class="btn btn-primary" href="javascript:uncheck()">Uncheck All</a>
                         <a href="javascript:cmdSaveKpiSettingList()" class="btn btn-primary" >Get Data</a>
                     </div> 
                 </div>
@@ -487,11 +488,11 @@
             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId() %>">
             <input type="hidden" name="typeform" value="2">
-             <%
-            for(int j = 0; j < vKpiList.size(); j++){
-            KPI_List objKpiList = (KPI_List) vKpiList. get(j);  
-        %>
-        <%}%>
+            <%
+                for(int j = 0; j < vKpiList.size(); j++){
+                KPI_List objKpiList = (KPI_List) vKpiList. get(j);  
+            %>
+            <%}%>
        </form>
        
         <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
@@ -587,7 +588,7 @@
             
 
             function check() {
-                checkboxes = document.getElementsByName('KPI_ID');  
+                checkboxes = document.getElementsByName('FRM_FIELD_KPI_LIST_ID');  
                 for(var i = 0; i < checkboxes.length; i++){  
                     if(checkboxes[i].type=='checkbox')  
                         checkboxes[i].checked = true;  
@@ -595,7 +596,7 @@
             }
             
             function uncheck() {
-                checkboxes = document.getElementsByName('KPI_ID');  
+                checkboxes = document.getElementsByName('FRM_FIELD_KPI_LIST_ID');  
                 for(var i = 0; i < checkboxes.length; i++){  
                     if(checkboxes[i].type=='checkbox')  
                         checkboxes[i].checked = false;  

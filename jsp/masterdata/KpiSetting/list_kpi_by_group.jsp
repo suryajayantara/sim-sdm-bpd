@@ -40,12 +40,12 @@
 <%
     for (int i = 0; i < vKpiList.size(); i++) {
         KPI_List objKpiList = (KPI_List) vKpiList.get(i);
-        String checked = "";
+        boolean checked = false;
         if (oid_kpi != null) {
             for (int j = 0; j < oid_kpi.length; j++) {
                 String oidKpiList = "" + objKpiList.getOID();
                 if (oidKpiList.equals("" + oid_kpi[j])) {
-                    checked = "checked";
+                    checked = true;
                 }
             }
         }
@@ -55,7 +55,7 @@
     <table>
         <tr>
             <td>
-                <input value="<%= objKpiList.getOID()%>" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" type="checkbox" id="myCheck" >&nbsp;
+                <input value="<%= objKpiList.getOID()%>" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" type="checkbox" id="myCheck" checked="<%= checked %>">&nbsp;
             </td>
             <td>
 
@@ -65,7 +65,7 @@
     </table>
 </div>
 <%}%>
-<div>
+<div class="mt-3">
     <td>
         <label>Distribution</label>
         <select value="" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_DISTRIBUTION_ID]%>" style="width: 100%;" class="form-control form-control-sm custom-select">

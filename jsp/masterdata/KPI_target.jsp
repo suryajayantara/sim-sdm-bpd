@@ -775,7 +775,7 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                     </table>
                     <div style="border-top: 1px solid #DDD;">&nbsp;</div>
                     <a href="javascript:cmdSaveDetail()" style="color:#FFF;" class="btn">Simpan Detail</a>
-                    <a href="javascript:cmdCancel()" style="color:#FFF;" class="btn-red">Batal</a>
+                    <a href="javascript:cmdCancel()" style="color:#FFF;" class="btn btn-red">Batal</a>
                     <div>&nbsp;</div>
                 </div>
                 <%
@@ -999,7 +999,7 @@ for (int i=calNow.get(Calendar.YEAR) ; i >= 2000 ; i--){
                                 String startDate = dateFormat.format(objStartDate);  
                                 String validDate = dateFormat.format(objValidDate);  
                             %>
-                                <option value="<%= entKpiSetting.getOID() %>">KPI Setting <%= entKpiSetting.getTahun() %> (<%= startDate %> s/d <%= validDate %>)</option>
+                                <option value="<%= entKpiSetting.getOID() %>">KPI Setting <%= entKpiSetting.getTahun() %> (Berlaku <%= startDate %> s/d <%= validDate %>)</option>
                             <% } %>
                         </select>
                       </div>
