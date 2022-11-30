@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package com.dimata.harisma.form.masterdata;
-
 /**
  *
  * @author User
@@ -58,7 +57,7 @@ public class FrmKpiSettingList extends FRMHandler implements I_FRMInterface, I_F
     public String getFormName() {
         return FRM_NAME_KPISETTINGLIST;
     }
-
+    
     public int[] getFieldTypes() {
         return fieldTypes;
     }
@@ -66,7 +65,7 @@ public class FrmKpiSettingList extends FRMHandler implements I_FRMInterface, I_F
     public String[] getFieldNames() {
         return fieldNames;
     }
-
+    
     public int getFieldSize() {
         return fieldNames.length;
     }
@@ -86,5 +85,4 @@ public class FrmKpiSettingList extends FRMHandler implements I_FRMInterface, I_F
             System.out.println("Error on requestEntityObject : " + e.toString());
         }
     }
-
 }

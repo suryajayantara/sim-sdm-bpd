@@ -375,6 +375,34 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
         return 0;
         
     }
+    
+    public static Vector listDataKpiSettingList(long oidKpiSetting) {
+        Vector lists = new Vector();
+        DBResultSet dbrs = null;
+        try {
+            String sql = "SELECT * FROM `hr_kpi_setting_group` \n" +
+                            "INNER JOIN `hr_kpi_setting_list`\n" +
+                            "ON `hr_kpi_setting_group`.`KPI_SETTING_ID` = `hr_kpi_setting_list`.`KPI_SETTING_ID`\n" +
+                            "LEFT JOIN `hr_kpi_list`\n" +
+                            "ON `hr_kpi_setting_list`.`KPI_LIST_ID` = `hr_kpi_list`.`KPI_LIST_ID`\n" +
+                            "WHERE `hr_kpi_setting_list`.`KPI_SETTING_ID` = "+ oidKpiSetting;
+            
+            dbrs = DBHandler.execQueryResult(sql);
+            ResultSet rs = dbrs.getResultSet();
+            while (rs.next()) {
+                KpiSettingList entKpiSettingList = new KpiSettingList();
+                resultToObject(rs, entKpiSettingList);
+                lists.add(entKpiSettingList);
+            }
+            rs.close();
+            return lists;
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            DBResultSet.close(dbrs);
+        }
+        return new Vector();
+    }
      
     
 }

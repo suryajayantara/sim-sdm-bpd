@@ -238,9 +238,7 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
                     }
                 }
                 break;
-
             default:
-
         }
         return rsCode;
     }

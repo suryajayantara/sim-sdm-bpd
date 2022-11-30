@@ -99,6 +99,7 @@
     //sValidDate = sValidDate; 
     CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
     if (typeform == 1) {
+
         long iErrCodeSetttingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
         if (iCommand == Command.SAVE) {
             iCommand = 0;
@@ -207,7 +208,7 @@
         <script src="<%=approot%>/javascripts/datepicker/jquery.ui.core.js"></script>
         <script src="<%=approot%>/javascripts/datepicker/jquery.ui.widget.js"></script>
         <script src="<%=approot%>/javascripts/datepicker/jquery.ui.datepicker.js"></script>
-
+        
         <link rel="stylesheet" href="../../styles/main.css" type="text/css">
 
         <!--css tanggal-->

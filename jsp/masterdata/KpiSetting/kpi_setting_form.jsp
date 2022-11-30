@@ -185,7 +185,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>FORM KPI SETTING</title>
 
-
         <link rel="stylesheet" href="../../styles/css_suryawan/CssSuryawan.css" type="text/css">
         <link rel="stylesheet" href="<%=approot%>/javascripts/datepicker/themes/jquery.ui.all.css">
         <script src="<%=approot%>/javascripts/jquery.js"></script>
@@ -673,8 +672,6 @@
             document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_form.jsp";
             document.FRM_NAME_KPISETTINGLIST.submit();
         }
-        
-       
         
         function cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType) {
             if(confirm("Data KPI Type dan KPI Group akan terhapus, anda yakin?")){

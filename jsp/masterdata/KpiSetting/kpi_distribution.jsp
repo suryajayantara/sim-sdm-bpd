@@ -437,9 +437,6 @@ function MM_swapImage() { //v3.0
 						 if((iCommand != Command.ADD && iCommand != Command.ASK && iCommand != Command.EDIT)&& (frmKpiDistribution.errorSize()<1)){
 						if(privAdd){%>
                                               <tr align="left" valign="top"> 
-                                              <div>
-                                                 &nbsp;<a href="javascript:cmdBackKpiSetting()" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>                            
-                                              </div>
                                                 <td height="22" valign="middle" colspan="3">
                                                   <table cellpadding="0" cellspacing="0" border="0">
                                                     <tr> 
