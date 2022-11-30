@@ -151,6 +151,10 @@
         <servlet-class>com.dimata.harisma.ajax.competency.AjaxCompetencyOption</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>AjaxCopyKpiSetting</servlet-name>
+        <servlet-class>com.dimata.harisma.ajax.kpitarget.AjaxCopyKpiSetting</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>AjaxDeleteKpiSettingType</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingType</servlet-class>
     </servlet>
@@ -1622,6 +1626,10 @@
     <servlet-mapping>
         <servlet-name>AjaxDeleteKpiSettingType</servlet-name>
         <url-pattern>/AjaxDeleteKpiSettingType</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AjaxCopyKpiSetting</servlet-name>
+        <url-pattern>/AjaxCopyKpiSetting</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

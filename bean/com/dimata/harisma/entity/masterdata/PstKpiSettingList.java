@@ -404,5 +404,25 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
         return new Vector();
     }
      
-    
+    public static int getCountKpiList(String whereClause) {
+        DBResultSet dbrs = null;
+        try {
+            String sql = "SELECT COUNT(" + PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_LIST_ID] + ") FROM " + TBL_KPISETTINGLIST;
+            if (whereClause != null && whereClause.length() > 0) {
+                sql = sql + " WHERE " + whereClause;
+            }
+            dbrs = DBHandler.execQueryResult(sql);
+            ResultSet rs = dbrs.getResultSet();
+            int count = 0;
+            while (rs.next()) {
+                count = rs.getInt(1);
+            }
+            rs.close();
+            return count;
+        } catch (Exception e) {
+            return 0;
+        } finally {
+            DBResultSet.close(dbrs);
+        }
+    }
 }
