@@ -384,15 +384,17 @@ public class PstKpiSettingType extends DBHandler implements I_DBInterface, I_DBT
         return 0;
         
     }
-        public static long deleteByKpiGroup(long kpi_group_id) {
+        public static long deleteByKpiGroupAndSetting(long kpiGroupId, long kpiSettingId) {
         DBResultSet dbrs = null;
         try {
             String sql = "DELETE FROM " + PstKpiSettingType.TBL_KPI_SETTING_TYPE
                     + " WHERE " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_GROUP_ID]
-                    + " = '" + kpi_group_id + "'";
+                    + " = '" + kpiGroupId + "'"
+                    + " AND " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID]
+                    + " = '" + kpiSettingId;
 
             int status = DBHandler.execUpdate(sql);
-            return kpi_group_id;
+            return 1;
         } catch (Exception e) {
             System.out.println(e);
         } finally {

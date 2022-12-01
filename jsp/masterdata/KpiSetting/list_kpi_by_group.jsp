@@ -69,7 +69,6 @@
     <td>
         <label>Distribution</label>
         <select value="" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_DISTRIBUTION_ID]%>" style="width: 100%;" class="form-control form-control-sm custom-select">
-            <option>=Select=</option>
             <%
                 Vector listKpiDistribution = PstKpiDistribution.list(0, 0, "", "");
                 for (int j = 0; j < listKpiDistribution.size(); j++) {

@@ -147,7 +147,6 @@
     Vector valTahun = new Vector();
     Vector vKpiSetting = PstKpiSetting.list(0, 0, whereClause, "");
     Vector listCompany = PstCompany.list(0, 0, "", PstCompany.fieldNames[PstCompany.FLD_COMPANY]);
-    Company entCompany = PstCompany.fetchExc(oidCompany);
 
     Calendar calNow = Calendar.getInstance();
     for (int i = calNow.get(Calendar.YEAR); i >= 2000; i--) {

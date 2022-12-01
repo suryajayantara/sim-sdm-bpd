@@ -56,6 +56,7 @@
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     long oidCompany = FRMQueryString.requestLong(request, "company");
     int iCommandInUrl = iCommand;
+    long iErrCodeSetttingList = 0;
 
     /*untuk memisah controller satu dengan lainnya, jadi ketika menyimpan data atau perlu action di controller berbeda, maka action akan diarahkan ke controller yang sesuai*/
     long typeform = FRMQueryString.requestLong(request, "typeform");
@@ -119,8 +120,8 @@
 
     /*controller untuk save data kpi setting list*/
     CtrlKpiSettingList ctrlKpiSettingList = new CtrlKpiSettingList(request);
-    if (typeform == 2 || typeform == 4) {
-        long iErrCodeSetttingList = ctrlKpiSettingList.action(iCommand, oidKpiSettingList, request);
+    if (typeform == 2) {
+        iErrCodeSetttingList = ctrlKpiSettingList.action(iCommand, oidKpiSettingList, request);
         if (iCommand == Command.SAVE) {
             iCommand = 0;
         }
@@ -152,7 +153,6 @@
     }
 
     /*controlle untuk mengolah data kpi Setting Group*/
-    Vector kpiType = new Vector();
     try {
         if (oidKpiSettingType != 0) {
             String query = "KPI_TYPE_ID = '" + oidKpiSettingType + "'";
@@ -238,7 +238,7 @@
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
     </head>
-    <body onload="prepare()" >
+    <body onload="refreshAndClose()">
         <div class="header">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%> 
@@ -330,8 +330,7 @@
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
-            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiTypeOid%>">
-            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=oidKpiSettingType%>">
+            <input type="hidden" name="<%= FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID] %>" value="<%= kpiTypeOid %>">
             <input type="hidden" name="typeform" value="1">
               <%
             for (int i = 0; i < vKpiSettingGroup.size(); i++) {
@@ -345,7 +344,7 @@
                             <a href="javascript:openModal('<%= objKpiGroup.getOID() %>', '<%= objKpiGroup.getGroup_title() %>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2">Tambah KPI
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
-                            <a href="javascript:cmdDeleteGroup('<%=objKpiGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                            <a href="javascript:cmdDeleteGroup('<%=objKpiGroup.getOID() %>', '<%= oidKpiSetting %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
                                 <strong><i class="fa fa-trash"></i></strong>
                             </a>
                         </div>
@@ -515,8 +514,9 @@
             });
             
             /*kumpulan tombol delete*/
-            function cmdDeleteGroup(oid) { 
-                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
+            function cmdDeleteGroup(oidKpiGroup, oidKpiSetting) { 
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiGroup;
                 document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
@@ -527,14 +527,6 @@
                 document.FRM_NAME_KPISETTINGLISTFORM2.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM2.submit();
             }
-            
-           function cmdDeleteGroup(oid) {
-                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
-                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
-                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM.submit();
-            }
-
 
             function openModal(oidKpiGroup, groupName) {
                 var strUrl = "";
@@ -672,6 +664,16 @@
                 popup = window.open("../kpi_list.jsp?emp_department="
                         , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
                 popup.focus();
+            }
+            
+            //untuk close pop up ketika kpi list ditambahkan
+            function refreshAndClose() {
+                <% if(iErrCodeSetttingList == 0 && iCommandInUrl == Command.SAVE){ %>                            
+                        window.close();
+                        if (window.opener && !window.opener.closed) {
+                            window.opener.location.reload();
+                        }
+                <% } %>
             }
         </script>
         
