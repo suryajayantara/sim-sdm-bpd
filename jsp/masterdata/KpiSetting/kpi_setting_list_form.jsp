@@ -56,6 +56,7 @@
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     long oidCompany = FRMQueryString.requestLong(request, "company");
     int iCommandInUrl = iCommand;
+    long iErrCodeSetttingList = 0;
 
     /*untuk memisah controller satu dengan lainnya, jadi ketika menyimpan data atau perlu action di controller berbeda, maka action akan diarahkan ke controller yang sesuai*/
     long typeform = FRMQueryString.requestLong(request, "typeform");
@@ -119,7 +120,7 @@
     /*controller untuk save data kpi setting list*/
     CtrlKpiSettingList ctrlKpiSettingList = new CtrlKpiSettingList(request);
     if (typeform == 2) {
-        long iErrCodeSetttingList = ctrlKpiSettingList.action(iCommand, oidKpiSettingList, request);
+        iErrCodeSetttingList = ctrlKpiSettingList.action(iCommand, oidKpiSettingList, request);
         if (iCommand == Command.SAVE) {
             iCommand = 0;
         }
@@ -237,7 +238,7 @@
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
     </head>
-    <body onload="prepare()" >
+    <body onload="refreshAndClose()">
         <div class="header">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%> 
@@ -682,6 +683,16 @@
                 popup = window.open("../kpi_list.jsp?emp_department="
                         , "SelectEmployee", "height=600,width=700,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
                 popup.focus();
+            }
+            
+            //untuk close pop up ketika kpi list ditambahkan
+            function refreshAndClose() {
+                <% if(iErrCodeSetttingList == 0 && iCommandInUrl == Command.SAVE){ %>                            
+                        window.close();
+                        if (window.opener && !window.opener.closed) {
+                            window.opener.location.reload();
+                        }
+                <% } %>
             }
         </script>
         
