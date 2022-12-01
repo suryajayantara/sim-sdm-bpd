@@ -207,29 +207,33 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
 
             case Command.DELETE:
                 if (oidKpiSettingGroup != 0) {
+                    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+                    long oidKpiGroup = FRMQueryString.requestLong(request, FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]);
+                    long oidKpiType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]);
                     try {
-                        PstKpiSettingGroup pstkpiSettingGroup = new PstKpiSettingGroup();
-                        long kpiSettingGroup = PstKpiSettingGroup.deleteByKpiGroup(oidKpiSettingGroup);
-                        if (kpiSettingGroup != 0) {
-                            long oidKpiType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]);
-                                  String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
-                                  Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, ""); 
-                                  KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(0);
-                                  long oidKpiSettingId = entKpiSettingType.getKpiSettingId();
-                                  long kpiSettingTypeId = entKpiSettingType.getKpiTypeId();
-                                  long kpiSettingType = PstKpiSettingType.deleteByKpiGroup(oidKpiSettingGroup);
-                                        entKpiSettingType.setKpiSettingId(oidKpiSettingId);
-                                        entKpiSettingType.setKpiTypeId(kpiSettingTypeId);
-                                        entKpiSettingType.setKpiGroupId(0); 
-                                        PstKpiSettingType.insertExc(entKpiSettingType);
+                        // untuk menghapus kpi list pada tabel kpi setting list
+                        PstKpiSettingList.deleteByKpiGroupAndSetting(oidKpiGroup, oidKpiSetting);
 
-                            long oid = PstKpiSettingGroup.deleteExc(oidKpiSettingGroup);
-                            msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);
-                            excCode = RSLT_OK;
-                        } else {
-                            msgString = FRMMessage.getMessage(FRMMessage.ERR_DELETED);
-                            excCode = RSLT_FORM_INCOMPLETE;
-                        }
+                        String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + oidKpiSetting + " AND " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
+                        Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, "");
+                        KpiSettingType objKpiSettingType = (KpiSettingType) vKpiSettingType.get(0);
+                        long oidKpiSettingId = objKpiSettingType.getKpiSettingId();
+                        long kpiSettingTypeId = objKpiSettingType.getKpiTypeId();
+
+                        // delete kpi setting type
+                        PstKpiSettingType.deleteExc(objKpiSettingType.getOID());
+
+                        // insert kembali kpi setting type dengan column kpi group id null
+                        objKpiSettingType.setKpiSettingId(oidKpiSettingId);
+                        objKpiSettingType.setKpiTypeId(kpiSettingTypeId);
+                        objKpiSettingType.setKpiGroupId(0); 
+                        PstKpiSettingType.insertExc(objKpiSettingType);
+                        
+                        //untuk menghapus kpi group pada tabel kpi setting group
+                        PstKpiSettingGroup.deleteExc(oidKpiSettingGroup);
+
+                        msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);
+                        excCode = RSLT_OK;
                     } catch (DBException dbexc) {
                         excCode = dbexc.getErrorCode();
                         msgString = getSystemMessage(excCode);
