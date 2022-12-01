@@ -100,10 +100,10 @@
     //sValidDate = sValidDate; 
     CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
     if (typeform == 1) {
-
         long iErrCodeSetttingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
-        if (iCommand == Command.SAVE) {
+        if (iCommand == Command.SAVE) {                                                                                      
             iCommand = 0;
+            
         }
     }
     KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
@@ -516,7 +516,7 @@
             /*kumpulan tombol delete*/
             function cmdDeleteGroup(oidKpiGroup, oidKpiSetting) { 
                 document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
-                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiGroup;
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
                 document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();

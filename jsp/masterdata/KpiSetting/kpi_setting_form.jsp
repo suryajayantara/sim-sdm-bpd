@@ -126,7 +126,6 @@
         if (iCommand == Command.SAVE) {
             iCommand = 0;
         }
-
         kpiSetting = ctrlKpiSetting.getKpiSetting();
     }
     KpiSettingType kpiSettingType = ctrlKpiSettingType.getKpiSettingType();

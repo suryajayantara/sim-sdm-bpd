@@ -211,26 +211,28 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
                     long oidKpiGroup = FRMQueryString.requestLong(request, FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]);
                     long oidKpiType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]);
                     try {
-                        // untuk menghapus kpi list pada tabel kpi setting list
-                        PstKpiSettingList.deleteByKpiGroupAndSetting(oidKpiGroup, oidKpiSetting);
-
                         String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + oidKpiSetting + " AND " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
                         Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, "");
                         KpiSettingType objKpiSettingType = (KpiSettingType) vKpiSettingType.get(0);
+                        
+                        // untuk menghapus kpi list pada tabel kpi setting list
+                        PstKpiSettingList.deleteByKpiGroupAndSetting(oidKpiGroup, oidKpiSetting);
+
                         long oidKpiSettingId = objKpiSettingType.getKpiSettingId();
                         long kpiSettingTypeId = objKpiSettingType.getKpiTypeId();
-
-                        // delete kpi setting type
-                        PstKpiSettingType.deleteExc(objKpiSettingType.getOID());
-
+ 
+                        //untuk menghapus kpi group pada tabel kpi setting group
+                        PstKpiSettingGroup.deleteByKpiGroup(oidKpiGroup);
+                        
+                                                // delete kpi setting type
+                        PstKpiSettingType.deleteByKpiGroupAndSetting(oidKpiGroup);
+                        
                         // insert kembali kpi setting type dengan column kpi group id null
                         objKpiSettingType.setKpiSettingId(oidKpiSettingId);
                         objKpiSettingType.setKpiTypeId(kpiSettingTypeId);
                         objKpiSettingType.setKpiGroupId(0); 
                         PstKpiSettingType.insertExc(objKpiSettingType);
                         
-                        //untuk menghapus kpi group pada tabel kpi setting group
-                        PstKpiSettingGroup.deleteExc(oidKpiSettingGroup);
 
                         msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);
                         excCode = RSLT_OK;
