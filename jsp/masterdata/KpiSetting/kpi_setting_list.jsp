@@ -309,11 +309,8 @@
                                     for (int j = 0; j < vListPosisi.size(); j++) {
                                         Position objPosition = (Position) vListPosisi.get(j);
                                 %>
-
                                 <%= objPosition.getPosition()%> <br><div>&nbsp;</div>
-
                                 <%}%>
-
                             </td>
                             <td style="background-color: #FFF;"><%= I_DocStatus.fieldDocumentStatus[kpiSettingList.getStatus()]%></td>
                             <td style="background-color: #FFF;"><%= kpiSettingList.getStartDate()%></td>

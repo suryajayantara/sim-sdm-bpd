@@ -212,7 +212,8 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
                         long kpiSettingGroup = PstKpiSettingGroup.deleteByKpiGroup(oidKpiSettingGroup);
                         if (kpiSettingGroup != 0) {
                             long oidKpiType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]);
-                                  String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
+                            long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);     
+                            String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + oidKpiSetting + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
                                   Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, ""); 
                                   KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(0);
                                   long oidKpiSettingId = entKpiSettingType.getKpiSettingId();

@@ -384,6 +384,7 @@
                 KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
                 if(kpiType.getOID() > 0){
                     if(kpiType.getOID() != lastKpiTypeOID){
+                         
         %>
                 <div class="formstyle mb-3">
                     <form name="<%= FrmKpiSettingType.FRM_NAME_KPISETTINGTYPE %>_<%= kpiType.getKpiSettingTypeId() %>" method="get" id="FRM_NAME_KPISETTINGTYPE_<%= kpiType.getKpiSettingTypeId() %>">

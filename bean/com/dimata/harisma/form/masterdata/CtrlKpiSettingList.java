@@ -120,6 +120,7 @@ public class CtrlKpiSettingList extends Control implements I_Language {
                 if (entKpiSettingList.getOID() == 0) {
                     try {
 //                        PstKpiSettingList.deleteByKpiSetting(this.entKpiSettingType.getKpiSettingId());
+                        
                         Vector<Long> vOidKpiList = frmKpiSettingList.getvOidKpiList();
                           if (vOidKpiList != null){
                               for(int i = 0 ; i < vOidKpiList.size();i++){
@@ -127,6 +128,7 @@ public class CtrlKpiSettingList extends Control implements I_Language {
                               objKpiSettingList.setKpiSettingId(entKpiSettingList.getKpiSettingId());
                               objKpiSettingList.setKpiDistributionId(entKpiSettingList.getKpiDistributionId());
                               objKpiSettingList.setKpiListId(vOidKpiList.get(i));
+                              objKpiSettingList.setKpiGroupId(entKpiSettingList.getKpiGroupId());
                               PstKpiSettingList.insertExc(objKpiSettingList);
                               }
                           }

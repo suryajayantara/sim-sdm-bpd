@@ -119,7 +119,7 @@
 
     /*controller untuk save data kpi setting list*/
     CtrlKpiSettingList ctrlKpiSettingList = new CtrlKpiSettingList(request);
-    if (typeform == 2) {
+    if (typeform == 2 || typeform == 4) {
         long iErrCodeSetttingList = ctrlKpiSettingList.action(iCommand, oidKpiSettingList, request);
         if (iCommand == Command.SAVE) {
             iCommand = 0;
@@ -330,6 +330,8 @@
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
+            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiTypeOid%>">
+            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=oidKpiSettingType%>">
             <input type="hidden" name="typeform" value="1">
               <%
             for (int i = 0; i < vKpiSettingGroup.size(); i++) {
@@ -461,6 +463,7 @@
             <input type="hidden" name="command" value="<%=iCommand%>">
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
+            <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
             <input type="hidden" name="typeform" value="2">
         <div class="modal fade" id="kpi-list-modal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl" role="document">
@@ -482,18 +485,13 @@
         </div>
        </form>
        
-       <!--ini untuk form delete kpi setting list, karena letak button delete kpi setting list berada pada form yang sama dengan delete kpi setting group, jadi aku bikinin form baru ya, kalo nemu cara yang lebih praktis dan rapi, silakan di ubah sendiri-->
+       <!--ini untuk form delete kpi setting list, karena letak button delete kpi setting list berada pada form yang sama dengan delete kpi setting group, jadi aku bikinin form baru-->
        <form name="FRM_NAME_KPISETTINGLIST2" method ="post" action="">
             <input type="hidden" name="command" value="<%=iCommand%>">
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId() %>">
-            <input type="hidden" name="typeform" value="2">
-            <%
-                for(int j = 0; j < vKpiList.size(); j++){
-                KPI_List objKpiList = (KPI_List) vKpiList. get(j);  
-            %>
-            <%}%>
+            <input type="hidden" name="typeform" value="4">
        </form>
        
         <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
@@ -546,6 +544,7 @@
                         document.getElementById("kpi-list-body").innerHTML = xmlhttp.responseText;
                         $("#kpi-group-name").html(groupName);
                         $("#kpi-list-modal").modal("show");
+                        document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
                     }
                 }
                 strUrl = "list_kpi_by_group.jsp";
@@ -565,16 +564,6 @@
             for (var selector in config) {
                 $(selector).chosen(config[selector]);
             }
-
-            $(function () {
-                $('#only-number').on('keydown', '#number', function (e) {
-                    -1 !== $
-                            .inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || /65|67|86|88/
-                            .test(e.keyCode) && (!0 === e.ctrlKey || !0 === e.metaKey)
-                            || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode)
-                            && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
-                });
-            })
 
             function cmdSaveKpiSettingGroup() {
                 document.FRM_NAME_KPISETTINGGROUP.command.value = "<%=Command.SAVE%>";
