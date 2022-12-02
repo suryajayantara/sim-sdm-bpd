@@ -410,10 +410,10 @@
                         <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId() %>">
 
                         <table class="tblStyle" style="width: 100%;">
-                            <thead class="text-center">
+                            <thead>
                                 <tr>
                                     <th class="title_tbl">Kpi Group</th>
-                                    <th class="title_tbl" style="width: 10%;">Action</th>
+                                    <th class="title_tbl text-center" style="width: 10%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
