@@ -412,15 +412,10 @@
                         <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiSettingType.getKpiTypeId() %>">
                         
                         <table class="tblStyle" style="width: 100%;">
-                            <thead class="text-center">
+                            <thead>
                                 <tr>
-                                    <th class="title_tbl"  style="width: 20%;">Kpi Group</th>
-                                    <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
-                                    <th class="title_tbl">Distribution Option</th>
-                                    <th class="title_tbl">Satuan Ukur</th>
-                                    <th class="title_tbl">Target</th>
-                                    <th class="title_tbl">Bobot</th>
-                                    <th class="title_tbl">Action</th>
+                                    <th class="title_tbl">Kpi Group</th>
+                                    <th class="title_tbl text-center" style="width: 10%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -431,20 +426,63 @@
                                         for(int j = 0; j < vKpiGroup.size(); j++){
                                             KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
                                 %>
-                                            <tr>
+                                            <tr style="background-color: #F3f3f3;">
                                                 <td class="p-3" value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title() %> </td>
-                                                <td> - </td>
-                                                <td> - </td>
-                                                <td> - </td>
-                                                <td class="text-center">
-                                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF" class="btn-edit btn-edit1">Edit</a>
-                                                </td>
-                                                <td> - </td>
                                                 <td class="text-center">
                                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                                                     <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
                                                     <a href="javascript:cmdDeleteKpiGroup('<%=objKpiGroup.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <!-- table kpi list -->
+                                                    <table style="width: 100%;">
+                                                        <thead style="text-align: center;">
+                                                            <tr>
+                                                                <th>No.</th>
+                                                                <th>Key Performance Indicator</th>
+                                                                <th>Distribution Option</th>
+                                                                <th>Satuan Ukur</th>
+                                                                <th>Target</th>
+                                                                <th>Bobot</th>
+                                                                <th>Action</th> 
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% 
+                                                                Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "`KPI_SETTING_ID` = "+ kpiSetting.getOID() +" AND `KPI_GROUP_ID` = "+ objKpiGroup.getOID(), "");
+                                                                if(vKpiSettingList.size() > 0){
+                                                                    for(int k = 0; k < vKpiSettingList.size(); k++){
+                                                                        KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(k);
+                                                                        KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+                                                                        KpiDistribution entKpiDistribution = PstKpiDistribution.fetchExc(entKpiSettingList.getKpiDistributionId());
+                                                            %>
+                                                                        <tr>
+                                                                            <td><%= k + 1 %></td>
+                                                                            <td><%= entKpiList.getKpi_title() %></td>
+                                                                            <td> <%= entKpiDistribution.getDistribution() %> </td>
+                                                                            <td> - </td>
+                                                                            <td width="5%" class="text-center">
+                                                                                <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #ffc107;" class="btn-small">Edit</a>
+                                                                            </td>
+                                                                            <td> - </td>
+                                                                            <td width="5%" class="text-center">
+                                                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #d9534f;" class="btn-small">Delete</a>
+                                                                            </td>
+                                                                        </tr>
+                                                            <%      }
+                                                                } else {
+                                                            %>
+                                                                        <tr>
+                                                                            <td colspan="8" class="text-center">Tidak ada data.</td>
+                                                                        </tr>
+                                                            <%
+                                                                }
+                                                            %>
+                                                        </tbody>
+                                                    </table>
                                                 </td>
                                             </tr>
                                 <% 
