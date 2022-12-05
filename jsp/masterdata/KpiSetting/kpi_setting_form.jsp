@@ -408,7 +408,9 @@
                         <input type="hidden" name="typeform" value="3">
                         <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
                         <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId() %>">
-
+                        <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId() %>">
+                        <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiSettingType.getKpiTypeId() %>">
+                        
                         <table class="tblStyle" style="width: 100%;">
                             <thead class="text-center">
                                 <tr>
@@ -666,8 +668,10 @@
             document.FRM_NAME_KPISETTING.submit();
         }
         
-        function cmdDeleteKpiGroup(oid) {
-            document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
+        function cmdDeleteKpiGroup(oidKpiGroup, oidKpiType, oidKpiList) {
+            document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
+            document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>.value = oidKpiType;
+            document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID] %>.value = oidKpiList;
             document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.DELETE %>";
             document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_form.jsp";
             document.FRM_NAME_KPISETTINGLIST.submit();

@@ -510,9 +510,8 @@
                     let params = new URLSearchParams(url.search);
                     params.set('command', <%= Command.EDIT %>);
                     window.history.pushState( {} , '', '?' +  params.toString());
-                <% } %>
+                <% }%>
             });
-            
             /*kumpulan tombol delete*/
             function cmdDeleteGroup(oidKpiGroup, oidKpiSetting) { 
                 document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
