@@ -6,18 +6,24 @@
 package com.dimata.harisma.ajax.kpitarget;
 
 import com.dimata.harisma.ajax.kpisetting.*;
+import com.dimata.harisma.entity.employee.Employee;
+import com.dimata.harisma.entity.employee.PstEmployee;
 import com.dimata.harisma.entity.masterdata.KPI_Group;
 import com.dimata.harisma.entity.masterdata.KpiSetting;
 import com.dimata.harisma.entity.masterdata.KpiSettingGroup;
 import com.dimata.harisma.entity.masterdata.KpiSettingList;
+import com.dimata.harisma.entity.masterdata.KpiSettingPosition;
 import com.dimata.harisma.entity.masterdata.KpiSettingType;
 import com.dimata.harisma.entity.masterdata.KpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.KpiTargetDetailEmployee;
 import com.dimata.harisma.entity.masterdata.PstKPI_Group;
 import com.dimata.harisma.entity.masterdata.PstKpiSetting;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingGroup;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingList;
+import com.dimata.harisma.entity.masterdata.PstKpiSettingPosition;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingType;
 import com.dimata.harisma.entity.masterdata.PstKpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.PstKpiTargetDetailEmployee;
 import com.dimata.harisma.form.masterdata.CtrlKpiTargetDetail;
 import com.dimata.harisma.form.masterdata.FrmKPI_Type;
 import com.dimata.harisma.form.masterdata.FrmKpiSetting;
@@ -55,12 +61,18 @@ public class AjaxCopyKpiSetting extends HttpServlet {
         long oidKpiTarget = FRMQueryString.requestLong(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_KPI_TARGET_ID]);
         if(oidKpiSetting != 0){
             try {
+                // ambil data kpi setting
                 KpiSetting entKpiSetting = PstKpiSetting.fetchExc(oidKpiSetting);
+                // ambil data kpi setting position
+                Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, "KPI_SETTING_ID = " + entKpiSetting.getOID(), "");
+                // membuat object kpi target detail
                 KpiTargetDetail entKpiTargetDetail = new KpiTargetDetail();
+                // ambil data kpi setting list
                 Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "KPI_SETTING_ID = '"+entKpiSetting.getOID()+"'", "KPI_SETTING_ID");
+
                 for(int i = 0; i < vKpiSettingList.size(); i++){
-                    KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
-                    
+                    // prepare data untuk insert ke kpi target detail
+                    KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);                    
                     entKpiTargetDetail.setKpiTargetId(oidKpiTarget);
                     entKpiTargetDetail.setKpiId(entKpiSettingList.getKpiListId());
                     entKpiTargetDetail.setPeriod(0);
@@ -70,8 +82,24 @@ public class AjaxCopyKpiSetting extends HttpServlet {
                     entKpiTargetDetail.setKpiGroupId(0);
                     entKpiTargetDetail.setWeightValue(0);
                     entKpiTargetDetail.setKpiSettingListId(entKpiSettingList.getOID());
-
-                    PstKpiTargetDetail.insertExc(entKpiTargetDetail);
+                    // insert ke tabel kpi target detail
+                    long oidKpiTargetDetail = PstKpiTargetDetail.insertExc(entKpiTargetDetail);
+                    
+                    // prepare insert data untuk tabel kpi target detail employe
+                    for(int j = 0; j < vKpiSettingPosition.size(); j++){
+                        KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(j);
+                        
+                        Vector vEmploye = PstEmployee.list(0, 0, "POSITION_ID = " + entKpiSettingPosition.getPositionId(), "");
+                        for(int k = 0; k < vEmploye.size(); k++){
+                            Employee entEmploye = (Employee) vEmploye.get(k);
+                            
+                            KpiTargetDetailEmployee entKpiTargetDetailEmployee = new KpiTargetDetailEmployee();
+                            entKpiTargetDetailEmployee.setEmployeeId(entEmploye.getOID());
+                            entKpiTargetDetailEmployee.setKpiTargetDetailId(oidKpiTargetDetail);
+                            // insert ke tabel target detail employe
+                            PstKpiTargetDetailEmployee.insertExc(entKpiTargetDetailEmployee);
+                        }
+                    }
                 }
             } catch (Exception exc) {}
             // end
