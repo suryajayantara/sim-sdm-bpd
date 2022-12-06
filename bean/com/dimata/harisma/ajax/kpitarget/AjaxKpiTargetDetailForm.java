@@ -106,9 +106,11 @@ public class AjaxKpiTargetDetailForm extends HttpServlet {
                     case 1:
                         startMonth = 0;
                         endMonth = 5;
+                        break;
                     case 2:
                         startMonth = 6;
                         endMonth = 1;
+                        break;
                 }
             }
             
@@ -118,15 +120,19 @@ public class AjaxKpiTargetDetailForm extends HttpServlet {
                     case 1:
                         startMonth = 0;
                         endMonth = 2;
+                        break;
                     case 2:
                         startMonth = 3;
                         endMonth = 5;
+                        break;
                     case 3:
                         startMonth = 6;
                         endMonth = 8;
+                        break;
                     case 4:
                         startMonth = 9;
                         endMonth = 11;
+                        break;
                 }
             }
             
@@ -136,12 +142,15 @@ public class AjaxKpiTargetDetailForm extends HttpServlet {
                     case 1:
                         startMonth = 0;
                         endMonth = 3;
+                        break;
                     case 2:
                         startMonth = 4;
                         endMonth = 7;
+                        break;
                     case 3:
                         startMonth = 8;
                         endMonth = 11;
+                        break;
                 }
             }
             

@@ -150,11 +150,11 @@ pageEncoding="UTF-8"%>
                             </td>
                             <td class="text-center"><input type="number" name="FRM_FIELD_PERIOD_INDEX" placeholder="Periode Index" class="ms-2 input-period-index" id="periodeindex-<%= entKpiTargetDetail.getOID() %>"></td>
                             <td class="text-center">
-                                <input class="input-target-jumlah" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT] %>" value="<%= entKpiTargetDetail.getAmount() %>" placeholder="Target Jumlah" class="me-2" id="targetjumlah-<%= entKpiTargetDetail.getOID() %>">
+                                <input class="input-target-jumlah" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT] %>" value="<%= Math.round(entKpiTargetDetail.getAmount()) %>" placeholder="Target Jumlah" class="me-2" id="targetjumlah-<%= entKpiTargetDetail.getOID() %>">
                             </td>
                             <td class="text-center">
                                 <div class="d-flex">
-                                    <input class="input-weight-value me-2" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_WEIGHT_VALUE] %>" value="<%= entKpiTargetDetail.getWeightValue() %>" placeholder="Weight Value" id="weightvalue-<%= entKpiTargetDetail.getOID() %>">
+                                    <input class="input-weight-value me-2" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_WEIGHT_VALUE] %>" value="<%= Math.round(entKpiTargetDetail.getWeightValue()) %>" placeholder="Weight Value" id="weightvalue-<%= entKpiTargetDetail.getOID() %>">
                                     <div class="spinner-border spinner-border-sm" role="status" style="display: none;" id="loading-<%= entKpiTargetDetail.getOID() %>">
                                       <span class="visually-hidden">Loading...</span>
                                     </div>
@@ -193,7 +193,7 @@ pageEncoding="UTF-8"%>
                                         <td><%= PstEmployee.getDivisionName(entEmployee.getDivisionId()) %></td>
                                         <td>
                                             <div class="d-flex">
-                                                <input type="number" name="<%= FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_BOBOT] %>" value="<%= entKpiTargetDetailEmployee.getBobot() %>" id="bobot-<%= entKpiTargetDetailEmployee.getOID() %>" class="input-bobot">
+                                                <input type="number" name="<%= FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_BOBOT] %>" value="<%= Math.round(entKpiTargetDetailEmployee.getBobot()) %>" id="bobot-<%= entKpiTargetDetailEmployee.getOID() %>" class="input-bobot">
                                                 <div class="spinner-border spinner-border-sm" role="status" style="display: none;" id="loading-<%= entKpiTargetDetailEmployee.getOID() %>">
                                                   <span class="visually-hidden">Loading...</span>
                                                 </div>
@@ -228,27 +228,26 @@ pageEncoding="UTF-8"%>
     <script src="<%=approot%>/styles/datatable/v1/jquery.dataTables.min.js"></script>
     <script type="text/javascript">      
         $("body").on("change", ".select-period, .input-period-index, .input-target-jumlah, .input-weight-value", function(e){
-            let isFormReady = true;
+            let isReady = {};
             const targetDetailOID = $(this).attr("id").split("-")[1];
-            const periode = $("#periode-"+targetDetailOID).val();
-            const periodindex = $("#periodindex-"+targetDetailOID).val();
-            const targetjumlah = $("#targetjumlah-"+targetDetailOID).val();
-            const weightvalue = $("#weightvalue-"+targetDetailOID).val();
+            const periode = parseInt($("#periode-"+targetDetailOID).val());
+            const periodindex = parseInt($("#periodindex-"+targetDetailOID).val());
+            const targetjumlah = parseInt($("#targetjumlah-"+targetDetailOID).val());
+            const weightvalue = parseInt($("#weightvalue-"+targetDetailOID).val());
             
-            if(periode == ""){
-                isFormReady = false;
+            if(periode < 0){
+                isReady.periode = false;
             }
-            if(periodindex < 0){
-                isFormReady = false;
+            if(periodindex <= 0){
+                isReady.periodeindex = false;
             }
-            if(targetjumlah < 0){
-                isFormReady = false;
+            if(targetjumlah <= 0){
+                isReady.targetjumlah = false;
             }
-            if(weightvalue < 0){
-                isFormReady = false;
+            if(weightvalue <= 0){
+                isReady.weightvalue = false;
             }
-            
-            if(isFormReady){
+            if(Object.keys(isReady).length <= 0){
                 const form = $("#formtargetdetail-"+targetDetailOID);
                 $.ajax({
                   url: "<%= approot %>/AjaxKpiTargetDetailForm",
@@ -265,16 +264,17 @@ pageEncoding="UTF-8"%>
                   },
                   complete: function() {
                         $("#loading-" + targetDetailOID).fadeOut("slow");
-                  },
+                  }
                 });
             }
+            
         });
         
         $("body").on("change", ".input-bobot", function(e){
             const targetDetailEmployeOID = $(this).attr("id").split("-")[1];
             const bobot = $(this).val();
             
-            if(bobot > 0 && bobot != ""){
+            if(bobot > 0 && bobot !== ""){
                 const form = $("#formtargetdetailemploye-"+targetDetailEmployeOID);
                 $.ajax({
                   url: "<%= approot %>/AjaxKpiTargetDetailEmployeForm",
@@ -291,7 +291,7 @@ pageEncoding="UTF-8"%>
                   },
                   complete: function() {
                         $("#loading-" + targetDetailEmployeOID).fadeOut("slow");
-                  },
+                  }
                 });
             }
         });
