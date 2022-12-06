@@ -110,13 +110,16 @@ pageEncoding="UTF-8"%>
 
     <div class="content-main">
         <div class="formstyle">
-            <table class="tblStyle" style="width: 100%; hover">
+            <small class="fst-italic">note: data telah tersimpan jika baris berwarna hijau</small>
+            <table class="tblStyle" style="width: 100%;">
                 <thead>
                     <tr>
                         <td style="width: 5%; text-align: center"><strong>No</strong></td>
-                        <td style="width: 50%; text-align: center"><strong>KPI</strong></td>
-                        <td style="width: 20%; text-align: center"><strong>Periode</strong></td>
-                        <td style="width: 25%; text-align: center"><strong>Target</strong></td>
+                        <td style="width: 55%; text-align: center"><strong>KPI</strong></td>
+                        <td style="width: 10%; text-align: center"><strong>Periode</strong></td>
+                        <td style="width: 10%; text-align: center"><strong>Periode Index</strong></td>
+                        <td style="width: 10%; text-align: center"><strong>Target</strong></td>
+                        <td style="width: 10%; text-align: center"><strong>Weight Value</strong></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -132,26 +135,25 @@ pageEncoding="UTF-8"%>
                     <tr <%= isCompletedTarget %>>
                         <form name="<%= FrmKpiTargetDetail.FRM_NAME_KPI_TARGET_DETAIL %>" class="form-target-detail" id="formtargetdetail-<%= entKpiTargetDetail.getOID() %>">
                             <input type="hidden" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_TARGET_DETAIL_ID] %>" value="<%= entKpiTargetDetail.getOID() %>">
-                            <td style="text-align: center"><%= i+1 %></td>
+                            <td class="text-center"><%= i+1 %></td>
                             <td><strong><%= entKpiList.getKpi_title() %></strong></td>
-                            <td>
-                                <div class="d-flex">
-                                    <%
-                                        Vector periode_value = new Vector(1, 1);
-                                        Vector periode_key = new Vector(1, 1);
-                                        for (int j = 0; j < PstKpiTargetDetail.period.length; j++) {
-                                            periode_key.add(PstKpiTargetDetail.period[j]);
-                                            periode_value.add(String.valueOf(j));
-                                        }
-                                    %>
-                                    <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "chosen-select", null, "" + kpiTargetDetail.getPeriod(), periode_value, periode_key, "id='periode-"+entKpiTargetDetail.getOID()+"' class='select-period' data-placeholder='Select Group...'")%>
-
-                                    <input type="number" name="FRM_FIELD_PERIOD_INDEX-<%= entKpiTargetDetail.getOID() %>" placeholder="Periode Index" class="ms-2 input-period-index" id="periodeindex-<%= entKpiTargetDetail.getOID() %>">
-                                </div>
+                            <td class="text-center">
+                                <%
+                                    Vector periode_value = new Vector(1, 1);
+                                    Vector periode_key = new Vector(1, 1);
+                                    for (int j = 0; j < PstKpiTargetDetail.period.length; j++) {
+                                        periode_key.add(PstKpiTargetDetail.period[j]);
+                                        periode_value.add(String.valueOf(j));
+                                    }
+                                %>
+                                <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "select-period", null, "" + entKpiTargetDetail.getPeriod(), periode_value, periode_key, "id='periode-"+entKpiTargetDetail.getOID()+"' data-placeholder='Select Group...'")%>
                             </td>
-                            <td>
+                            <td class="text-center"><input type="number" name="FRM_FIELD_PERIOD_INDEX" placeholder="Periode Index" class="ms-2 input-period-index" id="periodeindex-<%= entKpiTargetDetail.getOID() %>"></td>
+                            <td class="text-center">
+                                <input class="input-target-jumlah" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT] %>" value="<%= entKpiTargetDetail.getAmount() %>" placeholder="Target Jumlah" class="me-2" id="targetjumlah-<%= entKpiTargetDetail.getOID() %>">
+                            </td>
+                            <td class="text-center">
                                 <div class="d-flex">
-                                    <input class="input-target-jumlah" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT] %>" value="<%= entKpiTargetDetail.getAmount() %>" placeholder="Target Jumlah" class="me-2" id="targetjumlah-<%= entKpiTargetDetail.getOID() %>">
                                     <input class="input-weight-value me-2" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_WEIGHT_VALUE] %>" value="<%= entKpiTargetDetail.getWeightValue() %>" placeholder="Weight Value" id="weightvalue-<%= entKpiTargetDetail.getOID() %>">
                                     <div class="spinner-border spinner-border-sm" role="status" style="display: none;" id="loading-<%= entKpiTargetDetail.getOID() %>">
                                       <span class="visually-hidden">Loading...</span>
@@ -163,7 +165,7 @@ pageEncoding="UTF-8"%>
 
                     <tr>
                         <td>&nbsp;</td>
-                        <td colspan="3">
+                        <td colspan="5">
                             <table class="tblStyle" style="width: 100%">
                                 <tr>
                                     <td style="width: 5%; text-align: center" ><strong>No</strong></td>
@@ -183,11 +185,21 @@ pageEncoding="UTF-8"%>
                                         }
                                 %>
                                 <tr <%= isCompletedEmploye %>>
-                                    <td><%= j+1 %></td>
-                                    <td><%= entEmployee.getEmployeeNum() %></td>
-                                    <td><%= entEmployee.getFullName() %></td>
-                                    <td><%= PstEmployee.getDivisionName(entEmployee.getDivisionId()) %></td>
-                                    <td><input type='text' name='bobot' value="<%= entKpiTargetDetailEmployee.getBobot() %>"></td>
+                                    <form name="<%= FrmKpiTargetDetailEmployee.FRM_NAME_KPI_TARGET_DETAIL_EMPLOYEE %>" class="form-target-detail-employe" id="formtargetdetailemploye-<%= entKpiTargetDetailEmployee.getOID() %>">
+                                        <input type="hidden" name="<%= FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_KPI_TARGET_DETAIL_EMPLOYEE_ID] %>" value="<%= entKpiTargetDetailEmployee.getOID() %>">
+                                        <td><%= j+1 %></td>
+                                        <td><%= entEmployee.getEmployeeNum() %></td>
+                                        <td><%= entEmployee.getFullName() %></td>
+                                        <td><%= PstEmployee.getDivisionName(entEmployee.getDivisionId()) %></td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <input type="number" name="<%= FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_BOBOT] %>" value="<%= entKpiTargetDetailEmployee.getBobot() %>" id="bobot-<%= entKpiTargetDetailEmployee.getOID() %>" class="input-bobot">
+                                                <div class="spinner-border spinner-border-sm" role="status" style="display: none;" id="loading-<%= entKpiTargetDetailEmployee.getOID() %>">
+                                                  <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </form>
                                 </tr>
                                 <% } %>
                             </table>
@@ -198,7 +210,7 @@ pageEncoding="UTF-8"%>
             </table>
             <hr>
             <div class="d-flex justify-content-center">
-                <a href="#" class="btn" style="color:#FFF;">Simpan</a>
+                <a href="#" class="btn" style="color:#FFF;" id="btn-save">Simpan</a>
             </div>
         </div>
     </div>
@@ -237,7 +249,8 @@ pageEncoding="UTF-8"%>
             }
             
             if(isFormReady){
-                const form = $("#formtargetdetail-"+targetDetailOID);$.ajax({
+                const form = $("#formtargetdetail-"+targetDetailOID);
+                $.ajax({
                   url: "<%= approot %>/AjaxKpiTargetDetailForm",
                   data: form.serialize(),
                   type: 'POST',
@@ -255,7 +268,39 @@ pageEncoding="UTF-8"%>
                   },
                 });
             }
-        })
+        });
+        
+        $("body").on("change", ".input-bobot", function(e){
+            const targetDetailEmployeOID = $(this).attr("id").split("-")[1];
+            const bobot = $(this).val();
+            
+            if(bobot > 0 && bobot != ""){
+                const form = $("#formtargetdetailemploye-"+targetDetailEmployeOID);
+                $.ajax({
+                  url: "<%= approot %>/AjaxKpiTargetDetailEmployeForm",
+                  data: form.serialize(),
+                  type: 'POST',
+                  beforeSend: function() {
+                        $("#loading-" + targetDetailEmployeOID).fadeIn("slow");
+                  },
+                  success: function(res) {
+                        form.parent().css("background-color", "#BDF5C3");
+                  },
+                  error: function(err) {
+                        form.parent().css("background-", "#F7D8D8");
+                  },
+                  complete: function() {
+                        $("#loading-" + targetDetailEmployeOID).fadeOut("slow");
+                  },
+                });
+            }
+        });
+        
+        $("body").on("click", "#btn-save", function(e){
+            e.preventDefault();
+            alert("Data telah disimpan");
+            location.reload();
+        });
     </script>
   </body>
 </html>

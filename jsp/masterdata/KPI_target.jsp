@@ -36,6 +36,7 @@
     long oidCompany = FRMQueryString.requestLong(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_COMPANY_ID]);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     int iCommand = FRMQueryString.requestCommand(request);
+    int iCommandInUrl = iCommand;
     int start = FRMQueryString.requestInt(request, "start");
     long divisionId = FRMQueryString.requestLong(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_DIVISION_ID]);
     long departmentId = FRMQueryString.requestLong(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_DEPARTMENT_ID]);
@@ -133,7 +134,6 @@
             divisionId = emplx.getDivisionId();
             strDisable = "disabled=\"disabled\"";
         }
-
     }
 
     if (!privViewAllDivision && appUserSess.getAdminStatus() != 1) {
@@ -176,6 +176,14 @@
         <link rel="stylesheet" href="../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../stylesheets/custom.css" >
         <script language="JavaScript">
+            // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
+            <% if(iCommandInUrl == Command.SAVE){ %>
+                let url = new URL(window.location.href);
+                let params = new URLSearchParams(url.search);
+                params.set('command', <%= Command.EDIT %>);
+                window.history.pushState( {} , '', '?' +  params.toString());
+            <% }%>
+            
             function cmdUpdateSec() {
                 document.frmKPI_Company_Target.command.value = "<%=String.valueOf(Command.GOTO)%>";
                 document.frmKPI_Company_Target.action = "KPI_target.jsp";
@@ -401,7 +409,7 @@
             <span id="menu_title"><strong>Performance Management</strong> <strong style="color:#333;"> / </strong>Target & Distribusi</span>
         </div>
         <div class="content-main">
-            <form name="frmKPI_Company_Target" method ="post" action="">
+            <form name="frmKPI_Company_Target" method ="GET" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="start" value="<%=start%>">
                 <input type="hidden" name="oidTargetDetail" value="<%=oidTargetDetail%>">
