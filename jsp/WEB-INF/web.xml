@@ -161,6 +161,8 @@
     <servlet>
         <servlet-name>AjaxKpiTargetDetailForm</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.kpitarget.AjaxKpiTargetDetailForm</servlet-class>
+    </servlet>
+    <servlet>    
         <servlet-name>AjaxDeleteKpiSettingList</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingList</servlet-class>
     </servlet>
