@@ -801,6 +801,9 @@
                     if (kpiTarget.getOID() > 0) {
                 %>
                 <div class="formstyle">
+                    <div class="d-flex justify-content-end mb-2">
+                        <a href="kpi_target_detail_form.jsp?<%= FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_KPI_TARGET_ID] %>=<%= oidTarget %>" style="color:#FFF;" class="btn">Lengkapi Detail</a>
+                    </div>
                     <table class="tblStyle" style="width: 100%">
                         <tr>
                             <td style="width: 5%; text-align: center" colspan="2"><strong>No</strong></td>
