@@ -125,7 +125,7 @@ if (iCommand == Command.LIST){
         <div id="menu_utama">
             <span id="menu_title">Daftar Target</span>
         </div>
-            <form name="frm" method="post" action="">
+            <form name="frm" method="POST" action="">
                  <input type="hidden" name="command" value="<%= iCommand %>"> 
                 <input type="hidden" name="targetId">
         <div class="box">
