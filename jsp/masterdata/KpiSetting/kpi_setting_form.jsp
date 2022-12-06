@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="com.dimata.harisma.form.masterdata.FrmKPI_Type"%>
 <%@page import="com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingType"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingGroup"%>
@@ -31,12 +32,11 @@
 <!DOCTYPE html>
 
 
-<%    
-    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+<%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     long oidKpiSettingGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]);
-
+    
     Vector vKpiGroup = new Vector();
 
     /*berfungsi untuk menyiman data sementara, yang di mana ini bisa dibilang adalah penerima oid tapi ini hardcore*/
@@ -64,7 +64,7 @@
     String validDate = FRMQueryString.requestString(request, "valid_date");
 
     Long dtReq = FRMQueryString.requestLong(request, "requestDateDaily");
-    
+
     java.util.Date requestDate = new Date();
     if (dtReq != 0) {
         requestDate = new Date(dtReq.longValue());
@@ -132,7 +132,7 @@
     if (iCommand == Command.EDIT && kpiSettingType != null && kpiSettingType.exists()) {
 
     }
-    
+
     CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
     if (typeform == 3) {
         long iErrCode = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
@@ -144,7 +144,7 @@
 
     /*end*/
 
-    /*digunakan untuk button edit agar sesuai dengan oid tabel utama,
+ /*digunakan untuk button edit agar sesuai dengan oid tabel utama,
      untuk form jabatan, harus dibuat fungsi array di pst kpi setting 
     baru karena sudah mengambil data dengan bentuk array string */
     if (iCommand == Command.EDIT || kpiSetting.getOID() != 0) {
@@ -162,7 +162,6 @@
     }
     KpiSettingList kpiSettingList = ctrlKpiSettingList.getKpiSettingList();
 
-    
     if (oidCompany != 0) {
         kpiSetting.setCompanyId(oidCompany);
     } else {
@@ -261,7 +260,8 @@
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="typeform" value="1">
                 <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
-                <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getKpiSettingId()%>">             
+                <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getKpiSettingId()%>">
+                <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiSettingType.getKpiTypeId() %>">
                 <input type="hidden" name="kpiSettingId" value="<%=oidKpiSetting%>">
                 <input type="hidden" name="delete_for">
                 <input type="hidden" name="urlBack" value="kpi_setting_form.jsp">
@@ -336,7 +336,7 @@
                                     %>
                                     <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_STATUS], "custom-select form-select-sm", null, "" + kpiSetting.getStatus(), val_status, key_status, "style='width : 20%' id='status'")%> 
                                 </div>
-                                
+
                                 <div id="caption">Tahun</div>
                                 <div id="divinput" >
                                     <%= ControlCombo.draw(FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_TAHUN], "custom-select form-select-sm", null, "" + kpiSetting.getTahun(), valTahun, keyTahun, "style='width : 20%'")%> 
@@ -364,8 +364,8 @@
                     <%
                         if (kpiSetting.getOID() > 0) {
                     %>
-                        <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal" >Pilih Kpi Type <strong><i class="fa fa-plus"></i></strong></a>
-                    <%}%>
+                    <a href="javascript:cmdAdd()" type="hidden" style="color:#FFF;" class="btn-add btn-add1" data-toggle="modal" data-target="#exampleModal" >Pilih Kpi Type <strong><i class="fa fa-plus"></i></strong></a>
+                            <%}%>
                     <div>&nbsp;</div>
                 </div>
                 <div>&nbsp;</div>
@@ -376,205 +376,210 @@
             if (kpiSetting.getOID() > 0) {
         %>
         <!--Tampilan form setelah input data kpi type-->
-        <%           
+        <%
             Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
             long lastKpiTypeOID = 0;
             for (int i = 0; i < vKpiSetting.size(); i++) {
                 KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
-                if(kpiType.getOID() > 0){
-                    if(kpiType.getOID() != lastKpiTypeOID){
-                         
-        %>
-                <div class="formstyle mb-3">
-                    <form name="<%= FrmKpiSettingType.FRM_NAME_KPISETTINGTYPE %>_<%= kpiType.getKpiSettingTypeId() %>" method="get" id="FRM_NAME_KPISETTINGTYPE_<%= kpiType.getKpiSettingTypeId() %>">
-                        <input type="hidden" name="command" value="<%= iCommand %>">
-                        <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%= kpiType.getOID() %>">
-                        <div class="row mb-3">
-                            <div class="col d-flex justify-content-between">
-                                <span> <%= kpiType.getType_name() %> </span>
-                                <div>
-                                    <a href="javascript:init('<%=kpiSetting.getOID()%>', '<%=kpiType.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
-                                        <strong><i class="fa fa-plus"></i></strong>
-                                    </a>
-                                    <a href="javascript:cmdDeleteKpiType('<%= kpiType.getKpiSettingTypeId() %>', '<%= oidKpiSetting %>', '<%= kpiType.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
-                                        <strong><i class="fa fa-trash"></i></strong>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>      
-                    </form>
-                    <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
-                        <input type="hidden" name="command" value="<%=iCommand%>">
-                        <input type="hidden" name="typeform" value="3">
-                        <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
-                        <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId() %>">
+                if (kpiType.getOID() > 0) {
+                    if (kpiType.getOID() != lastKpiTypeOID) {
 
-                        <table class="tblStyle" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th class="title_tbl">Kpi Group</th>
-                                    <th class="title_tbl text-center" style="width: 10%;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <%
-                                    String kpiGroupQuery = "hr_kpi_setting_type.`KPI_SETTING_ID`='"+oidKpiSetting+"' AND hr_kpi_setting_type.`KPI_TYPE_ID`='"+kpiType.getOID()+"'";
-                                    vKpiGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
-                                    if(vKpiGroup.size() > 0){
-                                        for(int j = 0; j < vKpiGroup.size(); j++){
-                                            KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
-                                %>
-                                            <tr style="background-color: #F3f3f3;">
-                                                <td class="p-3" value="<%= objKpiGroup.getOID() %>"> <%= objKpiGroup.getGroup_title() %> </td>
-                                                <td class="text-center">
-                                                    <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                                    <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                                                    <a href="javascript:cmdDeleteKpiGroup('<%=objKpiGroup.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    <!-- table kpi list -->
-                                                    <table style="width: 100%;">
-                                                        <thead style="text-align: center;">
-                                                            <tr>
-                                                                <th>No.</th>
-                                                                <th>Key Performance Indicator</th>
-                                                                <th>Distribution Option</th>
-                                                                <th>Satuan Ukur</th>
-                                                                <th>Target</th>
-                                                                <th>Bobot</th>
-                                                                <th>Action</th> 
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <% 
-                                                                Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "`KPI_SETTING_ID` = "+ kpiSetting.getOID() +" AND `KPI_GROUP_ID` = "+ objKpiGroup.getOID(), "");
-                                                                if(vKpiSettingList.size() > 0){
-                                                                    for(int k = 0; k < vKpiSettingList.size(); k++){
-                                                                        KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(k);
-                                                                        KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
-                                                                        KpiDistribution entKpiDistribution = PstKpiDistribution.fetchExc(entKpiSettingList.getKpiDistributionId());
-                                                            %>
-                                                                        <tr>
-                                                                            <td><%= k + 1 %></td>
-                                                                            <td><%= entKpiList.getKpi_title() %></td>
-                                                                            <td> <%= entKpiDistribution.getDistribution() %> </td>
-                                                                            <td> - </td>
-                                                                            <td width="5%" class="text-center">
-                                                                                <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #ffc107;" class="btn-small">Edit</a>
-                                                                            </td>
-                                                                            <td> - </td>
-                                                                            <td width="5%" class="text-center">
-                                                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #d9534f;" class="btn-small">Delete</a>
-                                                                            </td>
-                                                                        </tr>
-                                                            <%      }
-                                                                } else {
-                                                            %>
-                                                                        <tr>
-                                                                            <td colspan="8" class="text-center">Tidak ada data.</td>
-                                                                        </tr>
-                                                            <%
-                                                                }
-                                                            %>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                <% 
-                                        }
-                                    } else { 
-                                %>
-                                            <tr>
-                                                <td class="text-center" colspan="7"> Data tidak ditemukan. </td>
-                                            </tr>
-                                <%
-                                    } 
-                                %>
-                            </tbody>
-                        </table>
-                    </form>
-                </div>
-        <%
-                    }
-                    lastKpiTypeOID = kpiType.getOID();
-                } else {
         %>
-                <div class="formstyle mb-3">
-                    <table class="tblStyle" style="width: 100%;">
-                        <thead class="text-center">
-                            <tr>
-                                <th class="title_tbl"  style="width: 20%;">Kpi Group</th>
-                                <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
-                                <th class="title_tbl">Distribution Option</th>
-                                <th class="title_tbl">Satuan Ukur</th>
-                                <th class="title_tbl">Target</th>
-                                <th class="title_tbl">Bobot</th>
-                                <th class="title_tbl">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center" colspan="7">Data tidak ditemukan.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="formstyle mb-3">
+            <form name="<%= FrmKpiSettingType.FRM_NAME_KPISETTINGTYPE%>_<%= kpiType.getKpiSettingTypeId()%>" method="get" id="FRM_NAME_KPISETTINGTYPE_<%= kpiType.getKpiSettingTypeId()%>">
+                <input type="hidden" name="command" value="<%= iCommand%>">
+                <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%= kpiType.getOID()%>">
+                <div class="row mb-3">
+                    <div class="col d-flex justify-content-between">
+                        <span> <%= kpiType.getType_name()%> </span>
+                        <div>
+                            <a href="javascript:init('<%=kpiSetting.getOID()%>', '<%=kpiType.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2" >Tambah Detail
+                                <strong><i class="fa fa-plus"></i></strong>
+                            </a>
+                            <a href="javascript:cmdDeleteKpiType('<%= kpiType.getKpiSettingTypeId()%>', '<%= oidKpiSetting%>', '<%= kpiType.getOID()%>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                                <strong><i class="fa fa-trash"></i></strong>
+                            </a>
+                        </div>
+                    </div>
+                </div>      
+            </form>
+            <form name="FRM_NAME_KPISETTINGLIST" method ="post" action="">
+                <input type="hidden" name="command" value="<%=iCommand%>">
+                <input type="hidden" name="typeform" value="3">
+                <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
+                <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
+                <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID() %>">
+                <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId()%>">
+                <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiType.getOID()%>">
+                <table class="tblStyle" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="title_tbl">Kpi Group</th>
+                            <th class="title_tbl text-center" style="width: 10%;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                            String kpiGroupQuery = "hr_kpi_setting_type.`KPI_SETTING_ID`='" + oidKpiSetting + "' AND hr_kpi_setting_type.`KPI_TYPE_ID`='" + kpiType.getOID() + "'";
+                            vKpiGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
+                            if (vKpiGroup.size() > 0) {
+                                for (int j = 0; j < vKpiGroup.size(); j++) {
+                                    KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
+                        %>
+                        <tr style="background-color: #F3f3f3;">
+                            <td class="p-3" value="<%= objKpiGroup.getOID()%>"> <%= objKpiGroup.getGroup_title()%> </td>
+                            <td class="text-center">
+                                <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
+                                <a href="javascript:cmdDeleteKpiGroup('<%=objKpiGroup.getOID()%>','<%= oidKpiSetting%>', '<%= kpiType.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <!-- table kpi list -->
+                                <table style="width: 100%;">
+                                    <thead style="text-align: center;">
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Key Performance Indicator</th>
+                                            <th>Distribution Option</th>
+                                            <th>Satuan Ukur</th>
+                                            <th>Target</th>
+                                            <th>Bobot</th>
+                                            <th>Action</th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <%
+                                            Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "`KPI_SETTING_ID` = " + kpiSetting.getOID() + " AND `KPI_GROUP_ID` = " + objKpiGroup.getOID(), "");
+                                            if (vKpiSettingList.size() > 0) {
+                                                for (int k = 0; k < vKpiSettingList.size(); k++) {
+                                                    KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(k);
+                                                    KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+                                                    KpiDistribution entKpiDistribution = PstKpiDistribution.fetchExc(entKpiSettingList.getKpiDistributionId());
+                                        %>
+                                        <tr>
+                                            <td><%= k + 1%></td>
+                                            <td value="<%=entKpiList.getOID()%>"><%= entKpiList.getKpi_title()%></td>
+                                            <td> <%= entKpiDistribution.getDistribution()%> </td>
+                                            <td> - </td>
+                                            <td width="5%" class="text-center">
+                                                <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
+                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #ffc107;" class="btn-small">Edit</a>
+                                            </td>
+                                            <td> - </td>
+                                            <td width="5%" class="text-center">
+                                                <a href="javascript:cmdDeleteKpiSettingList('<%=kpiSetting.getOID()%>', '<%=entKpiList.getOID()%>')" style="color: #FFF; background-color: #d9534f;" class="btn-small">Delete</a>
+                                            </td>
+                                        </tr>
+                                        <%      }
+                                        } else {
+                                        %>
+                                        <tr>
+                                            <td colspan="8" class="text-center">Tidak ada data.</td>
+                                        </tr>
+                                        <%
+                                            }
+                                        %>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <%
+                            }
+                        } else {
+                        %>
+                        <tr>
+                            <td class="text-center" colspan="7"> Data tidak ditemukan. </td>
+                        </tr>
+                        <%
+                            }
+                        %>
+                    </tbody>
+                </table>
+            </form>
+            </form>
+        </div>
+        <%
+            }
+            lastKpiTypeOID = kpiType.getOID();
+        } else {
+        %>
+        <div class="formstyle mb-3">
+            <table class="tblStyle" style="width: 100%;">
+                <thead class="text-center">
+                    <tr>
+                        <th class="title_tbl"  style="width: 20%;">Kpi Group</th>
+                        <th class="title_tbl" style="width: 20%;">Key Performance Indicator</th>
+                        <th class="title_tbl">Distribution Option</th>
+                        <th class="title_tbl">Satuan Ukur</th>
+                        <th class="title_tbl">Target</th>
+                        <th class="title_tbl">Bobot</th>
+                        <th class="title_tbl">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center" colspan="7">Data tidak ditemukan.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <%
                 }
             }
         %>
-    <!-- Modal adalah javascript untuk memunculkan pop up saat klik button tambah kpi -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type <%=iCommand%></h5>
-                </div>
-                <div class="modal-body">
-                    <form name="FRM_NAME_KPISETTINGTYPE" method ="GET" action="">
-                        <input type="hidden" name="command" value="<%=iCommand%>">
-                        <input type="hidden" name="typeform" value="2">
-                        <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getOID()%>">
-                        <input type="hidden" name="oidKpiSettingType" value="<%=oidKpiSettingType%>">
-                        <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
-                        <div class="form-group">
-                            <label for="exampleInputPassword1">Kpi Type</label>
-                            <select name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" id="kpiTypeId" class="select2" style="width: 100%;">
-                                <option value="">=Select=</option>
-                                <%        
-                                    boolean showKpi = true;
-                                    Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
-                                    for (int i = 0; i < listKpiType.size(); i++) {
-                                        KPI_Type objKpiType = (KPI_Type) listKpiType.get(i);
-                                        String selected = "";
-                                        if (oid_kpi_type != null) {
-                                            for (int j = 0; j < oid_kpi_type.length; j++) {
-                                                String oidKpiType = "" + objKpiType.getOID();
-                                                if (oidKpiType.equals("" + oid_kpi_type[j])) {
-                                                    selected = "disabled";
+        <!-- Modal adalah javascript untuk memunculkan pop up saat klik button tambah kpi -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type <%=iCommand%></h5>
+                    </div>
+                    <div class="modal-body">
+                        <form name="FRM_NAME_KPISETTINGTYPE" method ="GET" action="">
+                            <input type="hidden" name="command" value="<%=iCommand%>">
+                            <input type="hidden" name="typeform" value="2">
+                            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%=kpiSettingType.getOID()%>">
+                            <input type="hidden" name="oidKpiSettingType" value="<%=oidKpiSettingType%>">
+                            <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Kpi Type</label>
+                                <select name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" id="kpiTypeId" class="select2" style="width: 100%;">
+                                    <option value="">=Select=</option>
+                                    <%
+                                        boolean showKpi = true;
+                                        Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
+                                        for (int i = 0; i < listKpiType.size(); i++) {
+                                            KPI_Type objKpiType = (KPI_Type) listKpiType.get(i);
+                                            String selected = "";
+                                            if (oid_kpi_type != null) {
+                                                for (int j = 0; j < oid_kpi_type.length; j++) {
+                                                    String oidKpiType = "" + objKpiType.getOID();
+                                                    if (oidKpiType.equals("" + oid_kpi_type[j])) {
+                                                        selected = "disabled";
+                                                    }
                                                 }
                                             }
-                                        }
-                                %>
+                                    %>
                                     <option value="<%=objKpiType.getOID()%>" <%=selected%>><%=objKpiType.getType_name()%></option> 
-                                <%
-                                    }
-                                %>
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <a href="javascript:cmdSaveKpiType()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
-                        </div>
-                    </form> 
+                                    <%
+                                        }
+                                    %>
+                                </select>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <a href="javascript:cmdSaveKpiType()" style="color:#FFF;" class="btn-simpan btn-simpan1">Save changes</a>
+                            </div>
+                        </form> 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!--End-->	
+        <!--End-->	
 </body>        
 <%}%>
 
@@ -591,159 +596,182 @@
         <%}%>
     </table>
 </div>
-    
-    <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
-    <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
-    <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
-    <script language="JavaScript">
-        //var oBody = document.body;
-        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
+<script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
+<script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
+<script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
+<script language="JavaScript">
+                                        //var oBody = document.body;
+                                        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-            //Initialize Select2 Elements
+                                        $(function () {
+                                            //Initialize Select2 Elements
+                                            $('.select2').select2()
 
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
-            })
-            
-            // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
-            <% if(iCommandInUrl == Command.SAVE){ %>
-                let url = new URL(window.location.href);
-                let params = new URLSearchParams(url.search);
-                params.set('command', <%= Command.EDIT %>);
-                window.history.pushState( {} , '', '?' +  params.toString());
-            <% } %>
-        })
-        
-        var config = {
-            '.chosen-select': {},
-            '.chosen-select-deselect': {allow_single_deselect: true},
-            '.chosen-select-no-single': {disable_search_threshold: 10},
-            '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
-            '.chosen-select-width': {width: "100%"}
-        }
-        for (var selector in config) {
-            $(selector).chosen(config[selector]);
-        }
-        
-        $(function () {
-            $('#only-number').on('keydown', '#number', function (e) {
-                -1 !== $
-                        .inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || /65|67|86|88/
-                        .test(e.keyCode) && (!0 === e.ctrlKey || !0 === e.metaKey)
-                        || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode)
-                        && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
-            });
-        })
-    </script>
+                                            //Initialize Select2 Elements
 
-    <script language="JavaScript">
-        function pageLoad() {
-            $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
-        }
+                                            $('.select2bs4').select2({
+                                                theme: 'bootstrap4'
+                                            })
 
-        function cmdUpdateSec() {
-            document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
+                                            // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
+    <% if (iCommandInUrl == Command.SAVE) {%>
+                                            let url = new URL(window.location.href);
+                                            let params = new URLSearchParams(url.search);
+                                            params.set('command', <%= Command.EDIT%>);
+                                            window.history.pushState({}, '', '?' + params.toString());
+    <% }%>
+                                        })
 
-        function cmdCancel() {
-            document.FRM_NAME_KPISETTING.command.value = "<%=Command.EDIT%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTING.oidKpiSetting.value = 0;
-            document.FRM_NAME_KPISETTING.submit();
-        }
+                                        var config = {
+                                            '.chosen-select': {},
+                                            '.chosen-select-deselect': {allow_single_deselect: true},
+                                            '.chosen-select-no-single': {disable_search_threshold: 10},
+                                            '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
+                                            '.chosen-select-width': {width: "100%"}
+                                        }
+                                        for (var selector in config) {
+                                            $(selector).chosen(config[selector]);
+                                        }
 
-        function cmdBack() {
-            document.FRM_NAME_KPISETTING.command.value = "<%=Command.LIST%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_list.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
+                                        $(function () {
+                                            $('#only-number').on('keydown', '#number', function (e) {
+                                                -1 !== $
+                                                        .inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || /65|67|86|88/
+                                                        .test(e.keyCode) && (!0 === e.ctrlKey || !0 === e.metaKey)
+                                                        || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode)
+                                                        && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
+                                            });
+                                        })
+</script>
 
-        function cmdEditDetail(oid) {
-            document.FRM_NAME_KPISETTING.command.value = "<%=Command.EDIT%>";
-            document.FRM_NAME_KPISETTING.oidKpiSetting.value = oid;
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
+<script language="JavaScript">
+    function pageLoad() {
+        $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
+    }
 
-        function cmdAdd() {
-            document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
-        function cmdAddKpiSettingListForm(oid) {
-            document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
-            document.FRM_NAME_KPISETTING.command.value = "<%= Command.EDIT%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_list_form.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
-        function cmdSave() {
-            document.FRM_NAME_KPISETTING.command.value = "<%=Command.SAVE%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
-        function cmdSaveKpiType() {
-            document.FRM_NAME_KPISETTINGTYPE.command.value = "<%=Command.SAVE%>";
-            document.FRM_NAME_KPISETTINGTYPE.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTINGTYPE.submit();
-        }
-        function cmdSaveKpiSettingList() {
-            document.FRM_NAME_KPISETTING.command.value = "<%=Command.SAVE%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
-        function cmdEdit(oid) {
-            document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
-            document.FRM_NAME_KPISETTING.command.value = "<%= Command.EDIT%>";
-            document.FRM_NAME_KPISETTING.action = "kpi_setting_target.jsp";
-            document.FRM_NAME_KPISETTING.submit();
-        }
-        
-        function cmdDeleteKpiGroup(oid) {
-            document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oid;
-            document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.DELETE %>";
-            document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_form.jsp";
-            document.FRM_NAME_KPISETTINGLIST.submit();
-        }
-        
-        function cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType) {
-            if(confirm("Data KPI Type dan KPI Group akan terhapus, anda yakin?")){
-                var strUrl = "";
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        alert("Data berhasil dihapus");
-                        window.location.reload();
-                    }
+    function cmdUpdateSec() {
+        document.FRM_NAME_KPISETTING.command.value = "<%=String.valueOf(Command.GOTO)%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+
+    function cmdCancel() {
+        document.FRM_NAME_KPISETTING.command.value = "<%=Command.EDIT%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTING.oidKpiSetting.value = 0;
+        document.FRM_NAME_KPISETTING.submit();
+    }
+
+    function cmdBack() {
+        document.FRM_NAME_KPISETTING.command.value = "<%=Command.LIST%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_list.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+
+    function cmdEditDetail(oid) {
+        document.FRM_NAME_KPISETTING.command.value = "<%=Command.EDIT%>";
+        document.FRM_NAME_KPISETTING.oidKpiSetting.value = oid;
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+
+    function cmdAdd() {
+        document.FRM_NAME_KPISETTING.command.value = "<%= Command.ADD%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+    function cmdAddKpiSettingListForm(oid) {
+        document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
+        document.FRM_NAME_KPISETTING.command.value = "<%= Command.EDIT%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_list_form.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+    function cmdSave() {
+        document.FRM_NAME_KPISETTING.command.value = "<%=Command.SAVE%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+    function cmdSaveKpiType() {
+        document.FRM_NAME_KPISETTINGTYPE.command.value = "<%=Command.SAVE%>";
+        document.FRM_NAME_KPISETTINGTYPE.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTINGTYPE.submit();
+    }
+    function cmdSaveKpiSettingList() {
+        document.FRM_NAME_KPISETTING.command.value = "<%=Command.SAVE%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+    function cmdEdit(oid) {
+        document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
+        document.FRM_NAME_KPISETTING.command.value = "<%= Command.EDIT%>";
+        document.FRM_NAME_KPISETTING.action = "kpi_setting_target.jsp";
+        document.FRM_NAME_KPISETTING.submit();
+    }
+
+    function cmdDeleteKpiGroup(oidKpiGroup, oidKpiSetting, kpiTypeId) {
+        document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
+        document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
+        document.FRM_NAME_KPISETTINGLIST.<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>.value = kpiTypeId;
+        document.FRM_NAME_KPISETTINGLIST.command.value = "<%=Command.DELETE%>";
+        document.FRM_NAME_KPISETTINGLIST.action = "kpi_setting_form.jsp";
+        document.FRM_NAME_KPISETTINGLIST.submit();
+    }
+
+    function cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType) {
+        if (confirm("Data KPI Type dan KPI Group akan terhapus, anda yakin?")) {
+            var strUrl = "";
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    alert("Data berhasil dihapus");
+                    window.location.reload();
                 }
-                strUrl = "<%= approot %>/AjaxDeleteKpiSettingType";
-                strUrl += "?FRM_FIELD_KPI_SETTING_TYPE_ID="+oidKpiSettingType;
-                strUrl += "&FRM_FIELD_KPI_SETTING_ID="+oidKpiSetting;
-                strUrl += "&FRM_FIELD_KPI_TYPE_ID="+oidKpiType;
-                strUrl += "&isFormKpiSettingType=1";
-                strUrl += "&command=<%=Command.DELETE %>";
-
-                xmlhttp.open("GET", strUrl, true);
-                xmlhttp.send();
             }
-        }
-        
-        var popup; 
+            strUrl = "<%= approot%>/AjaxDeleteKpiSettingType";
+            strUrl += "?FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiSettingType;
+            strUrl += "&FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting;
+            strUrl += "&FRM_FIELD_KPI_TYPE_ID=" + oidKpiType;
+            strUrl += "&isFormKpiSettingType=1";
+            strUrl += "&command=<%=Command.DELETE%>";
 
-        function init(oidKpiSetting, oidKpiType) {
-            document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
-            onload = "init()";
-//            emp_department = document.frm_pay_emp_level.department.value;
-            popup = window.open(
-                "kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting + "&FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiType, "SelectEmployee", "height=600,width=1200,status=no,toolbar=no,menubar=no,location=no,scrollbars=yes"
-            );
-            popup.focus();
+            xmlhttp.open("GET", strUrl, true);
+            xmlhttp.send();
         }
-    </script> 
+    }
+
+    function cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList) {
+        if (confirm("Data KPI List akan terhapus, anda yakin?")) {
+            var strUrl = "";
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    alert("Data berhasil dihapus");
+                    window.location.reload();
+                }
+            }
+            strUrl = "<%= approot%>/AjaxDeleteKpiSettingList";
+            strUrl += "?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting;
+            strUrl += "&FRM_FIELD_KPI_LIST_ID=" + oidKpiList;
+            strUrl += "&isFormKpiSettingList=1";
+            strUrl += "&command=<%=Command.DELETE%>";
+
+            xmlhttp.open("GET", strUrl, true);
+            xmlhttp.send();
+        }
+    }
+
+    var popup;
+
+    function init(oidKpiSetting, oidKpiType) {
+        document.FRM_NAME_KPISETTING.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
+        onload = "init()";
+//            emp_department = document.frm_pay_emp_level.department.value;
+        popup = window.open(
+                "kpi_setting_list_form.jsp?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting + "&FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiType, "SelectEmployee", "height=600,width=1200,status=no,toolbar=no,menubar=no,location=no,scrollbars=yes"
+                );
+        popup.focus();
+    }
+</script> 
 </html>
 

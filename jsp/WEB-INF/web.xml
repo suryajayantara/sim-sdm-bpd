@@ -161,6 +161,8 @@
     <servlet>
         <servlet-name>AjaxKpiTargetDetailForm</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.kpitarget.AjaxKpiTargetDetailForm</servlet-class>
+        <servlet-name>AjaxDeleteKpiSettingList</servlet-name>
+        <servlet-class>com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingList</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>AchievementPdf</servlet-name>
@@ -1630,6 +1632,10 @@
     <servlet-mapping>
         <servlet-name>AjaxDeleteKpiSettingType</servlet-name>
         <url-pattern>/AjaxDeleteKpiSettingType</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AjaxDeleteKpiSettingList</servlet-name>
+        <url-pattern>/AjaxDeleteKpiSettingList</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>AjaxCopyKpiSetting</servlet-name>

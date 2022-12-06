@@ -6,17 +6,20 @@
 package com.dimata.harisma.ajax.kpisetting;
 
 import com.dimata.harisma.entity.masterdata.KPI_Group;
+import com.dimata.harisma.entity.masterdata.KPI_List;
 import com.dimata.harisma.entity.masterdata.KpiSettingGroup;
 import com.dimata.harisma.entity.masterdata.KpiSettingList;
 import com.dimata.harisma.entity.masterdata.KpiSettingType;
 import com.dimata.harisma.entity.masterdata.PstKPI_Group;
+import com.dimata.harisma.entity.masterdata.PstKPI_List;
 import com.dimata.harisma.entity.masterdata.PstKpiSetting;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingGroup;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingList;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingType;
-import com.dimata.harisma.form.masterdata.FrmKPI_List;
 import com.dimata.harisma.form.masterdata.FrmKPI_Type;
+import com.dimata.harisma.form.masterdata.FrmKPI_List;
 import com.dimata.harisma.form.masterdata.FrmKpiSetting;
+import com.dimata.harisma.form.masterdata.FrmKpiSettingGroup;
 import com.dimata.harisma.form.masterdata.FrmKpiSettingType;
 import com.dimata.qdep.form.FRMQueryString;
 import com.dimata.util.Command;
@@ -27,59 +30,29 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 /**
  *
- * @author Utk
+ * @author suryawan
  */
-public class AjaxDeleteKpiSettingType extends HttpServlet {
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+public class AjaxDeleteKpiSettingList extends HttpServlet{
+    
+ protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int isFormKpiSettingType = FRMQueryString.requestInt(request, "isFormKpiSettingType");
-        long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
+        int isFormKpiSettingList = FRMQueryString.requestInt(request, "isFormKpiSettingList");
         long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
-        long oidKpiType = FRMQueryString.requestLong(request, FrmKPI_Type.fieldNames[FrmKPI_Type.FRM_FIELD_KPI_TYPE_ID]);
+        long oidKpiList = FRMQueryString.requestLong(request, FrmKPI_List.fieldNames[FrmKPI_List.FRM_FIELD_KPI_LIST_ID]);
         int iCommand = FRMQueryString.requestCommand(request);
-
+ 
         try {
             if(iCommand == Command.DELETE){
-                if((oidKpiSettingType != 0) && (isFormKpiSettingType == 1)){
-                    // untuk menghapus KPI Setting Type
-                    String whereClause = "KPI_TYPE_ID = '"+ oidKpiType +"' AND KPI_SETTING_ID ='"+ oidKpiSetting +"'";
-                    Vector vKpiList = PstKpiSettingType.list(0, 0, whereClause, "");
-                    for(int i = 0; i < vKpiList.size(); i++){
-                        KpiSettingType objKpiSettingType = (KpiSettingType) vKpiList.get(i);
-                        PstKpiSettingType.deleteExc(objKpiSettingType.getKpiSettingTypeId());
-                    }
-                    
-                    // untuk menghapus KPI Setting Group
-                    String kpiSettingGroupQuery = "KPI_SETTING_ID = '"+ oidKpiSetting + "'";
-                    Vector vKpiSettingGroup = PstKpiSettingGroup.list(0, 0, kpiSettingGroupQuery, "");
-                    if(vKpiSettingGroup.size() > 0){
-                        for(int j = 0; j < vKpiSettingGroup.size(); j++){
-                            KpiSettingGroup objKpiSettingGroup = (KpiSettingGroup) vKpiSettingGroup.get(j);
-                            PstKpiSettingGroup.deleteExc(objKpiSettingGroup.getOID());
-                        }
-                    }
+                if(isFormKpiSettingList != 0){
                     // untuk menghapus KPI Setting List
-                    String kpiSettingListQuery = "KPI_SETTING_ID ='"+ oidKpiSetting +"'";
-                    Vector vKpiSettingList = PstKpiSettingList.list(0, 0, kpiSettingListQuery, "");
-                    if (vKpiSettingList.size() > 0){
+                    String whereClause = "KPI_LIST_ID = '"+ oidKpiList +"' AND KPI_SETTING_ID ='"+ oidKpiSetting +"'";
+                    Vector vKpiSettingList = PstKpiSettingList.list(0, 0, whereClause, "");
                     for(int i = 0; i < vKpiSettingList.size(); i++){
                         KpiSettingList objKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
                         PstKpiSettingList.deleteExc(objKpiSettingList.getOID());
                     }
-                   }
                 }
             }
         } catch (Exception e) {
