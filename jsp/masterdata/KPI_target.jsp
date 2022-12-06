@@ -359,11 +359,15 @@
                 const url = '<%= approot%>/AjaxCopyKpiSetting?command=' + command + '&FRM_FIELD_KPI_SETTING_ID=' + oidKpiSetting + '&FRM_FIELD_KPI_TARGET_ID=' + oidKpiTarget;
 
                 // Create and Send the request
+                $("#loading").fadeIn("slow");
+                $(".btn-modal-copy").prop('disabled', true);
                 fetch(url, {
                     method: "GET",
                 })
                 .then(function (response) {
                     location.reload();
+                    $("#loading").fadeOut("slow");
+                    $(".btn-modal-copy").prop('disabled', false);
                 })
                 .catch(function (error) {
                     // Catch errors
@@ -1015,7 +1019,6 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Pilih Kpi Setting</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form name="TARGET_DETAIL" id="formKpiSetting">
                         <input type="hidden" value="<%= oidTarget%>" name="FRM_FIELD_KPI_TARGET_ID">
@@ -1044,8 +1047,11 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-red" data-bs-dismiss="modal">Batal</button>
-                            <button type="button" class="btn" onclick="javascript:cmdCopyKpiSetting()">Simpan</button>
+                            <button type="button" class="btn btn-red btn-modal-copy" data-bs-dismiss="modal">Batal</button>
+                            <button type="button" class="btn btn-modal-copy" onclick="javascript:cmdCopyKpiSetting()">Simpan</button>
+                            <div class="spinner-border" role="status" style="display: none;" id="loading">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
                         </div>
                     </form>
                 </div>
