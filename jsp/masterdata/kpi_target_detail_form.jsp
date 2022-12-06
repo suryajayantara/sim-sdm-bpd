@@ -122,10 +122,14 @@ pageEncoding="UTF-8"%>
                 <tbody>
                     <%
                         for(int i = 0; i < vKpiTargetDetail.size(); i++){
+                            String isCompletedTarget = "";
                             KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
                             KPI_List entKpiList = PstKPI_List.fetchExc(entKpiTargetDetail.getKpiId());
+                            if((entKpiTargetDetail.getAmount() > 0) && (entKpiTargetDetail.getPeriod() >= 0) && (entKpiTargetDetail.getWeightValue() > 0)){
+                                isCompletedTarget = "style='background-color: #BDF5C3;'";
+                            }
                     %>
-                    <tr>
+                    <tr <%= isCompletedTarget %>>
                         <form name="<%= FrmKpiTargetDetail.FRM_NAME_KPI_TARGET_DETAIL %>" class="form-target-detail" id="formtargetdetail-<%= entKpiTargetDetail.getOID() %>">
                             <input type="hidden" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_TARGET_DETAIL_ID] %>" value="<%= entKpiTargetDetail.getOID() %>">
                             <td style="text-align: center"><%= i+1 %></td>
@@ -140,15 +144,18 @@ pageEncoding="UTF-8"%>
                                             periode_value.add(String.valueOf(j));
                                         }
                                     %>
-                                    <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "chosen-select", entKpiTargetDetail.getPeriod(), "" + kpiTargetDetail.getPeriod(), periode_value, periode_key, "id='periode-"+entKpiTargetDetail.getOID()+"' class='select-period' data-placeholder='Select Group...'")%>
+                                    <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "chosen-select", null, "" + kpiTargetDetail.getPeriod(), periode_value, periode_key, "id='periode-"+entKpiTargetDetail.getOID()+"' class='select-period' data-placeholder='Select Group...'")%>
 
                                     <input type="number" name="FRM_FIELD_PERIOD_INDEX-<%= entKpiTargetDetail.getOID() %>" placeholder="Periode Index" class="ms-2 input-period-index" id="periodeindex-<%= entKpiTargetDetail.getOID() %>">
                                 </div>
                             </td>
                             <td>
                                 <div class="d-flex">
-                                    <input class="input-target-jumlah" type='text' name='<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT] %>' value='' placeholder="Target Jumlah" class="me-2" id="targetjumlah-<%= entKpiTargetDetail.getOID() %>">
-                                    <input class="input-weight-value" type='text' name='<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_WEIGHT_VALUE] %>' value='' placeholder="Weight Value" id="weightvalue-<%= entKpiTargetDetail.getOID() %>">
+                                    <input class="input-target-jumlah" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT] %>" value="<%= entKpiTargetDetail.getAmount() %>" placeholder="Target Jumlah" class="me-2" id="targetjumlah-<%= entKpiTargetDetail.getOID() %>">
+                                    <input class="input-weight-value me-2" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_WEIGHT_VALUE] %>" value="<%= entKpiTargetDetail.getWeightValue() %>" placeholder="Weight Value" id="weightvalue-<%= entKpiTargetDetail.getOID() %>">
+                                    <div class="spinner-border spinner-border-sm" role="status" style="display: none;" id="loading-<%= entKpiTargetDetail.getOID() %>">
+                                      <span class="visually-hidden">Loading...</span>
+                                    </div>
                                 </div>
                             </td>
                         </form>
@@ -168,15 +175,19 @@ pageEncoding="UTF-8"%>
                                 <%
                                     Vector vKpiTargetDetailEmployee = PstKpiTargetDetailEmployee.list(0, 0, PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID] + " = " + entKpiTargetDetail.getOID(), "");
                                     for(int j = 0; j < vKpiTargetDetailEmployee.size(); j++){
+                                        String isCompletedEmploye = "";
                                         KpiTargetDetailEmployee entKpiTargetDetailEmployee = (KpiTargetDetailEmployee) vKpiTargetDetailEmployee.get(j);
                                         Employee entEmployee = PstEmployee.fetchExc(entKpiTargetDetailEmployee.getEmployeeId());
+                                        if(entKpiTargetDetailEmployee.getBobot() != 0){
+                                            isCompletedEmploye = "style='background-color: #BDF5C3;'";
+                                        }
                                 %>
-                                <tr>
+                                <tr <%= isCompletedEmploye %>>
                                     <td><%= j+1 %></td>
                                     <td><%= entEmployee.getEmployeeNum() %></td>
                                     <td><%= entEmployee.getFullName() %></td>
                                     <td><%= PstEmployee.getDivisionName(entEmployee.getDivisionId()) %></td>
-                                    <td><input type='text' name='bobot' value=''></td>
+                                    <td><input type='text' name='bobot' value="<%= entKpiTargetDetailEmployee.getBobot() %>"></td>
                                 </tr>
                                 <% } %>
                             </table>
@@ -214,22 +225,34 @@ pageEncoding="UTF-8"%>
             
             if(periode == ""){
                 isFormReady = false;
-            } else if(periodindex == ""){
+            }
+            if(periodindex < 0){
                 isFormReady = false;
-            } else if(targetjumlah == ""){
+            }
+            if(targetjumlah < 0){
                 isFormReady = false;
-            } else if(weightvalue == ""){
+            }
+            if(weightvalue < 0){
                 isFormReady = false;
             }
             
             if(isFormReady){
-                const form = $("#formtargetdetail-"+targetDetailOID);
-                $.post("<%= approot %>/AjaxKpiTargetDetailForm", form.serialize(), function(data, status){
-                    if(status == "success"){
+                const form = $("#formtargetdetail-"+targetDetailOID);$.ajax({
+                  url: "<%= approot %>/AjaxKpiTargetDetailForm",
+                  data: form.serialize(),
+                  type: 'POST',
+                  beforeSend: function() {
+                        $("#loading-" + targetDetailOID).fadeIn("slow");
+                  },
+                  success: function(res) {
                         form.parent().css("background-color", "#BDF5C3");
-                    } else {
+                  },
+                  error: function(err) {
                         form.parent().css("background-", "#F7D8D8");
-                    }
+                  },
+                  complete: function() {
+                        $("#loading-" + targetDetailOID).fadeOut("slow");
+                  },
                 });
             }
         })
