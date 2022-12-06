@@ -31,7 +31,8 @@
 <%@ include file = "../../main/checkuser.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+<%    
+    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]);
     long oidKpiSettingGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]);
@@ -328,7 +329,7 @@
         <form name="FRM_NAME_KPISETTINGLISTFORM" method ="post" action="">
             <input type="hidden" name="command" value="<%=iCommand%>">
             <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
-            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
+            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
             <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
             <input type="hidden" name="<%= FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID] %>" value="<%= kpiTypeOid %>">
             <input type="hidden" name="typeform" value="1">
@@ -388,7 +389,7 @@
                                 <td>
                                     <div class="responsive-container">
                                         <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
-                                        <a href="javascript:cmdDeleteKpiSettingList('<%=objKpiList.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                        <a href="javascript:cmdDeleteKpiSettingList('<%=oidKpiSetting%>', '<%=objKpiList.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
                                     </div>
                                 </td>
                             </tr>
@@ -484,15 +485,6 @@
         </div>
        </form>
        
-       <!--ini untuk form delete kpi setting list, karena letak button delete kpi setting list berada pada form yang sama dengan delete kpi setting group, jadi aku bikinin form baru-->
-       <form name="FRM_NAME_KPISETTINGLIST2" method ="post" action="">
-            <input type="hidden" name="command" value="<%=iCommand%>">
-            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
-            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
-            <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId() %>">
-            <input type="hidden" name="typeform" value="4">
-       </form>
-       
         <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
@@ -520,12 +512,26 @@
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
-            function cmdDeleteKpiSettingList(oid) {
-                document.FRM_NAME_KPISETTINGLISTFORM2.<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>.value = oid;
-                document.FRM_NAME_KPISETTINGLISTFORM2.command.value = "<%=Command.DELETE %>";
-                document.FRM_NAME_KPISETTINGLISTFORM2.action = "kpi_setting_list_form.jsp";
-                document.FRM_NAME_KPISETTINGLISTFORM2.submit();
-            }
+            function cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList) {
+                    if (confirm("Data KPI List akan terhapus, anda yakin?")) {
+                        var strUrl = "";
+                        var xmlhttp = new XMLHttpRequest();
+                        xmlhttp.onreadystatechange = function () {
+                            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                                alert("Data berhasil dihapus");
+                                window.location.reload();
+                            }
+                        }
+                        strUrl = "<%= approot%>/AjaxDeleteKpiSettingList";
+                        strUrl += "?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting;
+                        strUrl += "&FRM_FIELD_KPI_LIST_ID=" + oidKpiList;
+                        strUrl += "&isFormKpiSettingList=1";
+                        strUrl += "&command=<%=Command.DELETE%>";
+
+                        xmlhttp.open("GET", strUrl, true);
+                        xmlhttp.send();
+                    }
+                }
 
             function openModal(oidKpiGroup, groupName) {
                 var strUrl = "";
