@@ -430,7 +430,6 @@
                             <td class="p-3" value="<%= objKpiGroup.getOID()%>"> <%= objKpiGroup.getGroup_title()%> </td>
                             <td class="text-center">
                                 <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
                                 <a href="javascript:cmdDeleteKpiGroup('<%=objKpiGroup.getOID()%>','<%= oidKpiSetting%>', '<%= kpiType.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
                             </td>
                         </tr>
@@ -470,7 +469,7 @@
                                             </td>
                                             <td> - </td>
                                             <td width="5%" class="text-center">
-                                                <a href="javascript:cmdDeleteKpiSettingList('<%=kpiSetting.getOID()%>', '<%=entKpiList.getOID()%>')" style="color: #FFF; background-color: #d9534f;" class="btn-small">Delete</a>
+                                                <a href="javascript:cmdDeleteKpiSettingList('<%=kpiSetting.getOID()%>', '<%=entKpiList.getOID()%>')" style="color: #FFF; background-color: #FF0000;" class="btn-small">Delete</a>
                                             </td>
                                         </tr>
                                         <%      }

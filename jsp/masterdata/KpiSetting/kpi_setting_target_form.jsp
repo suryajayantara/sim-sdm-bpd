@@ -4,6 +4,7 @@
     Author     : User
 --%>
 
+<%@page import="java.util.Calendar"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingType"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingType"%>
 <%@page import="com.dimata.harisma.entity.log.ChangeValue"%>
@@ -61,7 +62,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>KPI SETTING LIST DETAIL</title>
+        <title>KPI SETTING TARGET FORM</title>
 
 
 
@@ -192,18 +193,16 @@
             </table>
         </div>
         <div id="menu_utama">
-            <span id="menu_title"><strong>Kinerja</strong> <strong style="color:#333;"> / </strong>Master Data / KPI Setting List / KPI Setting List Detail</span>
+            <span id="menu_title"><strong>Kpi Setting Target Form</strong></span>
         </div>
         <div class="box">
             <form name="FRM_NAME_KPISETTING_LIST_DETAIL" method ="post" action="">
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="urlBack" value="kpi_setting_list_detail.jsp">
-                <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
+                <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=oidKpiSetting%>">
                 <div class="content-main">
                     <a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
                     <div>&nbsp;</div>
-                    <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
                     <div class="row">
                         <div class="col-2">
@@ -218,6 +217,7 @@
                             <div style="font-size: 15px">Tanggal Mulai</div>
                             <div style="font-size: 15px">Tanggal Selesai</div>
                             <div style="font-size: 15px">Tahun</div>
+
                         </div>
                         <div class="col-10">
                             <div style="font-size: 15px">: <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
@@ -240,12 +240,7 @@
 
                         </div>
                     </div>
-                    <div style="border-top: 1px solid #DDD;">&nbsp;</div>
-                    <div>&nbsp;</div>
-            </form>
-        </div>
-       
-
+                    
         <div class="footer-page">
             <table>
                 <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%>
