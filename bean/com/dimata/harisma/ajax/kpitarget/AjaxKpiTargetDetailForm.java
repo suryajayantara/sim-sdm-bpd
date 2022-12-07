@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.dimata.qdep.form.FRMQueryString;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import org.jfree.data.time.Month;
@@ -54,7 +56,6 @@ public class AjaxKpiTargetDetailForm extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        response.getWriter().print("Hellow GET");
     }
 
     /**
@@ -109,7 +110,7 @@ public class AjaxKpiTargetDetailForm extends HttpServlet {
                         break;
                     case 2:
                         startMonth = 6;
-                        endMonth = 1;
+                        endMonth = 11;
                         break;
                 }
             }
@@ -162,10 +163,16 @@ public class AjaxKpiTargetDetailForm extends HttpServlet {
             // returning the first date
             startDate = calendarStart.getTime();
 
+            int month = endMonth + 1;
+            Date date = new SimpleDateFormat("dd/MM/yyyy").parse("01/"+month+"/"+tahun);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int endDayOfMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            
             Calendar calendarEnd = Calendar.getInstance();
             calendarEnd.set(Calendar.YEAR, tahun);
             calendarEnd.set(Calendar.MONTH, endMonth);
-            calendarEnd.set(Calendar.DAY_OF_MONTH, 31);
+            calendarEnd.set(Calendar.DAY_OF_MONTH, endDayOfMonth);
 
             // returning the last date
             endDate = calendarEnd.getTime();

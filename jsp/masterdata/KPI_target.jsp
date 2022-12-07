@@ -175,6 +175,14 @@
         </script>
         <link rel="stylesheet" href="../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../stylesheets/custom.css" >
+        <style>
+            .kpi-row {
+                cursor: pointer 
+            }
+            .kpi-row:hover {
+                background: #e1e3e6
+            }
+        </style>
         <script language="JavaScript">
             // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
             <% if(iCommandInUrl == Command.SAVE){ %>
@@ -373,6 +381,23 @@
                     // Catch errors
                     console.log(error);
                 });
+            }
+            
+            function showEmploye(targetOID, detailId, iCommand){
+                var strUrl = "";
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        document.getElementById("employerow-" + targetOID).innerHTML = xmlhttp.responseText;
+                        $("#employerow-" + targetOID).fadeToggle();
+                    }
+                }
+                strUrl = "list_employe_by_target_id.jsp";
+                strUrl += "?command=" + iCommand;
+                strUrl += "&detail_employee_id=" + detailId;
+                strUrl += "&FRM_FIELD_KPI_TARGET_DETAIL_ID=" + targetOID;
+                xmlhttp.open("GET", strUrl, true);
+                xmlhttp.send();
             }
 
         </script>
@@ -850,7 +875,7 @@
                                             number++;
                                             numbAlpha = 0;
                         %>
-                        <tr>
+                        <tr class="kpi-row" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
                             <td colspan="2" style="text-align: center"><%=number%></td>
                             <td colspan="3"><strong><%=kpiParent.getKpi_title()%></strong></td>
                         </tr>
@@ -871,7 +896,7 @@
                                 target = "" + targetDetail.getAmount();
                             }
                         %>
-                        <tr>
+                        <tr class="kpi-row" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
                             <%
                                 if (isSub) {
                             %>
@@ -892,63 +917,8 @@
                                 <a href="javascript:cmdAddEmployee('<%=targetDetail.getOID()%>','<%=targetDetail.getKpiId()%>')" class="btn-small" style="color:#FFF;">Tambah Karyawan</a>
                             </td>
                         </tr>
-                        <tr>
-                            <td colspan="2">&nbsp;</td>
-                            <td colspan="3">
-                                <%
-                                    String whereTargetDetailEmp = PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID] + "=" + targetDetail.getOID();
-                                    Vector listEmployeeTarget = PstKpiTargetDetailEmployee.list(0, 0, whereTargetDetailEmp, "");
-                                    if (listEmployeeTarget.size() > 0) {
-                                %>
-                                <table class="tblStyle" style="width: 100%">
-                                    <tr>
-                                        <td style="width: 5%; text-align: center" ><strong>No</strong></td>
-                                        <td style="width: 10%; text-align: center"><strong>NRK</strong></td>
-                                        <td style="width: 30%; text-align: center"><strong>Nama</strong></td>
-                                        <td style="width: 30%; text-align: center"><strong>Satuan Kerja</strong></td>
-                                        <td style="width: 10%; text-align: center"><strong>Bobot Distribusi</strong></td>
-                                        <td style="width: 10%; text-align: center"><strong>Action</strong></td>
-                                    </tr>
-                                    <%
-                                        int no = 0;
-                                        for (int xx = 0; xx < listEmployeeTarget.size(); xx++) {
-                                            no++;
-                                            KpiTargetDetailEmployee kpiTargetDetailEmployee = (KpiTargetDetailEmployee) listEmployeeTarget.get(xx);
-                                            Employee empDetail = new Employee();
-                                            try {
-                                                empDetail = PstEmployee.fetchExc(kpiTargetDetailEmployee.getEmployeeId());
-                                            } catch (Exception exc) {
-                                            }
-
-                                    %>
-                                    <tr>
-                                        <td><%=no%></td>
-                                        <td><%=empDetail.getEmployeeNum()%></td>
-                                        <td><%=empDetail.getFullName()%></td>
-                                        <td><%=PstEmployee.getDivisionName(empDetail.getDivisionId())%></td>
-                                        <% if (iCommand == Command.EDIT && detailId == kpiTargetDetailEmployee.getOID()) {%>
-                                        <td><input type='text' name='bobot' value='<%=kpiTargetDetailEmployee.getBobot()%>'></td>
-                                        <td><a href="javascript:cmdSaveEmp('<%=kpiTargetDetailEmployee.getOID()%>')" class="btn-small-e" style="color:#FFF;">s</a> 
-                                            <a href="javascript:cmdBackEmp('<%=kpiTargetDetailEmployee.getOID()%>')" class="btn-small-x" style="color:#FFF;">b</a></td>
-                                            <% } else {%>
-                                        <td><%=kpiTargetDetailEmployee.getBobot()%></td>
-                                        <td><a href="javascript:cmdEditEmp('<%=kpiTargetDetailEmployee.getOID()%>')" class="btn-small-e" style="color:#FFF;">e</a> 
-                                            <a href="javascript:cmdDeleteEmp('<%=kpiTargetDetailEmployee.getOID()%>')" class="btn-small-x" style="color:#FFF;">x</a></td>
-                                            <% }  %>
-
-                                    </tr>
-                                    <%
-                                        }
-                                    %>
-
-                                </table>
-                                <%
-                                    } else {
-
-                                    }
-                                %>
-
-                            </td>
+                        <tr style="display: none;" id="employerow-<%= targetDetail.getOID() %>">
+                            
                         </tr>
                         <%
                                 String whereEmployee = PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID] + "=" + targetDetail.getOID();
