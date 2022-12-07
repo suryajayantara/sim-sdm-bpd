@@ -108,10 +108,12 @@
                 document.frm.submit();
             }
             function cmdDelete(oid) {
-                document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
-                document.frm.command.value = "<%= Command.DELETE%>";
-                document.frm.action = "kpi_setting_list.jsp";
-                document.frm.submit();
+                if(confirm("Data KPI Setting akan dihapus, anda yakin?")){
+                    document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
+                    document.frm.command.value = "<%= Command.DELETE%>";
+                    document.frm.action = "kpi_setting_list.jsp";
+                    document.frm.submit();
+                }
             }
             function cmdDetail(oid) {
                 document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
