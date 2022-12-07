@@ -374,6 +374,10 @@
                     console.log(error);
                 });
             }
+            
+            function showEmploye(targetOID){
+                $("#employerow-" + targetOID).fadeToggle();
+            }
 
         </script>
     </head>
@@ -850,7 +854,7 @@
                                             number++;
                                             numbAlpha = 0;
                         %>
-                        <tr>
+                        <tr style="cursor: pointer;" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
                             <td colspan="2" style="text-align: center"><%=number%></td>
                             <td colspan="3"><strong><%=kpiParent.getKpi_title()%></strong></td>
                         </tr>
@@ -871,7 +875,7 @@
                                 target = "" + targetDetail.getAmount();
                             }
                         %>
-                        <tr>
+                        <tr style="cursor: pointer;" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
                             <%
                                 if (isSub) {
                             %>
@@ -892,7 +896,7 @@
                                 <a href="javascript:cmdAddEmployee('<%=targetDetail.getOID()%>','<%=targetDetail.getKpiId()%>')" class="btn-small" style="color:#FFF;">Tambah Karyawan</a>
                             </td>
                         </tr>
-                        <tr>
+                        <tr style="display: none;" id="employerow-<%= targetDetail.getOID() %>">
                             <td colspan="2">&nbsp;</td>
                             <td colspan="3">
                                 <%
