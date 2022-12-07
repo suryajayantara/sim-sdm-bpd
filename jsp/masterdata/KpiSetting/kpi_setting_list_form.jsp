@@ -388,6 +388,7 @@
                                 <td>10</td>
                                 <td>
                                     <div class="responsive-container">
+                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
                                         <a href="javascript:cmdDeleteKpiSettingList('<%=oidKpiSetting%>', '<%=objKpiList.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
                                     </div>
                                 </td>

@@ -210,7 +210,7 @@ pageEncoding="UTF-8"%>
             </table>
             <hr>
             <div class="d-flex justify-content-center">
-                <!--<a href="#" class="btn" style="color:#FFF;" id="btn-save">Simpan</a>-->
+                <a href="#" class="btn" style="color:#FFF;" id="btn-save">Simpan</a>
             </div>
         </div>
     </div>
