@@ -175,6 +175,14 @@
         </script>
         <link rel="stylesheet" href="../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../stylesheets/custom.css" >
+        <style>
+            .kpi-row {
+                cursor: pointer 
+            }
+            .kpi-row:hover {
+                background: #e1e3e6
+            }
+        </style>
         <script language="JavaScript">
             // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
             <% if(iCommandInUrl == Command.SAVE){ %>
@@ -854,7 +862,7 @@
                                             number++;
                                             numbAlpha = 0;
                         %>
-                        <tr style="cursor: pointer;" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
+                        <tr class="kpi-row" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
                             <td colspan="2" style="text-align: center"><%=number%></td>
                             <td colspan="3"><strong><%=kpiParent.getKpi_title()%></strong></td>
                         </tr>
@@ -875,7 +883,7 @@
                                 target = "" + targetDetail.getAmount();
                             }
                         %>
-                        <tr style="cursor: pointer;" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
+                        <tr class="kpi-row" onclick="javascript:showEmploye('<%= targetDetail.getOID() %>')">
                             <%
                                 if (isSub) {
                             %>
