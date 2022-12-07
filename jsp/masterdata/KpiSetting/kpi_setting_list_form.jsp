@@ -505,14 +505,12 @@
                 <% }%>
             });
             /*kumpulan tombol delete*/
-            function cmdDeleteGroup(oidKpiGroup, oidKpiSetting) {
-                if(confirm("Data KPI Group akan dihapus, anda yakin?")){
-                    document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
-                    document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
-                    document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
-                    document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
-                    document.FRM_NAME_KPISETTINGLISTFORM.submit();
-                }
+            function cmdDeleteGroup(oidKpiGroup, oidKpiSetting) { 
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
+                document.FRM_NAME_KPISETTINGLISTFORM.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
+                document.FRM_NAME_KPISETTINGLISTFORM.command.value = "<%=Command.DELETE %>";
+                document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
+                document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
             function cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList) {
                     if (confirm("Data KPI List akan terhapus, anda yakin?")) {
