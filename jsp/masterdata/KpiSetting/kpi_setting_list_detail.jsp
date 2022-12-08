@@ -99,7 +99,7 @@ Vector listKpiSettingDetail = new Vector();
 
         <!--bootsrtrap untuk menu pop up-->
         <link href="../../styles/bootstrap 5.0/css/bootstrap.css" rel="stylesheet" type="text/css"/>
-        <script href="../../styles/bootstrap 5.0/js/bootstrap.bundle.js" type="text/javascript"></script>
+        <script src="../../styles/bootstrap 5.0/js/bootstrap.bundle.js" type="text/javascript"></script>
 
         <!--end-->
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >

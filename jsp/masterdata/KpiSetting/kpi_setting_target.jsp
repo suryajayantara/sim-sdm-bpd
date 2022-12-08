@@ -95,12 +95,12 @@ Vector listKpiSettingTarget = new Vector();
      </head>
     <body>
         <div class="header">
-            <table widtd="100%" border="0" cellspacing="0" cellpadding="0">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%> 
             <%@include file="../../styletemplate/template_header.jsp" %>
             <%} else {%>
             <tr> 
-                <td ID="TOPTITLE" background="<%=approot%>/images/HRIS_HeaderBg3.jpg" widtd="100%" height="54"> 
+                <td ID="TOPTITLE" style="background:<%=approot%>/images/HRIS_HeaderBg3.jpg" width="100%" height="54"> 
                     <!-- #BeginEditable "header" --> 
                     <%@ include file = "../../main/header.jsp" %>
                     <!-- #EndEditable --> 
@@ -113,11 +113,11 @@ Vector listKpiSettingTarget = new Vector();
             </tr>
             <tr> 
                 <td  bgcolor="#9BC1FF" height="10" valign="middle"> 
-                    <table widtd="100%" border="0" cellspacing="0" cellpadding="0">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr> 
-                            <td align="left"><img src="<%=approot%>/images/harismaMenuLeft1.jpg" widtd="8" height="8"></td>
-                            <td align="center" background="<%=approot%>/images/harismaMenuLine1.jpg" widtd="100%"><img src="<%=approot%>/images/harismaMenuLine1.jpg" widtd="8" height="8"></td>
-                            <td align="right"><img src="<%=approot%>/images/harismaMenuRight1.jpg" widtd="8" height="8"></td>
+                            <td align="left"><img src="<%=approot%>/images/harismaMenuLeft1.jpg" width="8" height="8"></td>
+                            <td align="center" style="background:<%=approot%>/images/harismaMenuLine1.jpg" width="100%"><img src="<%=approot%>/images/harismaMenuLine1.jpg" width="8" height="8"></td>
+                            <td align="right"><img src="<%=approot%>/images/harismaMenuRight1.jpg" width="8" height="8"></td>
                         </tr>
                     </table>
                 </td>
@@ -128,7 +128,7 @@ Vector listKpiSettingTarget = new Vector();
         <div id="menu_utama">
             <span id="menu_title">KPI Setting Detail/KPI Setting Target</span>
         </div>
-            <form name="frm" metdod="post" action="">
+            <form name="frm" method="post" action="">
                  <input type="hidden" name="command" value="<%= iCommand %>"> 
                 <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
         <div class="box">
@@ -165,7 +165,7 @@ Vector listKpiSettingTarget = new Vector();
                 <div style="border-top: 1px solid #DDD;">&nbsp;</div>
                 <h3>KPI Target Per Satuan Kerja</h3>
                 <div>&nbsp;</div>
-                <a href="" style="color:#fff;" class="btn-add btn-add1">Tambah Data <strong><i class="fa fa-plus"></i></strong></a>
+                <a href="kpi_setting_target_form.jsp?<%= FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID] %>=<%= kpiSetting.getOID() %>" style="color:#fff;" class="btn-add btn-add1">Tambah Data <strong><i class="fa fa-plus"></i></strong></a>
                 <a href="" style="color:#fff;" class="btn-copy btn-copy1">Salin Data Target Sebelumnya <strong><i class="fa fa-copy"></i></strong></a>
                 <div>&nbsp;</div>
                 <table class="tblStyle" style="width:100%">

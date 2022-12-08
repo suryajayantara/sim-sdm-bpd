@@ -12,6 +12,7 @@ pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <% 
     long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+    
 %>
 <html>
   <head>
