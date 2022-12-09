@@ -1,66 +1,75 @@
-<%-- Document : kpi_setting_target_form Created on : Dec 12, 2022, 10:58:42 AM
-Author : kadek --%> 
-<%@page import="com.dimata.harisma.form.masterdata.FrmKpiSetting"%>
-<%@page import="com.dimata.gui.jsp.ControlCombo"%> <%@page
-import="com.dimata.qdep.entity.I_DocStatus"%> <%@page
-import="com.dimata.harisma.entity.admin.AppObjInfo"%> <%@ include file =
-"/main/javainit.jsp" %> <% int appObjCode =
-AppObjInfo.composeObjCode(AppObjInfo.G1_EMPLOYEE,
-AppObjInfo.G2_LEAVE_APPLICATION, AppObjInfo.OBJ_LEAVE_APPLICATION);%> <%@
-include file = "/main/checkuser.jsp" %> <%@page contentType="text/html"
-pageEncoding="UTF-8"%>
+<%-- Document : kpi_setting_target Created on : Oct 12, 2022, 2:47:43 PM Author
+: User --%> 
+<%@page import="com.dimata.harisma.form.masterdata.FrmKpiTargetDetail"%>
+<%@page import="com.dimata.harisma.form.masterdata.FrmKpiTarget"%>
+<%@page import="com.dimata.gui.jsp.ControlCombo"%>
+<%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingList"%>
+<%@page import="com.dimata.harisma.entity.admin.AppObjInfo"%> 
+<%@ include file = "../../main/javainit.jsp" %> 
+<% int appObjCode = AppObjInfo.composeObjCode(AppObjInfo.G1_EMPLOYEE, AppObjInfo.G2_LEAVE_APPLICATION, AppObjInfo.OBJ_LEAVE_APPLICATION);%> 
+<%@ include file = "../../main/checkuser.jsp" %> 
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <% 
-    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+    long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
+    int tahun = Calendar.getInstance().get(Calendar.YEAR);
     
+    KpiSettingList entKpiSettingList = PstKpiSettingList.fetchExc(oidKpiSettingList);
+    KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+    KpiSetting entKpiSetting = PstKpiSetting.fetchExc(entKpiSettingList.getKpiSettingId());
+    Company entCompany = PstCompany.fetchExc(entKpiSetting.getCompanyId());
+    
+    Vector valTahun = new Vector();
+    Calendar calNow = Calendar.getInstance();
+    for (int i = calNow.get(Calendar.YEAR); i >= 2000; i--) {
+        valTahun.add("" + i);
+    }
 %>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>Kpi Target Detail Form</title>
-    <link rel="stylesheet" href="../styles/main.css" type="text/css" />
+    <title>KPI Setting Target Form</title>
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="../../styles/main.css" type="text/css" />
+    <link rel="stylesheet" href="../../stylesheets/custom.css" />
     <link
       rel="stylesheet"
-      href="<%=approot%>/javascripts/datepicker/themes/jquery.ui.all.css"
+      href="../../styles/css_suryawan/CssSuryawan.css"
+      type="text/css"
     />
-    <link
-      rel="stylesheet"
-      href="<%=approot%>/styles/datatable/v1/jquery.dataTables.min.css"
-    />
-    <link rel="stylesheet" href="../stylesheets/chosen.css" >
-    <link rel="stylesheet" href="../stylesheets/custom.css" >
+    <link rel="stylesheet" href="../../stylesheets/chosen.css" />
   </head>
   <body>
     <div class="header">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%> <%@include
-        file="/styletemplate/template_header.jsp" %> <%} else {%>
+        file="../../styletemplate/template_header.jsp" %> <%} else {%>
         <tr>
           <td
             ID="TOPTITLE"
-            background="<%=approot%>/images/HRIS_HeaderBg3.jpg"
+            style="background: <%=approot%>/images/HRIS_HeaderBg3.jpg"
             width="100%"
             height="54"
           >
             <!-- #BeginEditable "header" -->
-            <%@ include file = "/main/header.jsp" %>
+            <%@ include file = "../../main/header.jsp" %>
             <!-- #EndEditable -->
           </td>
         </tr>
         <tr>
           <td bgcolor="#9BC1FF" height="15" ID="MAINMENU" valign="middle">
             <!-- #BeginEditable "menumain" -->
-            <%@ include file = "/main/mnmain.jsp" %>
+            <%@ include file = "../../main/mnmain.jsp" %>
             <!-- #EndEditable -->
           </td>
         </tr>
         <tr>
           <td bgcolor="#9BC1FF" height="10" valign="middle">
-            <table width="100%" bo rder="0" cellspacing="0" cellpadding="0">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td align="left">
                   <img
@@ -71,7 +80,7 @@ pageEncoding="UTF-8"%>
                 </td>
                 <td
                   align="center"
-                  background="<%=approot%>/images/harismaMenuLine1.jpg"
+                  style="background: <%=approot%>/images/harismaMenuLine1.jpg"
                   width="100%"
                 >
                   <img
@@ -94,203 +103,289 @@ pageEncoding="UTF-8"%>
         <%}%>
       </table>
     </div>
-
     <div id="menu_utama">
-        <span id="menu_title"><strong>Kpi Target Detail Form</strong> <strong style="color:#333;"> / </strong>Target & Distribusi</span>
+      <span id="menu_title">KPI Setting Target Form / KPI Setting Target</span>
     </div>
-
-    <div class="content-main">
-        <div class="formstyle">
-            <small class="fst-italic">note: data telah tersimpan jika baris berwarna hijau</small>
-            <table class="tblStyle" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <td style="width: 5%; text-align: center"><strong>No</strong></td>
-                        <td style="width: 55%; text-align: center"><strong>KPI</strong></td>
-                        <td style="width: 10%; text-align: center"><strong>Periode</strong></td>
-                        <td style="width: 10%; text-align: center"><strong>Periode Index</strong></td>
-                        <td style="width: 10%; text-align: center"><strong>Target</strong></td>
-                        <td style="width: 10%; text-align: center"><strong>Weight Value</strong></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%
-                        for(int i = 0; i < vKpiTargetDetail.size(); i++){
-                            String isCompletedTarget = "";
-                            KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
-                            KPI_List entKpiList = PstKPI_List.fetchExc(entKpiTargetDetail.getKpiId());
-                            if((entKpiTargetDetail.getAmount() > 0) && (entKpiTargetDetail.getPeriod() >= 0) && (entKpiTargetDetail.getWeightValue() > 0)){
-                                isCompletedTarget = "style='background-color: #BDF5C3;'";
-                            }
-                    %>
-                    <tr <%= isCompletedTarget %>>
-                        <form name="<%= FrmKpiTargetDetail.FRM_NAME_KPI_TARGET_DETAIL %>" class="form-target-detail" id="formtargetdetail-<%= entKpiTargetDetail.getOID() %>">
-                            <input type="hidden" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_TARGET_DETAIL_ID] %>" value="<%= entKpiTargetDetail.getOID() %>">
-                            <td class="text-center"><%= i+1 %></td>
-                            <td><strong><%= entKpiList.getKpi_title() %></strong></td>
-                            <td class="text-center">
-                                <%
-                                    Vector periode_value = new Vector(1, 1);
-                                    Vector periode_key = new Vector(1, 1);
-                                    for (int j = 0; j < PstKpiTargetDetail.period.length; j++) {
-                                        periode_key.add(PstKpiTargetDetail.period[j]);
-                                        periode_value.add(String.valueOf(j));
-                                    }
-                                %>
-                                <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "select-period", null, "" + entKpiTargetDetail.getPeriod(), periode_value, periode_key, "id='periode-"+entKpiTargetDetail.getOID()+"' data-placeholder='Select Group...'")%>
-                            </td>
-                            <td class="text-center"><input type="number" name="FRM_FIELD_PERIOD_INDEX" placeholder="Periode Index" class="ms-2 input-period-index" id="periodeindex-<%= entKpiTargetDetail.getOID() %>"></td>
-                            <td class="text-center">
-                                <input class="input-target-jumlah" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT] %>" value="<%= Math.round(entKpiTargetDetail.getAmount()) %>" placeholder="Target Jumlah" class="me-2" id="targetjumlah-<%= entKpiTargetDetail.getOID() %>">
-                            </td>
-                            <td class="text-center">
-                                <div class="d-flex">
-                                    <input class="input-weight-value me-2" type="text" name="<%= FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_WEIGHT_VALUE] %>" value="<%= Math.round(entKpiTargetDetail.getWeightValue()) %>" placeholder="Weight Value" id="weightvalue-<%= entKpiTargetDetail.getOID() %>">
-                                    <div class="spinner-border spinner-border-sm" role="status" style="display: none;" id="loading-<%= entKpiTargetDetail.getOID() %>">
-                                      <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                            </td>
-                        </form>
-                    </tr>
-
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td colspan="5">
-                            <table class="tblStyle" style="width: 100%">
-                                <tr>
-                                    <td style="width: 5%; text-align: center" ><strong>No</strong></td>
-                                    <td style="width: 10%; text-align: center"><strong>NRK</strong></td>
-                                    <td style="width: 30%; text-align: center"><strong>Nama</strong></td>
-                                    <td style="width: 30%; text-align: center"><strong>Satuan Kerja</strong></td>
-                                    <td style="width: 10%; text-align: center"><strong>Bobot Distribusi</strong></td>
-                                </tr>
-                                <%
-                                    Vector vKpiTargetDetailEmployee = PstKpiTargetDetailEmployee.list(0, 0, PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID] + " = " + entKpiTargetDetail.getOID(), "");
-                                    for(int j = 0; j < vKpiTargetDetailEmployee.size(); j++){
-                                        String isCompletedEmploye = "";
-                                        KpiTargetDetailEmployee entKpiTargetDetailEmployee = (KpiTargetDetailEmployee) vKpiTargetDetailEmployee.get(j);
-                                        Employee entEmployee = PstEmployee.fetchExc(entKpiTargetDetailEmployee.getEmployeeId());
-                                        if(entKpiTargetDetailEmployee.getBobot() != 0){
-                                            isCompletedEmploye = "style='background-color: #BDF5C3;'";
-                                        }
-                                %>
-                                <tr <%= isCompletedEmploye %>>
-                                    <form name="<%= FrmKpiTargetDetailEmployee.FRM_NAME_KPI_TARGET_DETAIL_EMPLOYEE %>" class="form-target-detail-employe" id="formtargetdetailemploye-<%= entKpiTargetDetailEmployee.getOID() %>">
-                                        <input type="hidden" name="<%= FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_KPI_TARGET_DETAIL_EMPLOYEE_ID] %>" value="<%= entKpiTargetDetailEmployee.getOID() %>">
-                                        <td><%= j+1 %></td>
-                                        <td><%= entEmployee.getEmployeeNum() %></td>
-                                        <td><%= entEmployee.getFullName() %></td>
-                                        <td><%= PstEmployee.getDivisionName(entEmployee.getDivisionId()) %></td>
-                                        <td>
-                                            <div class="d-flex">
-                                                <input type="number" name="<%= FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_BOBOT] %>" value="<%= Math.round(entKpiTargetDetailEmployee.getBobot()) %>" id="bobot-<%= entKpiTargetDetailEmployee.getOID() %>" class="input-bobot">
-                                                <div class="spinner-border spinner-border-sm" role="status" style="display: none;" id="loading-<%= entKpiTargetDetailEmployee.getOID() %>">
-                                                  <span class="visually-hidden">Loading...</span>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </form>
-                                </tr>
-                                <% } %>
-                            </table>
-                        </td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-            <hr>
-            <div class="d-flex justify-content-center">
-                <a href="#" class="btn" style="color:#FFF;" id="btn-save">Simpan</a>
+    <form name="frm" method="post" action="">
+      <input
+        type="hidden"
+        name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_ID]%>"
+      />
+      <div class="box">
+        <div class="content-main">
+          <h6><%= entCompany.getCompany() %> - <%= entKpiList.getKpi_title() %></h6>
+          <hr />
+          <div>
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1">Judul Target</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-sm"
+                  />
+                </div>
+              </div>
             </div>
-        </div>
-    </div>
 
+            <div class="row">
+              <div class="col">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1">Tahun</label>
+                    <%= ControlCombo.draw(FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TAHUN], "form-control", null, "" + tahun, valTahun, valTahun, " id='tahun'")%>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1">Periode</label>
+                  <%
+                        Vector periode_value = new Vector(1, 1);
+                        Vector periode_key = new Vector(1, 1);
+                        for (int i = 0; i < PstKpiTargetDetail.period.length; i++) {
+                            periode_key.add(PstKpiTargetDetail.period[i]);
+                            periode_value.add(String.valueOf(i));
+                        }
+
+                    %>
+                    <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "form-control", "~Pilih Periode~", "", periode_value, periode_key, " id='periode'")%> 
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1">Periode Index</label>
+                  <select name="" id="periode-index" class="form-control">
+                    
+                  </select>
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1">Date From</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="date-from"
+                  />
+                </div>
+              </div>
+
+              <div class="col">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1">Date To</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="date-to"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="card">
+                <div class="card-title">Posisi</div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <span class="fw-bold">Divisi</span><br />
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang badung</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Denpasar</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Sanur</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Kuta</label>
+                  </div>
+
+                  <hr />
+
+                  <div class="mb-3">
+                    <span class="fw-bold">Departemen</span><br />
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang badung</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Denpasar</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Sanur</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Kuta</label>
+                  </div>
+
+                  <hr />
+
+                  <div class="mb-3">
+                    <span class="fw-bold">Section</span><br />
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang badung</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Denpasar</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Sanur</label>
+
+                    <input type="checkbox" />
+                    <label class="me-2" for="">Cabang Kuta</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center mt-3">
+            <button class="btn btn-primary" style="color: white">
+              Create Target
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="footer-page">
+      <table>
+        <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%>
+        <tr>
+          <td valign="bottom"><%@include file="../../footer.jsp" %></td>
+        </tr>
+        <%} else {%>
+        <tr>
+          <td colspan="2" height="20">
+            <%@ include file = "../../main/footer.jsp" %>
+          </td>
+        </tr>
+        <%}%>
+      </table>
+    </div>
     <script src="<%=approot%>/javascripts/jquery.js"></script>
-    <script src="<%=approot%>/javascripts/datepicker/jquery.ui.core.js"></script>
-    <script src="<%=approot%>/javascripts/datepicker/jquery.ui.widget.js"></script>
-    <script src="<%=approot%>/javascripts/datepicker/jquery.ui.datepicker.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-    <script
-      src="../javascripts/chosen.jquery.js"
-      type="text/javascript"
-    ></script>
-    <script src="<%=approot%>/styles/datatable/v1/jquery.dataTables.min.js"></script>
-    <script type="text/javascript">      
-        $("body").on("change", ".select-period, .input-period-index, .input-target-jumlah, .input-weight-value", function(e){
-            let isReady = {};
-            const targetDetailOID = $(this).attr("id").split("-")[1];
-            const periode = parseInt($("#periode-"+targetDetailOID).val());
-            const periodindex = parseInt($("#periodindex-"+targetDetailOID).val());
-            const targetjumlah = parseInt($("#targetjumlah-"+targetDetailOID).val());
-            const weightvalue = parseInt($("#weightvalue-"+targetDetailOID).val());
-            
-            if(periode < 0){
-                isReady.periode = false;
-            }
-            if(periodindex <= 0){
-                isReady.periodeindex = false;
-            }
-            if(targetjumlah <= 0){
-                isReady.targetjumlah = false;
-            }
-            if(weightvalue <= 0){
-                isReady.weightvalue = false;
-            }
-            if(Object.keys(isReady).length <= 0){
-                const form = $("#formtargetdetail-"+targetDetailOID);
-                $.ajax({
-                  url: "<%= approot %>/AjaxKpiTargetDetailForm",
-                  data: form.serialize(),
-                  type: 'POST',
-                  beforeSend: function() {
-                        $("#loading-" + targetDetailOID).fadeIn("slow");
-                  },
-                  success: function(res) {
-                        form.parent().css("background-color", "#BDF5C3");
-                  },
-                  error: function(err) {
-                        form.parent().css("background-", "#F7D8D8");
-                  },
-                  complete: function() {
-                        $("#loading-" + targetDetailOID).fadeOut("slow");
-                  }
-                });
-            }
-            
-        });
+    <script>
+        $(function(){
+            const PERIOD_BULAN = <%= PstKpiTargetDetail.PERIOD_BULAN %>;
+            const PERIOD_TRIWULAN = <%= PstKpiTargetDetail.PERIOD_TRIWULAN %>;
+            const PERIOD_CATURWULAN = <%= PstKpiTargetDetail.PERIOD_CATURWULAN %>;
+            const PERIOD_SEMESTER = <%= PstKpiTargetDetail.PERIOD_SEMESTER %>;
+            const PERIOD_TAHUN = <%= PstKpiTargetDetail.PERIOD_TAHUN %>;
         
-        $("body").on("change", ".input-bobot", function(e){
-            const targetDetailEmployeOID = $(this).attr("id").split("-")[1];
-            const bobot = $(this).val();
-            
-            if(bobot > 0 && bobot !== ""){
-                const form = $("#formtargetdetailemploye-"+targetDetailEmployeOID);
-                $.ajax({
-                  url: "<%= approot %>/AjaxKpiTargetDetailEmployeForm",
-                  data: form.serialize(),
-                  type: 'POST',
-                  beforeSend: function() {
-                        $("#loading-" + targetDetailEmployeOID).fadeIn("slow");
-                  },
-                  success: function(res) {
-                        form.parent().css("background-color", "#BDF5C3");
-                  },
-                  error: function(err) {
-                        form.parent().css("background-", "#F7D8D8");
-                  },
-                  complete: function() {
-                        $("#loading-" + targetDetailEmployeOID).fadeOut("slow");
-                  }
-                });
-            }
-        });
-        
-        $("body").on("click", "#btn-save", function(e){
-            e.preventDefault();
-            alert("Data telah disimpan");
-            location.reload();
+            $("body").on("change", "#periode", function(){
+                const value = $(this).val();
+                let periodeIndex = 0;
+                let stringOption = "<option>~Pilih Periode Index~</option>";
+
+                switch(parseInt(value)) {
+                  case PERIOD_BULAN:
+                    periodeIndex = 12;
+                    break;
+                  case PERIOD_TRIWULAN:
+                    periodeIndex = 4;
+                    break;
+                  case PERIOD_CATURWULAN:
+                    periodeIndex = 3;
+                    break;
+                  case PERIOD_SEMESTER:
+                    periodeIndex = 2;
+                    break;
+                  case PERIOD_TAHUN:
+                    periodeIndex = 1;
+                    break;
+                }
+                for (let i = 0; i < parseInt(periodeIndex); i++) {
+                    stringOption += "<option value="+ i +">"+ (i + 1) +"</option>";
+                }
+                $("#periode-index").html(stringOption);
+            });
+
+            $("body").on("change", "#periode-index", function(){
+                const value = $(this).val();
+                const year = $("#tahun").val();
+                const periode = $("#periode").val();
+                let startMonth = null;
+                let endMonth = null;
+                let startDate = null;
+                let endDate = null;
+                
+                switch(parseInt(periode)) {
+                    case PERIOD_BULAN:
+                        startMonth = value;
+                        endMonth = value;
+                        break;
+                    case PERIOD_TRIWULAN:
+                        switch (parseInt(value)) {
+                            case 0:
+                                startMonth = 0;
+                                endMonth = 2;
+                                break;
+                            case 1:
+                                startMonth = 3;
+                                endMonth = 5;
+                                break;
+                            case 2:
+                                startMonth = 6;
+                                endMonth = 8;
+                                break;
+                            case 3:
+                                startMonth = 9;
+                                endMonth = 11;
+                                break;
+                        }
+                        break;
+                    case PERIOD_CATURWULAN:
+                        switch (parseInt(value)) {
+                            case 0:
+                                startMonth = 0;
+                                endMonth = 3;
+                                break;
+                            case 1:
+                                startMonth = 4;
+                                endMonth = 7;
+                                break;
+                            case 2:
+                                startMonth = 8;
+                                endMonth = 11;
+                                break;
+                        }
+                        break;
+                    case PERIOD_SEMESTER:
+                        switch (parseInt(value)) {
+                            case 0:
+                                startMonth = 0;
+                                endMonth = 5;
+                                break;
+                            case 1:
+                                startMonth = 6;
+                                endMonth = 11;
+                                break;
+                        }
+                        break;
+                    case PERIOD_TAHUN:
+                        startMonth = 0;
+                        endMonth = 11;
+                        break;
+                }
+               
+                startDate = new Date(parseInt(year), parseInt(startMonth), 1);
+                endDate = new Date(parseInt(year), parseInt(endMonth) + 1, 0);
+                
+                const intStartDay = ("0" + startDate.getDate()).slice(-2);
+                const intStartMonth = ("0" + (startDate.getMonth() + 1)).slice(-2);
+                const intEndDay = ("0" + endDate.getDate()).slice(-2);
+                const intEndMonth = ("0" + (endDate.getMonth() + 1)).slice(-2);
+                
+                let validStartDate = startDate.getFullYear() + "-" + intStartMonth + "-" + intStartDay;
+                let validEndDate = endDate.getFullYear() + "-" + intEndMonth + "-" + intEndDay;
+                
+                $("#date-from").val(validStartDate);
+                $("#date-to").val(validEndDate);
+            });
         });
     </script>
   </body>
