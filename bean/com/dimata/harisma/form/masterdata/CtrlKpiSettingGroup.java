@@ -120,29 +120,29 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
 
                 if (entKpiSettingGroup.getOID() == 0) {
                     try {
-                        long oidKpiType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]);
                         Vector<Long> vOidKpiGroup = frmKpiSettingGroup.getvOidKpiGroup();
                           if (vOidKpiGroup != null){
                               for(int ux = 0 ; ux < vOidKpiGroup.size();ux++){
                                   KpiSettingGroup objKpiSettingGroup = new KpiSettingGroup();
                                   objKpiSettingGroup.setKpiSettingId(entKpiSettingGroup.getKpiSettingId());
                                   objKpiSettingGroup.setKpiGroupId(vOidKpiGroup.get(ux));
+                                  objKpiSettingGroup.setKpiSettingTypeId(entKpiSettingGroup.getKpiSettingTypeId());
                                   PstKpiSettingGroup.insertExc(objKpiSettingGroup);
 
-                                  String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + objKpiSettingGroup.getKpiSettingId() + " AND " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
-                                  Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, "");
-                                  for(int j = 0; j < vKpiSettingType.size(); j++){
-                                      KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(j);
-                                      if(entKpiSettingType.getKpiGroupId() == 0){
-                                          entKpiSettingType.setKpiGroupId(objKpiSettingGroup.getKpiGroupId());
-                                          PstKpiSettingType.updateExc(entKpiSettingType);
-                                      } else {
-                                          entKpiSettingType.setKpiSettingId(entKpiSettingGroup.getKpiSettingId());
-                                          entKpiSettingType.setKpiTypeId(oidKpiType);
-                                          entKpiSettingType.setKpiGroupId(objKpiSettingGroup.getKpiGroupId());
-                                          PstKpiSettingType.insertExc(entKpiSettingType);
-                                      }
-                                  }
+//                                  String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + objKpiSettingGroup.getKpiSettingId() + " AND " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
+//                                  Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, "");
+//                                  for(int j = 0; j < vKpiSettingType.size(); j++){
+//                                      KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(j);
+//                                      if(entKpiSettingType.getKpiGroupId() == 0){
+//                                          entKpiSettingType.setKpiGroupId(objKpiSettingGroup.getKpiGroupId());
+//                                          PstKpiSettingType.updateExc(entKpiSettingType);
+//                                      } else {
+//                                          entKpiSettingType.setKpiSettingId(entKpiSettingGroup.getKpiSettingId());
+//                                          entKpiSettingType.setKpiTypeId(oidKpiType);
+//                                          entKpiSettingType.setKpiGroupId(objKpiSettingGroup.getKpiGroupId());
+//                                          PstKpiSettingType.insertExc(entKpiSettingType);
+//                                      }
+//                                  }
                               }
                           }
                         
@@ -209,36 +209,22 @@ public class CtrlKpiSettingGroup extends Control implements I_Language {
                 if (oidKpiSettingGroup != 0) {
                     long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
                     long oidKpiGroup = FRMQueryString.requestLong(request, FrmKPI_Group.fieldNames[FrmKPI_Group.FRM_FIELD_KPI_GROUP_ID]);
+                    long kpiSettingGroupId = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]);
                     long oidKpiType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]);
                     try {
-                        String query = PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + oidKpiSetting + " AND " + PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_TYPE_ID] + " = " + oidKpiType;
-                        Vector vKpiSettingType = PstKpiSettingType.list(0, 1, query, "");
-                        KpiSettingType objKpiSettingType = (KpiSettingType) vKpiSettingType.get(0);
                         
                         // untuk menghapus kpi list pada tabel kpi setting list
-                        PstKpiSettingList.deleteByKpiGroupAndSetting(oidKpiGroup, oidKpiSetting);
+                        PstKpiSettingList.deleteByKpiSettingGroupAndSetting(kpiSettingGroupId, oidKpiSetting);
 
-                        long oidKpiSettingId = objKpiSettingType.getKpiSettingId();
-                        long kpiSettingTypeId = objKpiSettingType.getKpiTypeId();
  
                         //untuk menghapus kpi group pada tabel kpi setting group
                         PstKpiSettingGroup.deleteByKpiGroup(oidKpiGroup);
                         
-                                                // delete kpi setting type
-                        PstKpiSettingType.deleteByKpiGroupAndSetting(oidKpiGroup);
                         
-                        // insert kembali kpi setting type dengan column kpi group id null
-                        objKpiSettingType.setKpiSettingId(oidKpiSettingId);
-                        objKpiSettingType.setKpiTypeId(kpiSettingTypeId);
-                        objKpiSettingType.setKpiGroupId(0); 
-                        PstKpiSettingType.insertExc(objKpiSettingType);
                         
 
                         msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);
                         excCode = RSLT_OK;
-                    } catch (DBException dbexc) {
-                        excCode = dbexc.getErrorCode();
-                        msgString = getSystemMessage(excCode);
                     } catch (Exception exc) {
                         msgString = getSystemMessage(I_DBExceptionInfo.UNKNOWN);
                     }

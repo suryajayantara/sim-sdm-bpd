@@ -22,17 +22,20 @@ public class PstKpiSettingGroup extends DBHandler implements I_DBInterface, I_DB
     public static final int FLD_KPI_SETTING_GROUP_ID = 0;
     public static final int FLD_KPI_SETTING_ID = 1;
     public static final int FLD_KPI_GROUP_ID = 2;
+    public static final int FLD_KPI_SETTING_TYPE_ID = 3;
 
     public static String[] fieldNames = {
         "KPI_SETTING_GROUP_ID",
         "KPI_SETTING_ID",
-        "KPI_GROUP_ID"
+        "KPI_GROUP_ID",
+        "KPI_SETTING_TYPE_ID"
     };
 
     public static int[] fieldTypes = {
         TYPE_LONG + TYPE_PK + TYPE_ID,
         TYPE_LONG,
-        TYPE_LONG
+        TYPE_LONG,
+        TYPE_LONG 
     };
 
     public PstKpiSettingGroup() {
@@ -93,6 +96,7 @@ public class PstKpiSettingGroup extends DBHandler implements I_DBInterface, I_DB
             entKpisettinggroup.setOID(oid);
             entKpisettinggroup.setKpiSettingId(pstKpiSettingGroup.getlong(FLD_KPI_SETTING_ID));
             entKpisettinggroup.setKpiGroupId(pstKpiSettingGroup.getlong(FLD_KPI_GROUP_ID));
+            entKpisettinggroup.setKpiSettingTypeId(pstKpiSettingGroup.getLong(FLD_KPI_SETTING_TYPE_ID));
             return entKpisettinggroup;
         } catch (DBException dbe) {
             throw dbe;
@@ -152,6 +156,7 @@ public class PstKpiSettingGroup extends DBHandler implements I_DBInterface, I_DB
             PstKpiSettingGroup pstKpiSettingGroup = new PstKpiSettingGroup(0);
             pstKpiSettingGroup.setLong(FLD_KPI_SETTING_ID, entKpiSettingGroup.getKpiSettingId());
             pstKpiSettingGroup.setLong(FLD_KPI_GROUP_ID, entKpiSettingGroup.getKpiGroupId());
+            pstKpiSettingGroup.setLong(FLD_KPI_SETTING_TYPE_ID, entKpiSettingGroup.getKpiSettingTypeId());
             pstKpiSettingGroup.insert();
             entKpiSettingGroup.setOID(pstKpiSettingGroup.getlong(FLD_KPI_SETTING_ID));
         } catch (DBException dbe) {
@@ -212,6 +217,32 @@ public class PstKpiSettingGroup extends DBHandler implements I_DBInterface, I_DB
         return new Vector();
     }
 
+    public static Vector listWithJoinKpiSettingAndKpiSettingType(String whereClause) {
+        Vector lists = new Vector();
+        DBResultSet dbrs = null;
+        try {
+            String sql = "SELECT hr_kpi_setting_group.* FROM hr_kpi_setting_type \n" +
+"INNER JOIN hr_kpi_type ON hr_kpi_setting_type.`KPI_TYPE_ID` = hr_kpi_type.`KPI_TYPE_ID` \n" +
+"INNER JOIN hr_kpi_setting ON hr_kpi_setting_type.`KPI_SETTING_ID` = hr_kpi_setting.`KPI_SETTING_ID` \n" +
+"INNER JOIN hr_kpi_setting_group ON hr_kpi_setting_type.`KPI_SETTING_TYPE_ID` = hr_kpi_setting_group.`KPI_SETTING_TYPE_ID` \n" +
+                            "WHERE " + whereClause;
+            dbrs = DBHandler.execQueryResult(sql);
+            ResultSet rs = dbrs.getResultSet();
+            while (rs.next()) {
+                KpiSettingGroup entKpiSettingGroup = new KpiSettingGroup();
+                resultToObject(rs, entKpiSettingGroup);
+                lists.add(entKpiSettingGroup);
+            }
+            rs.close();
+            return lists;
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            DBResultSet.close(dbrs);
+        }
+        return new Vector();
+    }
+    
     public static int getCount(String whereClause) {
         DBResultSet dbrs = null;
         try {
@@ -350,15 +381,15 @@ public class PstKpiSettingGroup extends DBHandler implements I_DBInterface, I_DB
         return result;
     }
     
-    public static long deleteByKpiGroup(long kpi_setting_group_id) {
+    public static long deleteByKpiGroup(long kpi_group_id) {
         DBResultSet dbrs = null;
         try {
             String sql = "DELETE FROM " + PstKpiSettingGroup.TBL_KPISETTINGGROUP
                     + " WHERE " + PstKpiSettingGroup.fieldNames[PstKpiSettingGroup.FLD_KPI_GROUP_ID]
-                    + " = '" + kpi_setting_group_id + "'";
+                    + " = '" + kpi_group_id + "'";
                         
             int status = DBHandler.execUpdate(sql);
-            return kpi_setting_group_id;
+            return kpi_group_id;
         } catch (Exception e) {
             System.out.println(e);
         } finally {

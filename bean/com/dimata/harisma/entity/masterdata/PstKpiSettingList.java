@@ -21,14 +21,15 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
     public static final int FLD_KPI_SETTING_ID = 1;
     public static final int FLD_KPI_LIST_ID = 2;
     public static final int FLD_KPI_DISTRIBUTION_ID = 3;
-    public static final int FLD_KPI_GROUP_ID = 4;
+    public static final int FLD_KPI_SETTING_GROUP_ID = 4;
 
     public static String[] fieldNames = {
         "KPI_SETTING_LIST_ID",
         "KPI_SETTING_ID",
         "KPI_LIST_ID",
         "KPI_DISTRIBUTION_ID",
-        "KPI_GROUP_ID"
+        "KPI_SETTING_GROUP_ID"
+          
     };
 
     public static int[] fieldTypes = {
@@ -36,7 +37,7 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
         TYPE_LONG,
         TYPE_LONG,
         TYPE_LONG,
-        TYPE_LONG
+        TYPE_LONG,
     };
 
     public PstKpiSettingList() {
@@ -98,7 +99,7 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
             entKpisettinglist.setKpiSettingId(pstKpiSettingList.getlong(FLD_KPI_SETTING_ID));
             entKpisettinglist.setKpiListId(pstKpiSettingList.getlong(FLD_KPI_LIST_ID));
             entKpisettinglist.setKpiDistributionId(pstKpiSettingList.getlong(FLD_KPI_DISTRIBUTION_ID));
-            entKpisettinglist.setKpiGroupId(pstKpiSettingList.getlong(FLD_KPI_GROUP_ID));
+            entKpisettinglist.setKpiSettingGroupId(pstKpiSettingList.getlong(FLD_KPI_SETTING_GROUP_ID));
             return entKpisettinglist;
         } catch (DBException dbe) {
             throw dbe;
@@ -120,7 +121,7 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
                 pstKpiSettingList.setLong(FLD_KPI_SETTING_ID, entKpiSettingList.getKpiSettingId());
                 pstKpiSettingList.setLong(FLD_KPI_LIST_ID, entKpiSettingList.getKpiListId());
                 pstKpiSettingList.setLong(FLD_KPI_DISTRIBUTION_ID, entKpiSettingList.getKpiDistributionId());
-                pstKpiSettingList.setLong(FLD_KPI_GROUP_ID, entKpiSettingList.getKpiGroupId());
+                pstKpiSettingList.setLong(FLD_KPI_SETTING_GROUP_ID, entKpiSettingList.getKpiSettingGroupId()    );
                 pstKpiSettingList.update();
                 return entKpiSettingList.getOID();
             }
@@ -161,7 +162,7 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
             pstKpiSettingList.setLong(FLD_KPI_SETTING_ID, entKpiSettingList.getKpiSettingId());
             pstKpiSettingList.setLong(FLD_KPI_LIST_ID, entKpiSettingList.getKpiListId());
             pstKpiSettingList.setLong(FLD_KPI_DISTRIBUTION_ID, entKpiSettingList.getKpiDistributionId());
-            pstKpiSettingList.setLong(FLD_KPI_GROUP_ID, entKpiSettingList.getKpiGroupId());
+            pstKpiSettingList.setLong(FLD_KPI_SETTING_GROUP_ID, entKpiSettingList.getKpiSettingGroupId());
             pstKpiSettingList.insert();
             entKpiSettingList.setOID(pstKpiSettingList.getlong(FLD_KPI_SETTING_ID));
         } catch (DBException dbe) {
@@ -182,7 +183,7 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
             entKpiSettingList.setKpiSettingId(rs.getLong(PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_SETTING_ID]));
             entKpiSettingList.setKpiListId(rs.getLong(PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_LIST_ID]));
             entKpiSettingList.setKpiDistributionId(rs.getLong(PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_DISTRIBUTION_ID]));
-            entKpiSettingList.setKpiGroupId(rs.getLong(PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_GROUP_ID]));
+            entKpiSettingList.setKpiSettingGroupId(rs.getLong(PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_SETTING_GROUP_ID]));
         } catch (Exception e) {
         }
     }
@@ -433,13 +434,12 @@ public class PstKpiSettingList extends DBHandler implements I_DBInterface, I_DBT
         }
     }
     
-    public static long deleteByKpiGroupAndSetting(long kpiGroupId, long kpiSettingId) {
+    public static long deleteByKpiSettingGroupAndSetting(long kpiSettingGroupId, long kpiSettingId) {
         DBResultSet dbrs = null;
         try {
             String sql = "DELETE FROM " + PstKpiSettingList.TBL_KPISETTINGLIST
-                    + " WHERE " + PstKpiSettingGroup.fieldNames[PstKpiSettingGroup.FLD_KPI_GROUP_ID] + " = '" + kpiGroupId + "'"
-                    + " AND " + PstKpiSetting.fieldNames[PstKpiSetting.FLD_KPI_SETTING_ID] + " = '" + kpiSettingId + "'";
-                        
+                    + " WHERE " + PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_SETTING_GROUP_ID] + " = '" + kpiSettingGroupId + "'"
+                    + " AND " + PstKpiSetting.fieldNames[PstKpiSetting.FLD_KPI_SETTING_ID] + " = '" + kpiSettingId + "'";         
             int status = DBHandler.execUpdate(sql);
             return 1;
         } catch (Exception e) {

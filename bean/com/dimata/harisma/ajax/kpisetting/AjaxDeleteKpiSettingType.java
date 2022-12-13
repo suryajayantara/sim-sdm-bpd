@@ -62,24 +62,6 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
                         PstKpiSettingType.deleteExc(objKpiSettingType.getKpiSettingTypeId());
                     }
                     
-                    // untuk menghapus KPI Setting Group
-                    String kpiSettingGroupQuery = "KPI_SETTING_ID = '"+ oidKpiSetting + "'";
-                    Vector vKpiSettingGroup = PstKpiSettingGroup.list(0, 0, kpiSettingGroupQuery, "");
-                    if(vKpiSettingGroup.size() > 0){
-                        for(int j = 0; j < vKpiSettingGroup.size(); j++){
-                            KpiSettingGroup objKpiSettingGroup = (KpiSettingGroup) vKpiSettingGroup.get(j);
-                            PstKpiSettingGroup.deleteExc(objKpiSettingGroup.getOID());
-                        }
-                    }
-                    // untuk menghapus KPI Setting List
-                    String kpiSettingListQuery = "KPI_SETTING_ID ='"+ oidKpiSetting +"'";
-                    Vector vKpiSettingList = PstKpiSettingList.list(0, 0, kpiSettingListQuery, "");
-                    if (vKpiSettingList.size() > 0){
-                    for(int i = 0; i < vKpiSettingList.size(); i++){
-                        KpiSettingList objKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
-                        PstKpiSettingList.deleteExc(objKpiSettingList.getOID());
-                    }
-                   }
                 }
             }
         } catch (Exception e) {

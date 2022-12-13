@@ -16,7 +16,6 @@ public class KpiSettingType extends Entity {
     private long kpiSettingTypeId = 0;
     private long kpiSettingId = 0;
     private long kpiTypeId = 0;
-    private long kpiGroupId = 0;
 
     public long getKpiSettingTypeId() {
         return kpiSettingTypeId;
@@ -42,12 +41,5 @@ public class KpiSettingType extends Entity {
         this.kpiTypeId = kpiTypeId;
     }
     
-    public long getKpiGroupId() {
-        return kpiGroupId;
-    }
-
-    public void setKpiGroupId(long kpiGroupId) {
-        this.kpiGroupId = kpiGroupId;
-    }
 
 }

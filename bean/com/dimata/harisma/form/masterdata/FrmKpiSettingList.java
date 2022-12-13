@@ -27,14 +27,14 @@ public class FrmKpiSettingList extends FRMHandler implements I_FRMInterface, I_F
     public static final int FRM_FIELD_KPI_SETTING_ID = 1;
     public static final int FRM_FIELD_KPI_LIST_ID = 2;
     public static final int FRM_FIELD_KPI_DISTRIBUTION_ID = 3;
-    public static final int FRM_FIELD_KPI_GROUP_ID = 4;
+    public static final int FRM_FIELD_KPI_SETTING_GROUP_ID = 4;
 
     public static String[] fieldNames = {
         "FRM_FIELD_KPI_SETTING_LIST_ID",
         "FRM_FIELD_KPI_SETTING_ID",
         "FRM_FIELD_KPI_LIST_ID",
         "FRM_FIELD_KPI_DISTRIBUTION_ID",
-        "FRM_FIELD_KPI_GROUP_ID"
+        "FRM_FIELD_KPI_SETTING_GROUP_ID"
     };
 
     public static int[] fieldTypes = {
@@ -84,7 +84,7 @@ public class FrmKpiSettingList extends FRMHandler implements I_FRMInterface, I_F
             entKpiSettingList.setKpiSettingId(getLong(FRM_FIELD_KPI_SETTING_ID));
             vOidKpiList = getVectorLong(fieldNames[FRM_FIELD_KPI_LIST_ID]);
             entKpiSettingList.setKpiDistributionId(getLong(FRM_FIELD_KPI_DISTRIBUTION_ID));
-            entKpiSettingList.setKpiGroupId(getLong(FRM_FIELD_KPI_GROUP_ID));
+            entKpiSettingList.setKpiSettingGroupId(getLong(FRM_FIELD_KPI_SETTING_GROUP_ID));
         } catch (Exception e) {
             System.out.println("Error on requestEntityObject : " + e.toString()); 
         }

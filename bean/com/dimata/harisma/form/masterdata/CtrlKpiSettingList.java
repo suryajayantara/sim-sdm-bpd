@@ -128,7 +128,7 @@ public class CtrlKpiSettingList extends Control implements I_Language {
                               objKpiSettingList.setKpiSettingId(entKpiSettingList.getKpiSettingId());
                               objKpiSettingList.setKpiDistributionId(entKpiSettingList.getKpiDistributionId());
                               objKpiSettingList.setKpiListId(vOidKpiList.get(i));
-                              objKpiSettingList.setKpiGroupId(entKpiSettingList.getKpiGroupId());
+                              objKpiSettingList.setKpiSettingGroupId(entKpiSettingList.getKpiSettingGroupId());
                               PstKpiSettingList.insertExc(objKpiSettingList);
                               }
                           }

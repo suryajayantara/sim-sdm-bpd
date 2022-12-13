@@ -17,13 +17,11 @@ import com.dimata.qdep.entity.Entity;
  */
 public class KpiSettingList extends Entity{
 
-
-
     private long kpiSettingListId = 0;
     private long kpiSettingId = 0;
     private long kpiListId = 0;
     private long kpiDistributionId = 0;
-    private long kpiGroupId = 0;
+    private long kpiSettingGroupId = 0;
 
         /**
      * @return the kpiSettinListId
@@ -81,18 +79,19 @@ public class KpiSettingList extends Entity{
     }
     
         /**
-     * @return the kpiGroupId
+     * @return the kpiSettingGroupId
      */
-    public long getKpiGroupId() {
-        return kpiGroupId;
+    public long getKpiSettingGroupId() {
+        return kpiSettingGroupId;
     }
 
     /**
-     * @param kpiGroupId the kpiGroupId to set
+     * @param kpiSettingGroupId the kpiSettingGroupId to set
      */
-    public void setKpiGroupId(long kpiGroupId) {
-        this.kpiGroupId = kpiGroupId;
+    public void setKpiSettingGroupId(long kpiSettingGroupId) {
+        this.kpiSettingGroupId = kpiSettingGroupId;
     }
+
     
 }
 

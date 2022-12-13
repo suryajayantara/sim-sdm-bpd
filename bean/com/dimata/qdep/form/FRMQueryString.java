@@ -357,7 +357,7 @@ public static Date requestDateYYYYMMDD(HttpServletRequest req, String paramName,
     
     
     public static int requestCommand(HttpServletRequest req) {
-        return requestInt(req, CMD);
+         return requestInt(req, CMD);
     }
     
     
