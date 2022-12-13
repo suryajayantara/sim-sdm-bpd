@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKPI_Type"%>
 <%@page import="com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingType"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
@@ -15,7 +16,6 @@
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingType"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingType"%>
 <%@page import="com.dimata.harisma.entity.log.ChangeValue"%>
-<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSetting"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSetting"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlPosition"%>
