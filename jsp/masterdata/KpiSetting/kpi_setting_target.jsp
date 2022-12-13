@@ -28,9 +28,15 @@
     
     KpiSetting entKpiSetting = new KpiSetting();
     KpiSettingList entKpiSettingList = new KpiSettingList();
+    KpiSettingGroup entKpiSettingGroup = new KpiSettingGroup();
+    KPI_List entKpiList = new KPI_List();
+    KPI_Group entKpiGroup = new KPI_Group();
     if(oidKpiSettingList > 0){
         entKpiSettingList = PstKpiSettingList.fetchExc(oidKpiSettingList);
+        entKpiSettingGroup = PstKpiSettingGroup.fetchExc(entKpiSettingList.getKpiSettingGroupId());
         entKpiSetting = PstKpiSetting.fetchExc(entKpiSettingList.getKpiSettingId());
+        entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+        entKpiGroup = PstKPI_Group.fetchExc(entKpiSettingGroup.getKpiGroupId());
     }
 %>
 <html>
@@ -118,7 +124,7 @@
             <a href="javascript:cmdBack();" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
             <div class="formstyle" style="margin-top: 1rem;">
                 <!--judul ini merupakan judul dari KPI-->
-                <span>Pendapatan Bunga kredit Korporasi</span>
+                <span><%= entKpiList.getKpi_title() %></span>
                 <hr>
                 <table>
                     <tr>
@@ -138,8 +144,7 @@
                             <br><div style="font-size: 12px;">Status         :<%= I_DocStatus.fieldDocumentStatus[entKpiSetting.getStatus()]%></div>
                             <br><div style="font-size: 12px;">Tanggal Mulai  :<%= entKpiSetting.getStartDate()%></div>
                             <br><div style="font-size: 12px;">Tanggal Selesai:<%= entKpiSetting.getValidDate()%></div>
-                            <br><div style="font-size: 12px;">KPI Group      :</div>
-                            <br><div style="font-size: 12px;">KPI            :</div>
+                            <br><div style="font-size: 12px;">KPI Group      :<%= entKpiGroup.getGroup_title() %></div>
                             <br><div style="font-size: 12px;">Tahun          :<%= entKpiSetting.getTahun()%></div>
                         </td>
                     </tr>
@@ -157,49 +162,63 @@
             <div class="formstyle" style="margin-bottom: 1rem;">
                 <table class="tblStyle" style="width:100%">
                     <tr>
-                        <td class="title_tbl"></td>
-                        <td class="title_tbl">Satuan Kerja</td>
-                        <td class="title_tbl">Unit Kerja</td>
-                        <td class="title_tbl">Sub Unit</td>
+                        <td class="title_tbl">No.</td>
+                        <td class="title_tbl">Divisi</td>
+                        <td class="title_tbl">Departemen</td>
+                        <td class="title_tbl">Section</td>
                         <td class="title_tbl">Tahun</td>
                         <td class="title_tbl">periode</td>
-                        <td class="title_tbl">Ka</td>
-                        <td class="title_tbl">Target(%)</td>
+                        <td class="title_tbl">Target(<%= PstKPI_List.strType[entKpiList.getInputType()] %>)</td>
                         <td class="title_tbl">Status</td>
-                        <td class="title_tbl"></td>
+                        <td class="title_tbl">Action</td>
                     </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
-                        <td>9</td>
-                        <td>Edit || Delete</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td colspan="9">
-
-                        <table class="tblStyle" style="width:100%">
-                            <td class="title_tbl">No</td>
-                            <td class="title_tbl">NIK</td>
-                            <td class="title_tbl">Nama</td>
-                            <td class="title_tbl">Bobot Distribusi</td>
-                            <td class="title_tbl">Action</td>
-                            <tr>
-                                <td>1</td>
-                                <td>2352364634</td>
-                                <td>Surya</td>
-                                <td>70%</td>
-                                <td><center>Edit || Delete</center></td>
-                            </tr>
-                        </table>
-                    </tr>
-                </table> 
+                    <%
+                        Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 0, PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_SETTING_LIST_ID] + " = " + oidKpiSettingList, "");
+                        for(int i = 0; i < vKpiTargetDetail.size(); i++){
+                            KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
+                            KpiTarget entKpiTarget = PstKpiTarget.fetchExc(entKpiTargetDetail.getKpiTargetId());
+                    %>
+                        <tr>
+                            <td><%= i+1 %></td>
+                            <td><%= PstDivision.fetchExc(entKpiTarget.getDivisionId()).getDivision() %></td>
+                            <td><%= PstDepartment.fetchExc(entKpiTarget.getDepartmentId()).getDepartment()%></td>
+                            <td><%= PstSection.fetchExc(entKpiTarget.getSectionId()).getSection() %></td>
+                            <td><%= entKpiTarget.getTahun() %></td>
+                            <td><%= entKpiTargetDetail.getPeriod() %></td>
+                            <td><%= entKpiTargetDetail.getAmount() %></td>
+                            <td><%= entKpiTarget.getStatusDoc() %></td>
+                            <td>Edit || Delete</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="9">
+                                <table class="tblStyle" style="width:100%">
+                                    <tr>
+                                        <td class="title_tbl">No</td>
+                                        <td class="title_tbl">NIK</td>
+                                        <td class="title_tbl">Nama</td>
+                                        <td class="title_tbl">Bobot Distribusi</td>
+                                        <td class="title_tbl">Action</td>
+                                    </tr>
+                                    <%
+                                        Vector vKpiTargetDetailEmploye = PstKpiTargetDetailEmployee.list(0, 0, PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID] + " = " + entKpiTargetDetail.getOID(), "");
+                                        for(int j = 0; j < vKpiTargetDetailEmploye.size(); j++){
+                                            KpiTargetDetailEmployee entKpiTargetDetailEmploye = (KpiTargetDetailEmployee) vKpiTargetDetailEmploye.get(j);
+                                            Employee entEmploye = PstEmployee.getNumAndFullname(entKpiTargetDetailEmploye.getEmployeeId());
+                                    %>
+                                        <tr>
+                                            <td><%= j+1 %></td>
+                                            <td><%= entEmploye.getEmployeeNum() %></td>
+                                            <td><%= entEmploye.getFullName()%></td>
+                                            <td><%= entKpiTargetDetailEmploye.getBobot() %></td>
+                                            <td><center>Edit || Delete</center></td>
+                                        </tr>
+                                    <% } %>
+                                </table>
+                            </td>
+                        </tr>
+                    <% } %>
+                </table>
             </div>
         </div>
                     
