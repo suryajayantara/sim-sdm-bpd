@@ -18,13 +18,21 @@
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     String divisionOID = "";
     String departementOID = "";
+    
+    KpiSettingList entKpiSettingList = new KpiSettingList();
+    KPI_List entKpiList = new KPI_List();
+    KpiSetting entKpiSetting = new KpiSetting();
+    Company entCompany = new Company();
+    Vector vKpiSettingPosition = new Vector();
+    if(oidKpiSettingList > 0){
+        entKpiSettingList = PstKpiSettingList.fetchExc(oidKpiSettingList);
+        entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+        entKpiSetting = PstKpiSetting.fetchExc(entKpiSettingList.getKpiSettingId());
+        entCompany = PstCompany.fetchExc(entKpiSetting.getCompanyId());
 
-    KpiSettingList entKpiSettingList = PstKpiSettingList.fetchExc(oidKpiSettingList);
-    KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
-    KpiSetting entKpiSetting = PstKpiSetting.fetchExc(entKpiSettingList.getKpiSettingId());
-    Company entCompany = PstCompany.fetchExc(entKpiSetting.getCompanyId());
+        vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, PstKpiSettingPosition.fieldNames[PstKpiSettingPosition.FLD_KPI_SETTING_ID] + " = " + entKpiSetting.getOID(), "");
+    }
 
-    Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, PstKpiSettingPosition.fieldNames[PstKpiSettingPosition.FLD_KPI_SETTING_ID] + " = " + entKpiSetting.getOID(), "");
 
     Vector valTahun = new Vector();
     Calendar calNow = Calendar.getInstance();

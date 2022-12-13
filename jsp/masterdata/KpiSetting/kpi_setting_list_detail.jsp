@@ -91,8 +91,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>KPI SETTING LIST DETAIL</title>
 
-
-
         <link rel="stylesheet" href="../../styles/css_suryawan/CssSuryawan.css" type="text/css">
         <link rel="stylesheet" href="<%=approot%>/javascripts/datepicker/themes/jquery.ui.all.css">
         <script src="<%=approot%>/javascripts/jquery.js"></script>
@@ -168,100 +166,98 @@
             <span id="menu_title"><strong>Kinerja</strong> <strong style="color:#333;"> / </strong>Master Data / KPI Setting List / KPI Setting List Detail</span>
         </div>
         <div class="content-main">
-            <form name="FRM_NAME_KPISETTING_LIST_DETAIL" method ="post" action="">
-                <input type="hidden" name="command" value="<%=iCommand%>">
-                <input type="hidden" name="urlBack" value="kpi_setting_list_detail.jsp">
-                <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
-                <a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
-                <div class="formstyle" style="margin-top: 1rem;">
-                    <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
-                    <div style="font-size: 15px">Company: <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
-                    <div style="font-size: 15px">Jabatan:
+            <a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
+            <div class="formstyle" style="margin-top: 1rem;">
+                <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
+                <div style="font-size: 15px">Company: <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
+                <div style="font-size: 15px">Jabatan:
+                    <%
+                        for (int i = 0; i < vListPosisi.size(); i++) {
+                            Position objPosition = (Position) vListPosisi.get(i);
+                    %>
+                    <%= objPosition.getPosition()%>,
+                    <%}%>
+                </div>
+                <div style="font-size: 15px">Status: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
+                <div style="font-size: 15px">Tanggal Mulai: <%= kpiSetting.getStartDate()%></div>
+                <div style="font-size: 15px">Tanggal Selesai: <%= kpiSetting.getValidDate()%></div>
+                <div style="font-size: 15px">Tahun: <%= kpiSetting.getTahun()%></div>
+            </div>
+
+            <%
+                Vector vKpiSettingType = PstKpiSettingType.list(0, 0, PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + kpiSetting.getOID(), "");
+                for (int i = 0; i < vKpiSettingType.size(); i++) {
+                    KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(i);
+                    KPI_Type entKpiType = PstKPI_Type.fetchExc(entKpiSettingType.getKpiTypeId());
+            %>
+            <div class="formstyle" style="margin-top: 1rem;">
+                <div><%= entKpiType.getType_name()%></div>
+                <table class="tblStyle" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th class="title_tbl" style="text-align: center;" width="2%">No.</th>
+                            <th class="title_tbl" style="text-align: center;">KPI Group</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
                         <%
-                            for (int i = 0; i < vListPosisi.size(); i++) {
-                                Position objPosition = (Position) vListPosisi.get(i);
+                            Vector vKpiSettingGroup = PstKpiSettingGroup.list(0, 0, PstKpiSettingGroup.fieldNames[PstKpiSettingGroup.FLD_KPI_SETTING_TYPE_ID] + " = " + entKpiSettingType.getKpiSettingTypeId(), "");
+                            for (int j = 0; j < vKpiSettingGroup.size(); j++) {
+                                KpiSettingGroup entKpiSettingGroup = (KpiSettingGroup) vKpiSettingGroup.get(j);
+                                KPI_Group entKpiGroup = PstKPI_Group.fetchExc(entKpiSettingGroup.getKpiGroupId());
                         %>
-                        <%= objPosition.getPosition()%>,
-                        <%}%>
-                    </div>
-                    <div style="font-size: 15px">Status: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
-                    <div style="font-size: 15px">Tanggal Mulai: <%= kpiSetting.getStartDate()%></div>
-                    <div style="font-size: 15px">Tanggal Selesai: <%= kpiSetting.getValidDate()%></div>
-                    <div style="font-size: 15px">Tahun: <%= kpiSetting.getTahun()%></div>
-                </div>
-                    
-                <%
-                    Vector vKpiSettingType = PstKpiSettingType.list(0, 0, PstKpiSettingType.fieldNames[PstKpiSettingType.FLD_KPI_SETTING_ID] + " = " + kpiSetting.getOID(), "");
-                    for (int i = 0; i < vKpiSettingType.size(); i++) {
-                        KpiSettingType entKpiSettingType = (KpiSettingType) vKpiSettingType.get(i);
-                        KPI_Type entKpiType = PstKPI_Type.fetchExc(entKpiSettingType.getKpiTypeId());
-                %>
-                <div class="formstyle" style="margin-top: 1rem;">
-                    <div><%= entKpiType.getType_name()%></div>
-                    <table class="tblStyle" style="width: 100%;">
-                        <thead>
-                            <tr>
-                                <th class="title_tbl" style="text-align: center;" width="2%">No.</th>
-                                <th class="title_tbl" style="text-align: center;">KPI Group</th>
-                            </tr>
-                        </thead>
+                        <tr>
+                            <td style="text-align: center;"><%= j + 1%></td>
+                            <td><%= entKpiGroup.getGroup_title()%></td>
+                        </tr>
 
-                        <tbody>
-                            <%
-                                Vector vKpiSettingGroup = PstKpiSettingGroup.list(0, 0, PstKpiSettingGroup.fieldNames[PstKpiSettingGroup.FLD_KPI_SETTING_TYPE_ID] + " = " + entKpiSettingType.getKpiSettingTypeId(), "");
-                                for (int j = 0; j < vKpiSettingGroup.size(); j++) {
-                                    KpiSettingGroup entKpiSettingGroup = (KpiSettingGroup) vKpiSettingGroup.get(j);
-                                    KPI_Group entKpiGroup = PstKPI_Group.fetchExc(entKpiSettingGroup.getKpiGroupId());
-                            %>
-                            <tr>
-                                <td style="text-align: center;"><%= j + 1%></td>
-                                <td><%= entKpiGroup.getGroup_title()%></td>
-                            </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <table class="tblStyle" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th class="title_tbl" width="2%"><center>No.</center></th>
+                                            <th class="title_tbl"><center>Key Performance Indicator</center></th>
+                                            <th class="title_tbl" width="10%"><center>Distribution Option</center></th>
+                                            <th class="title_tbl" width="10%"><center>Satuan Ukur</center></th>
+                                            <th class="title_tbl" width="2%"><center>Bobot</center></th>
+                                            <th class="title_tbl" width="2%"><center>Target</center></th>
+                                        </tr>
+                                    </thead>
 
-                            <tr>
-                                <td></td>
-                                <td>
-                                    <table class="tblStyle" style="width: 100%;">
-                                        <thead>
-                                            <tr>
-                                                <th class="title_tbl" width="2%"><center>No.</center></th>
-                                                <th class="title_tbl"><center>Key Performance Indicator</center></th>
-                                                <th class="title_tbl" width="10%"><center>Distribution Option</center></th>
-                                                <th class="title_tbl" width="10%"><center>Satuan Ukur</center></th>
-                                                <th class="title_tbl" width="2%"><center>Bobot</center></th>
-                                                <th class="title_tbl" width="2%"><center>Target</center></th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            <%
-                                                Vector vKpiSettingList = PstKpiSettingList.list(0, 0, PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_SETTING_GROUP_ID] + " = " + entKpiSettingGroup.getOID(), "");
-                                                for (int k = 0; k < vKpiSettingList.size(); k++) {
-                                                    KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(k);
-                                                    KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
-                                                    KpiDistribution entKpiDistribution = PstKpiDistribution.fetchExc(entKpiSettingList.getKpiDistributionId());
-                                            %>
-                                            <tr>
-                                                <td><%= k + 1%></td>
-                                                <td><%= entKpiList.getKpi_title()%></td>
-                                                <td><%= entKpiDistribution.getDistribution()%></td>
-                                                <td><%= PstKPI_List.strType[entKpiList.getInputType()] %></td>
-                                                <td>-</td>
-                                                <td style="text-align: center;">
-                                                    <a href="kpi_setting_target.jsp" class="btn-small" style="color:#FFF; background-color: #ffc107;">Edit</a>
-                                                </td>
-                                            </tr>
-                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-                <% } %>
-            </form>
+                                    <tbody>
+                                        <%
+                                            Vector vKpiSettingList = PstKpiSettingList.list(0, 0, PstKpiSettingList.fieldNames[PstKpiSettingList.FLD_KPI_SETTING_GROUP_ID] + " = " + entKpiSettingGroup.getOID(), "");
+                                            for (int k = 0; k < vKpiSettingList.size(); k++) {
+                                                KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(k);
+                                                KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+                                                KpiDistribution entKpiDistribution = PstKpiDistribution.fetchExc(entKpiSettingList.getKpiDistributionId());
+                                        %>
+                                        <tr>
+                                            <td><%= k + 1%></td>
+                                            <td><%= entKpiList.getKpi_title()%></td>
+                                            <td><%= entKpiDistribution.getDistribution()%></td>
+                                            <td><%= PstKPI_List.strType[entKpiList.getInputType()] %></td>
+                                            <td>-</td>
+                                            <td style="text-align: center;">
+                                                <form action="kpi_setting_target.jsp" method="POST">
+                                                    <input type="hidden" name="<%= FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID] %>" value="<%= entKpiSettingList.getOID() %>" />
+                                                    <button type="submit" class="btn-small" style="color:#FFF; background-color: #ffc107; border: none;">Edit</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <% } %>
         </div>
 
         <div class="footer-page">
@@ -282,20 +278,19 @@
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script language="JavaScript">
-        //var oBody = document.body;
-        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+            //var oBody = document.body;
+            //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
+            $(function () {
+                //Initialize Select2 Elements
+                $('.select2').select2()
 
-            //Initialize Select2 Elements
+                //Initialize Select2 Elements
 
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
+                $('.select2bs4').select2({
+                    theme: 'bootstrap4'
+                })
             })
-        })
-
         </script>
         <script type="text/javascript">
             var config = {
