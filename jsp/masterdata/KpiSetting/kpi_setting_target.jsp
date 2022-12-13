@@ -71,72 +71,107 @@
     </head>
     <body>
         <div class="header">
-            <table widtd="100%" border="0" cellspacing="0" cellpadding="0">
-                <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%> 
-                <%@include file="../../styletemplate/template_header.jsp" %>
-                <%} else {%>
-                <tr> 
-                    <td ID="TOPTITLE" background="<%=approot%>/images/HRIS_HeaderBg3.jpg" widtd="100%" height="54"> 
-                        <!-- #BeginEditable "header" --> 
-                        <%@ include file = "../../main/header.jsp" %>
-                        <!-- #EndEditable --> 
-                    </td>
-                </tr>
-                <tr> 
-                    <td  bgcolor="#9BC1FF" height="15" ID="MAINMENU" valign="middle"> <!-- #BeginEditable "menumain" --> 
-                        <%@ include file = "../../main/mnmain.jsp" %>
-                        <!-- #EndEditable --> </td>
-                </tr>
-                <tr> 
-                    <td  bgcolor="#9BC1FF" height="10" valign="middle"> 
-                        <table widtd="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tr> 
-                                <td align="left"><img src="<%=approot%>/images/harismaMenuLeft1.jpg" widtd="8" height="8"></td>
-                                <td align="center" background="<%=approot%>/images/harismaMenuLine1.jpg" widtd="100%"><img src="<%=approot%>/images/harismaMenuLine1.jpg" widtd="8" height="8"></td>
-                                <td align="right"><img src="<%=approot%>/images/harismaMenuRight1.jpg" widtd="8" height="8"></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <%}%>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%> 
+            <%@include file="../../styletemplate/template_header.jsp" %>
+            <%} else {%>
+            <tr> 
+                <td ID="TOPTITLE" style="background:<%=approot%>/images/HRIS_HeaderBg3.jpg" width="100%" height="54"> 
+                    <!-- #BeginEditable "header" --> 
+                    <%@ include file = "../../main/header.jsp" %>
+                    <!-- #EndEditable --> 
+                </td>
+            </tr>
+            <tr> 
+                <td  bgcolor="#9BC1FF" height="15" ID="MAINMENU" valign="middle"> <!-- #BeginEditable "menumain" --> 
+                    <%@ include file = "../../main/mnmain.jsp" %>
+                    <!-- #EndEditable --> </td>
+            </tr>
+            <tr> 
+                <td  bgcolor="#9BC1FF" height="10" valign="middle"> 
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr> 
+                            <td align="left"><img src="<%=approot%>/images/harismaMenuLeft1.jpg" width="8" height="8"></td>
+                            <td align="center" style="background:<%=approot%>/images/harismaMenuLine1.jpg" width="100%"><img src="<%=approot%>/images/harismaMenuLine1.jpg" width="8" height="8"></td>
+                            <td align="right"><img src="<%=approot%>/images/harismaMenuRight1.jpg" width="8" height="8"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <%}%>
             </table>
         </div>
         <div id="menu_utama">
             <span id="menu_title">KPI Setting Detail/KPI Setting Target</span>
         </div>
-        <form name="frm" metdod="post" action="">
-            <input type="hidden" name="command" value="<%= iCommand%>"> 
-            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
-            <div class="box">
-                <div class="content-main">
-                    
-                    <a href="javascript:cmdBack();" style="color:#FFF;float: left;" class="btn-back btn-back1">Kembali</a>
-                    <div>&nbsp;</div>
-                    <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
-                    <div class="row">
-                        <div class="col-2">
-                            <div style="font-size: 15px">Perusahaan</div>
-                            <div style="font-size: 15px">Jabatan</div>
-                            <%
-                                for (int i = 0; i < vListPosisi.size() - 1; i++) {
-                            %>
-                            <div style="font-size: 15px;" class="text-white">S </div>
-                            <%}%>
-                            <div style="font-size: 15px">Status</div>
-                            <div style="font-size: 15px">Tanggal Mulai</div>
-                            <div style="font-size: 15px">Tanggal Selesai</div>
-                            <div style="font-size: 15px">Tahun</div>
-                            <div style="font-size: 15px">KPI Group</div>
+            <form name="frm" method="post" action="">
+                 <input type="hidden" name="command" value="<%= iCommand %>"> 
+                <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
+        <div class="box">
+            <div class="content-main">
+            <!--judul ini merupakan judul dari KPI-->
+            <div id="box-title">Pendapatan Bunga kredit Korporasi
+            <a href="javascript:cmdBack();" style="color:#FFF;float: right;" class="btn-back btn-back1">Kembali</a></div>
+            <!--End-->
+            <div id="box-content">
+                <table>
+                    <tr>
+                        <td>
+                        <br><div style="font-size: 12px;">Perusahaan:<%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
+                        <br><div style="font-size: 12px;">Jabatan        :
+                        <%
+                          Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
+                          for (int i=0; i < vListPosisi.size(); i++){
+                              Position objPosisi = (Position)vListPosisi.get(i);
+                              %>
+                              <%=objPosisi.getPosition()%>,
+                        <%
+                          }
+                        %>
                         </div>
-                        <div class="col-10">
-                            <%
-                                Vector vKpiSetting = PstKPI_Type.listWithJoinKpiSettingTypeAndKpiSetting(kpiSetting.getOID());
-                                long lastKpiTypeOID = 0;
-                                for (int i = 0; i < vKpiSetting.size(); i++) {
-                                    KPI_Type kpiType = (KPI_Type) vKpiSetting.get(i);
-                                    if (kpiType.getOID() > 0) {
-                            %>
-                            <div style="font-size: 15px">: <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
+                        <br><div style="font-size: 12px;">Status         :<%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()] %></div>
+                        <br><div style="font-size: 12px;">Tanggal Mulai  :<%= kpiSetting.getStartDate() %></div>
+                        <br><div style="font-size: 12px;">Tanggal Selesai:<%= kpiSetting.getValidDate()%></div>
+                        <br><div style="font-size: 12px;">KPI Group      :</div>
+                        <br><div style="font-size: 12px;">KPI            :</div>
+                        <br><div style="font-size: 12px;">Tahun          :<%= kpiSetting.getTahun() %></div>
+                        </td>
+                    </tr>
+                </table>
+                <div style="border-top: 1px solid #DDD;">&nbsp;</div>
+                <h3>KPI Target Per Satuan Kerja</h3>
+                <div>&nbsp;</div>
+                <a href="kpi_setting_target_form.jsp?<%= FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID] %>=<%= kpiSetting.getOID() %>" style="color:#fff;" class="btn-add btn-add1">Tambah Data <strong><i class="fa fa-plus"></i></strong></a>
+                <a href="" style="color:#fff;" class="btn-copy btn-copy1">Salin Data Target Sebelumnya <strong><i class="fa fa-copy"></i></strong></a>
+                <div>&nbsp;</div>
+                <table class="tblStyle" style="width:100%">
+                    <tr>
+                      <td class="title_tbl"></td>
+                      <td class="title_tbl">Satuan Kerja</td>
+                      <td class="title_tbl">Unit Kerja</td>
+                      <td class="title_tbl">Sub Unit</td>
+                      <td class="title_tbl">Tahun</td>
+                      <td class="title_tbl">periode</td>
+                      <td class="title_tbl">Ka</td>
+                      <td class="title_tbl">Target(%)</td>
+                      <td class="title_tbl">Status</td>
+                      <td class="title_tbl"></td>
+                    </tr>
+                  <tr>
+                  <td>1</td>
+                  <td>2</td>
+                  <td>3</td>
+                  <td>4</td>
+                  <td>5</td>
+                  <td>6</td>
+                  <td>7</td>
+                  <td>8</td>
+                  <td>9</td>
+                  <td>Edit || Delete</td>
+                  </tr>
+                  <tr>
+                  <td></td>
+                  <td colspan="9">
 
                             <div style="font-size: 15px">:
                                 <%
