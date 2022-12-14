@@ -85,6 +85,7 @@
     Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
     /*menampung data KPI Group dalam vektor*/
     Vector vKpiGroup = new Vector();
+    Vector vKpiSettingGroup = new Vector();
 %>
 <html>
     <head>
@@ -210,7 +211,6 @@
                             <div style="font-size: 17px">: <%= kpiSetting.getStartDate()%></div>
                             <div style="font-size: 17px">: <%= kpiSetting.getValidDate()%></div>
                             <div style="font-size: 17px">: <%= kpiSetting.getTahun()%></div>
-
                         </div>
                     </div>
                     <div style="border-top: 1px solid #DDD;">&nbsp;</div>
@@ -226,6 +226,7 @@
                     if (kpiType.getOID() != lastKpiTypeOID) {
 
         %>
+        <div class="formstyle mb-3">
             <form name="<%= FrmKpiSettingType.FRM_NAME_KPISETTINGTYPE%>_<%= kpiType.getKpiSettingTypeId()%>" method="get" id="FRM_NAME_KPISETTINGTYPE_<%= kpiType.getKpiSettingTypeId()%>">
                
                 <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]%>" value="<%= kpiType.getOID()%>">
@@ -239,7 +240,7 @@
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="typeform" value="3">
                 <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
-                <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
+                <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=oidKpiSettingGroup%>">
                 <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID() %>">
                 <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId()%>">
                 <input type="hidden" name="<%=FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_TYPE_ID]%>" value="<%=kpiType.getOID()%>">
@@ -251,11 +252,12 @@
                     </thead>
                     <tbody>
                         <%
-                            String kpiGroupQuery = "hr_kpi_setting_type.`KPI_SETTING_ID`='" + oidKpiSetting + "' AND hr_kpi_setting_type.`KPI_TYPE_ID`='" + kpiType.getOID() + "'";
-                            vKpiGroup = PstKPI_Group.listWithJoinKpiSettingAndKpiType(kpiGroupQuery);
-                            if (vKpiGroup.size() > 0) {
-                                for (int j = 0; j < vKpiGroup.size(); j++) {
-                                    KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
+                            String query = "KPI_SETTING_TYPE_ID = '" + kpiType.getKpiSettingTypeId() + "'";
+                            vKpiSettingGroup = PstKpiSettingGroup.list(0, 0, query, "");
+                            if (vKpiSettingGroup.size() > 0) {
+                                for (int j = 0; j < vKpiSettingGroup.size(); j++) {
+                                    KpiSettingGroup objKpiSettingGroup = (KpiSettingGroup) vKpiSettingGroup.get(j);
+                                    KPI_Group objKpiGroup = PstKPI_Group.fetchExc(objKpiSettingGroup.getKpiGroupId());
                         %>
                         <tr style="background-color: #F3f3f3;">
                             <td class="p-3" value="<%= objKpiGroup.getOID()%>" style="font-size: 25px"><%= objKpiGroup.getGroup_title()%> </td>
@@ -278,7 +280,7 @@
                                     <tbody>
 
                                         <%
-                                            Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "`KPI_SETTING_ID` = " + kpiSetting.getOID() + " AND `KPI_GROUP_ID` = " + objKpiGroup.getOID(), "");
+                                            Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "`KPI_SETTING_ID` = " + kpiSetting.getOID() + " AND `KPI_SETTING_GROUP_ID` = " + objKpiSettingGroup.getOID(), "");
                                             if (vKpiSettingList.size() > 0) {
                                                 for (int k = 0; k < vKpiSettingList.size(); k++) {
                                                     KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(k);
@@ -292,7 +294,7 @@
                                             <td> - </td>
                                             <td width="5%" class="text-center">
                                                 <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>','<%=objKpiGroup%>')" style="color: #FFF; background-color: #ffc107;"  class="btn-small">Edit</a>
+                                                <a href="javascript:cmdEditKpiSettingTarget('<%=kpiSetting.getOID()%>','<%=objKpiGroup.getOID() %>')" style="color: #FFF; background-color: #ffc107;"  class="btn-small">Edit</a>
                                             </td>
                                             <td> - </td>
                                         </tr>
@@ -331,7 +333,7 @@
             </form>
          
         </div>
-        </div>
+       
         <%
             }
             lastKpiTypeOID = kpiType.getOID();
@@ -459,11 +461,11 @@
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.submit();
             }
             
-            function cmdEditKpiSettingTarget(oidKpiSetting, oidKpiSettingGroup) {
+            function cmdEditKpiSettingTarget(oidKpiSetting, oidKpiGroup) {
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oidKpiSetting;
-                document.FRM_NAME_KPISETTING_LIST_DETAIL.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiSettingGroup;
+                document.FRM_NAME_KPISETTING_LIST_DETAIL.<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>.value = oidKpiGroup;
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.command.value = "<%= Command.EDIT%>";
-                document.FRM_NAME_KPISETTING_LIST_DETAIL.action = "kpi_setting_target.jsp";
+                document.FRM_NAME_KPISETTING_LIST_DETAIL.action = "kpi_setting_target_form.jsp";
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.submit();
             }
         </script>

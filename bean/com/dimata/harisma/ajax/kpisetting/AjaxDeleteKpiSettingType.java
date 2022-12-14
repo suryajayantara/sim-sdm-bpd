@@ -54,6 +54,24 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
         try {
             if(iCommand == Command.DELETE){
                 if((oidKpiSettingType != 0) && (isFormKpiSettingType == 1)){
+                    // untuk menghapus KPI Setting List
+                    String kpiSettingListQuery = "KPI_SETTING_ID ='"+ oidKpiSetting +"'";
+                    Vector vKpiSettingList = PstKpiSettingList.list(0, 0, kpiSettingListQuery, "");
+                    if (vKpiSettingList.size() > 0){
+                    for(int i = 0; i < vKpiSettingList.size(); i++){
+                        KpiSettingList objKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
+                        PstKpiSettingList.deleteExc(objKpiSettingList.getOID());
+                    }
+                   }
+                    // untuk menghapus KPI Setting Group
+                    String kpiSettingGroupQuery = "KPI_SETTING_ID = '"+ oidKpiSetting + "'";
+                    Vector vKpiSettingGroup = PstKpiSettingGroup.list(0, 0, kpiSettingGroupQuery, "");
+                    if(vKpiSettingGroup.size() > 0){
+                        for(int j = 0; j < vKpiSettingGroup.size(); j++){
+                            KpiSettingGroup objKpiSettingGroup = (KpiSettingGroup) vKpiSettingGroup.get(j);
+                            PstKpiSettingGroup.deleteExc(objKpiSettingGroup.getOID());
+                        }
+                    }
                     // untuk menghapus KPI Setting Type
                     String whereClause = "KPI_TYPE_ID = '"+ oidKpiType +"' AND KPI_SETTING_ID ='"+ oidKpiSetting +"'";
                     Vector vKpiList = PstKpiSettingType.list(0, 0, whereClause, "");
@@ -61,6 +79,8 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
                         KpiSettingType objKpiSettingType = (KpiSettingType) vKpiList.get(i);
                         PstKpiSettingType.deleteExc(objKpiSettingType.getKpiSettingTypeId());
                     }
+                    
+                    
                     
                 }
             }
