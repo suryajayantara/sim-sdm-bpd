@@ -30,7 +30,7 @@
     long oidKpiSettingType = FRMQueryString.requestLong(request, "kpi_setting_type_id");
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     long oidKpiSettingGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]);
-    
+
     int iCommand = FRMQueryString.requestCommand(request);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
     long oidCompany = FRMQueryString.requestLong(request, "company");
@@ -49,26 +49,26 @@
 //sValidDate = sValidDate; 
 
     /*controller bisa untuk menampilkan data berdasarkan oid, bisa kok, sans, karena menggunakan icommand EDIT, 
-   yang dimana di CTRL itu comand edit nge fetch data berdasarkan oid*/
+    yang dimana di CTRL itu comand edit nge fetch data berdasarkan oid*/
     CtrlKpiSetting ctrlKpiSetting = new CtrlKpiSetting(request);
     long iErrCode = ctrlKpiSetting.action(iCommand, oidKpiSetting, request);
     KpiSetting kpiSetting = ctrlKpiSetting.getKpiSetting();
     if (iCommand == Command.SAVE) {
         iCommand = 0;
     }
-    
+
     CtrlKpiSettingType ctrlKpiSettingType = new CtrlKpiSettingType(request);
-        long iErrCodeSettingType = ctrlKpiSettingType.action(iCommand, oidKpiSettingType, request);
-        if (iCommand == Command.SAVE) {
-            iCommand = 0;
-        }
+    long iErrCodeSettingType = ctrlKpiSettingType.action(iCommand, oidKpiSettingType, request);
+    if (iCommand == Command.SAVE) {
+        iCommand = 0;
+    }
     KpiSettingType kpiSettingType = ctrlKpiSettingType.getKpiSettingType();
 
     CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
-        long iErrCodeSettingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
-        if (iCommand == Command.SAVE) {
-            iCommand = 0;
-        }
+    long iErrCodeSettingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
+    if (iCommand == Command.SAVE) {
+        iCommand = 0;
+    }
     KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
 
     CtrlKpiSettingList ctrlKpiSettingList = new CtrlKpiSettingList(request);
@@ -77,7 +77,7 @@
         iCommand = 0;
     }
     KpiSettingList kpiSettingList = ctrlKpiSettingList.getKpiSettingList();
-    
+
     /*menampilkan data kpi setting*/
     Vector listKpiSettingDetail = new Vector();
 
@@ -91,8 +91,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>KPI SETTING LIST DETAIL</title>
-
-
 
         <link rel="stylesheet" href="../../styles/css_suryawan/CssSuryawan.css" type="text/css">
         <link rel="stylesheet" href="<%=approot%>/javascripts/datepicker/themes/jquery.ui.all.css">
@@ -168,15 +166,24 @@
         <div id="menu_utama">
             <span id="menu_title"><strong>Kinerja</strong> <strong style="color:#333;"> / </strong>Master Data / KPI Setting List / KPI Setting List Detail</span>
         </div>
-        <div class="box">
-         <div class="content-main">
-            <form name="FRM_NAME_KPISETTING_LIST_DETAIL" method ="post" action="">
-                <input type="hidden" name="command" value="<%=iCommand%>">
-                <input type="hidden" name="urlBack" value="kpi_setting_list_detail.jsp">
-                <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
-                    <a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
-                    <div>&nbsp;</div>
-                    <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
+        <div class="content-main">
+            <a href="javascript:cmdBack()" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
+            <div class="formstyle" style="margin-top: 1rem;">
+                <!--data ini akan muncul ketika user klik detail pada kpi setting list-->
+                <div style="font-size: 15px">Company: <%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
+                <div style="font-size: 15px">Jabatan:
+                    <%
+                        for (int i = 0; i < vListPosisi.size(); i++) {
+                            Position objPosition = (Position) vListPosisi.get(i);
+                    %>
+                    <%= objPosition.getPosition()%>,
+                    <%}%>
+                </div>
+                <div style="font-size: 15px">Status: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
+                <div style="font-size: 15px">Tanggal Mulai: <%= kpiSetting.getStartDate()%></div>
+                <div style="font-size: 15px">Tanggal Selesai: <%= kpiSetting.getValidDate()%></div>
+                <div style="font-size: 15px">Tahun: <%= kpiSetting.getTahun()%></div>
+            </div>
 
                     <div style="border-bottom: 1px solid #DDD;">&nbsp;</div>
                     <div class="row">
@@ -247,9 +254,11 @@
                 <table class="tblStyle" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th class="title_tbl" style="font-size: 17px">Kpi Group</th>
+                            <th class="title_tbl" style="text-align: center;" width="2%">No.</th>
+                            <th class="title_tbl" style="text-align: center;">KPI Group</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <%
                             String query = "KPI_SETTING_TYPE_ID = '" + kpiType.getKpiSettingTypeId() + "'";
@@ -259,26 +268,27 @@
                                     KpiSettingGroup objKpiSettingGroup = (KpiSettingGroup) vKpiSettingGroup.get(j);
                                     KPI_Group objKpiGroup = PstKPI_Group.fetchExc(objKpiSettingGroup.getKpiGroupId());
                         %>
-                        <tr style="background-color: #F3f3f3;">
-                            <td class="p-3" value="<%= objKpiGroup.getOID()%>" style="font-size: 25px"><%= objKpiGroup.getGroup_title()%> </td>
-                        </tr>
                         <tr>
-                            <td colspan="2">
-                                <!-- table kpi list -->
-                                <table style="width: 100%;">
-                                    <thead style="text-align: center;">
+                            <td style="text-align: center;"><%= j + 1%></td>
+                            <td><%= entKpiGroup.getGroup_title()%></td>
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <table class="tblStyle" style="width: 100%;">
+                                    <thead>
                                         <tr>
-                                            <th style="font-size: 17px">No.</th>
-                                            <th style="font-size: 17px">Key Performance Indicator</th>
-                                            <th style="font-size: 17px">Distribution Option</th>
-                                            <th style="font-size: 17px">Satuan Ukur</th>
-                                            <th style="font-size: 17px">Target</th>
-                                            <th style="font-size: 17px">Bobot</th>
-                                             
+                                            <th class="title_tbl" width="2%"><center>No.</center></th>
+                                            <th class="title_tbl"><center>Key Performance Indicator</center></th>
+                                            <th class="title_tbl" width="10%"><center>Distribution Option</center></th>
+                                            <th class="title_tbl" width="10%"><center>Satuan Ukur</center></th>
+                                            <th class="title_tbl" width="2%"><center>Bobot</center></th>
+                                            <th class="title_tbl" width="2%"><center>Target</center></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
 
+                                    <tbody>
                                         <%
                                             Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "`KPI_SETTING_ID` = " + kpiSetting.getOID() + " AND `KPI_SETTING_GROUP_ID` = " + objKpiSettingGroup.getOID(), "");
                                             if (vKpiSettingList.size() > 0) {
@@ -296,42 +306,17 @@
                                                 <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                                                 <a href="javascript:cmdEditKpiSettingTarget('<%=kpiSetting.getOID()%>','<%=objKpiGroup.getOID() %>')" style="color: #FFF; background-color: #ffc107;"  class="btn-small">Edit</a>
                                             </td>
-                                            <td> - </td>
                                         </tr>
-                                        
-                                        <%      }
-                                        } else {
-                                        %>
-                                        <tr>
-                                            <td colspan="8" class="text-center">Tidak ada data.</td>
-                                        </tr>
-                                        <%
-                                            }
-                                        %>
-                                        <tr>
-                                            <td class="title_tbl" colspan="5"><center><strong>Total</strong></center></td>
-                                <td><center> - </center></td>
-                                        </tr>
-                                    
+                                        <% } %>
                                     </tbody>
                                 </table>
                             </td>
                         </tr>
-                        <%
-                            }
-                        } else {
-                        %>
-                        <tr>
-                            <td class="text-center" colspan="7"> Data tidak ditemukan. </td>
-                        </tr>
-                        <%
-                            }
-                        %>
+                        <% } %>
                     </tbody>
                 </table>
-            </form>
-            </form>
-         
+            </div>
+            <% } %>
         </div>
        
         <%
@@ -383,20 +368,19 @@
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script language="JavaScript">
-        //var oBody = document.body;
-        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+            //var oBody = document.body;
+            //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-        $(function () {
-            //Initialize Select2 Elements
-            $('.select2').select2()
+            $(function () {
+                //Initialize Select2 Elements
+                $('.select2').select2()
 
-            //Initialize Select2 Elements
+                //Initialize Select2 Elements
 
-            $('.select2bs4').select2({
-                theme: 'bootstrap4'
+                $('.select2bs4').select2({
+                    theme: 'bootstrap4'
+                })
             })
-        })
-
         </script>
         <script type="text/javascript">
             var config = {
@@ -411,16 +395,9 @@
             }
         </script>
         <script language="JavaScript">
-
             function pageLoad() {
                 $(".mydate").datepicker({dateFormat: "yy-mm-dd"});
             }
-
-//            function cmdUpdateDivision() {
-//                document..FRM_NAME_KPISETTING_LIST_DETAIL.command.value = "<%= Command.ADD%>";
-//                document..FRM_NAME_KPISETTING_LIST_DETAIL.action = "kpi_setting_form.jsp";
-//                document..FRM_NAME_KPISETTING_LIST_DETAIL.submit();
-//            }
 
             function cmdUpdateSec() {
                 document.FRM_NAME_KPISETTING_LIST_DETAIL_LIST.command.value = "<%=String.valueOf(Command.GOTO)%>";
@@ -447,14 +424,14 @@
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.action = "kpi_setting_form.jsp";
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.submit();
             }
-            
+
             function cmdAdd() {
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.targetId.value = 0;
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.command.value = "<%= Command.ADD%>";
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.action = "kpi_setting_form.jsp";
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.submit();
             }
-            
+
             function cmdSave() {
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.command.value = "<%=Command.SAVE%>";
                 document.FRM_NAME_KPISETTING_LIST_DETAIL.action = "kpi_setting_form.jsp";

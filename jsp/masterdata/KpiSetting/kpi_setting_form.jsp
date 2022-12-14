@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKPI_Type"%>
 <%@page import="com.dimata.harisma.ajax.kpisetting.AjaxDeleteKpiSettingType"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
@@ -15,7 +16,6 @@
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingType"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingType"%>
 <%@page import="com.dimata.harisma.entity.log.ChangeValue"%>
-<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSetting"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSetting"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlPosition"%>
@@ -436,8 +436,8 @@
                             <td class="p-3" value="<%= objKpiGroup.getOID()%>"> <%= objKpiGroup.getGroup_title()%> </td>
                             <td class="text-center">
                                 <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> ||
-                                <a href="javascript:cmdDeleteKpiGroup('<%=objKpiGroup.getOID()%>','<%= oidKpiSetting%>', '<%= objKpiSettingGroup.getOID() %>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #ffc107;" class="btn-small">Edit</a> ||
+                                <a href="javascript:cmdDeleteKpiGroup('<%=objKpiGroup.getOID()%>','<%= oidKpiSetting%>', '<%= objKpiSettingGroup.getOID() %>')" style="color: #FFF; background-color: #d9534f;" class="btn-small">Delete</a>
                             </td>
                         </tr>
                         <tr>

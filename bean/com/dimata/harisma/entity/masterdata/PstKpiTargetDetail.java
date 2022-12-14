@@ -28,6 +28,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 	public static final int FLD_AMOUNT = 6;
 	public static final int FLD_KPI_GROUP_ID = 7;
 	public static final int FLD_WEIGHT_VALUE = 8;
+	public static final int FLD_KPI_SETTING_LIST_ID = 9;
 
 	public static String[] fieldNames = {
 		"KPI_TARGET_DETAIL_ID",
@@ -38,7 +39,8 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 		"DATE_TO",
 		"AMOUNT",
 		"KPI_GROUP_ID",
-		"WEIGHT_VALUE"
+		"WEIGHT_VALUE",
+                "KPI_SETTING_LIST_ID"
 	};
 
 	public static int[] fieldTypes = {
@@ -50,7 +52,8 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 		TYPE_DATE,
 		TYPE_FLOAT,
 		TYPE_LONG,
-		TYPE_FLOAT
+		TYPE_FLOAT,
+		TYPE_LONG,
 	};
 	
 	public static final int PERIOD_BULAN = 0;
@@ -227,6 +230,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 			entKpiTargetDetail.setAmount(rs.getDouble(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_AMOUNT]));
 			entKpiTargetDetail.setKpiGroupId(rs.getLong(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_GROUP_ID]));
 			entKpiTargetDetail.setWeightValue(rs.getDouble(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_WEIGHT_VALUE]));
+			entKpiTargetDetail.setKpiSettingListId(rs.getLong(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_SETTING_LIST_ID]));
 		} catch (Exception e) {
 		}
 	}
