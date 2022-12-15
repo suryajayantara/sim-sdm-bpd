@@ -5,12 +5,22 @@
  */
 package com.dimata.harisma.ajax.kpisetting;
 
+import com.dimata.harisma.entity.employee.Employee;
+import com.dimata.harisma.entity.employee.PstEmployee;
 import com.dimata.harisma.entity.masterdata.KpiSetting;
 import com.dimata.harisma.entity.masterdata.KpiSettingList;
 import com.dimata.harisma.entity.masterdata.KpiTarget;
 import com.dimata.harisma.entity.masterdata.KpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.KpiTargetDetailEmployee;
+import com.dimata.harisma.entity.masterdata.PstDepartment;
+import com.dimata.harisma.entity.masterdata.PstDivision;
 import com.dimata.harisma.entity.masterdata.PstKpiSetting;
 import com.dimata.harisma.entity.masterdata.PstKpiSettingList;
+import com.dimata.harisma.entity.masterdata.PstKpiTarget;
+import com.dimata.harisma.entity.masterdata.PstKpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.PstKpiTargetDetailEmployee;
+import com.dimata.harisma.entity.masterdata.PstPosition;
+import com.dimata.harisma.entity.masterdata.PstSection;
 import com.dimata.harisma.form.masterdata.FrmDepartment;
 import com.dimata.harisma.form.masterdata.FrmDivision;
 import com.dimata.harisma.form.masterdata.FrmKPI_Type;
@@ -19,6 +29,7 @@ import com.dimata.harisma.form.masterdata.FrmKpiSettingList;
 import com.dimata.harisma.form.masterdata.FrmKpiSettingType;
 import com.dimata.harisma.form.masterdata.FrmKpiTarget;
 import com.dimata.harisma.form.masterdata.FrmKpiTargetDetail;
+import com.dimata.harisma.form.masterdata.FrmPosition;
 import com.dimata.harisma.form.masterdata.FrmSection;
 import com.dimata.qdep.db.DBException;
 import com.dimata.qdep.form.FRMQueryString;
@@ -26,6 +37,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -80,6 +92,7 @@ public class AjaxTargetPerKpi extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
         try {
+            long positionOID = FRMQueryString.requestLong(request, FrmPosition.fieldNames[FrmPosition.FRM_FIELD_POSITION_ID]);
             long kpiSettingListOID = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_ID]);
             String targetTitle = FRMQueryString.requestString(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TITLE]);
             int docStatus = FRMQueryString.requestInt(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_STATUS_DOC]);
@@ -91,6 +104,8 @@ public class AjaxTargetPerKpi extends HttpServlet {
             long divisionOID = FRMQueryString.requestLong(request, FrmDivision.fieldNames[FrmDivision.FRM_FIELD_DIVISION_ID]);
             long departementOID = FRMQueryString.requestLong(request, FrmDepartment.fieldNames[FrmDepartment.FRM_FIELD_DEPARTMENT_ID]);
             long sectionOID = FRMQueryString.requestLong(request, FrmSection.fieldNames[FrmSection.FRM_FIELD_SECTION_ID]);
+            long kpiTargetOID = 0;
+            long kpiTargetDetailOID = 0;
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date newDateFrom = formatter.parse(dateFrom);
@@ -109,6 +124,7 @@ public class AjaxTargetPerKpi extends HttpServlet {
             entKpiTarget.setStatusDoc(docStatus);
             entKpiTarget.setCompanyId(entKpiSetting.getCompanyId());
             entKpiTarget.setCreateDate(new Date());
+            kpiTargetOID = PstKpiTarget.insertExc(entKpiTarget);
             
             // insert ke target detail
             KpiTargetDetail entKpiTargetDetail = new KpiTargetDetail();
@@ -118,10 +134,22 @@ public class AjaxTargetPerKpi extends HttpServlet {
             entKpiTargetDetail.setDateTo(newDateTo);
             entKpiTargetDetail.setKpiId(entKpiSettingList.getKpiListId());
             entKpiTargetDetail.setKpiSettingListId(entKpiSettingList.getOID());
+            entKpiTargetDetail.setKpiTargetId(kpiTargetOID);
+            kpiTargetDetailOID = PstKpiTargetDetail.insertExc(entKpiTargetDetail);
             
-            // insert ke tabel
-            
-            
+            // insert ke tabel detail employe
+            String where = PstPosition.fieldNames[PstPosition.FLD_POSITION_ID] + " = " + positionOID;
+                   where += " AND " + PstDivision.fieldNames[PstDivision.FLD_DIVISION_ID] + " = " + divisionOID;
+                   where += " AND " + PstDepartment.fieldNames[PstDepartment.FLD_DEPARTMENT_ID] + " = " + departementOID;
+                   where += " AND " + PstSection.fieldNames[PstSection.FLD_SECTION_ID] + " = " + sectionOID;
+            Vector vEmploye = PstEmployee.list(0, 0, where, "");
+            for(int i = 0; i < vEmploye.size(); i++){
+                Employee entEmploye = (Employee) vEmploye.get(i);
+                KpiTargetDetailEmployee entKpiTargetDetailEmploye = new KpiTargetDetailEmployee();
+                entKpiTargetDetailEmploye.setEmployeeId(entKpiTargetDetailEmploye.getOID());
+                entKpiTargetDetailEmploye.setKpiTargetDetailId(kpiTargetDetailOID);
+                PstKpiTargetDetailEmployee.insertExc(entKpiTargetDetailEmploye);
+            }
         } catch (ParseException ex) {
             Logger.getLogger(AjaxTargetPerKpi.class.getName()).log(Level.SEVERE, null, ex);
         } catch (DBException ex) {

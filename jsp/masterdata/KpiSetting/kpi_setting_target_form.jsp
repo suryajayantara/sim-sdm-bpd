@@ -1,5 +1,6 @@
 <%-- Document : kpi_setting_target Created on : Oct 12, 2022, 2:47:43 PM Author
 : User --%> 
+<%@page import="com.dimata.harisma.form.masterdata.FrmPosition"%>
 <%@page import="com.dimata.qdep.entity.I_DocStatus"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmSection"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmDepartment"%>
@@ -230,6 +231,12 @@
                             <div class="card-body py-0">
                                 <div class="mb-3">
                                     <div class="row datarow">
+                                        <input 
+                                            type="hidden" 
+                                            class="position-oid postion-oid-<%= i %>" 
+                                            id="position-<%= i %>"
+                                            value="<%=entPosition.getOID()%>"
+                                            />
                                         <%
                                             Vector vPositionDivision = PstPositionDivision.list(0, 0, PstPositionDivision.fieldNames[PstPositionDivision.FLD_POSITION_ID] + " = " + entPosition.getOID(), "");
                                             if(vPositionDivision.size() > 0){
@@ -532,6 +539,7 @@
                     $(".datarow").each(function(indexRow, objectRow){
                         let current = 0;
                         const totalLoop = $(".division-checkbox-" + indexRow + ":checked").size();
+                        const positionOID = $("#position-" + indexRow).val();
                         $(".division-checkbox-" + indexRow + ":checked").each(function(indexDivision, objectDivision){ 
                             if ($(objectDivision).is(":checked")){
                                 current =  indexDivision + 1;
@@ -550,16 +558,16 @@
                                                 checkedSectionCount++;
                                                 const sectionOID =  $(objectSection).val();
                                                 
-                                                ajaxPost(data(divisionOID, departemenOID, sectionOID), current, totalLoop);
+                                                ajaxPost(data(positionOID, divisionOID, departemenOID, sectionOID), current, totalLoop);
                                             }
                                         });
                                         if(checkedSectionCount === 0){
-                                            ajaxPost(data(divisionOID, departemenOID, 0), current, totalLoop);
+                                            ajaxPost(data(positionOID, divisionOID, departemenOID, 0), current, totalLoop);
                                         }
                                     }
                                 });
                                 if(checkedDepartmentCount === 0){
-                                    ajaxPost(data(divisionOID, 0, 0), current, totalLoop);
+                                    ajaxPost(data(positionOID, divisionOID, 0, 0), current, totalLoop);
                                 }
                             }
                         });
@@ -591,11 +599,13 @@
                         });
                     }
 
-                    function data(divisionOID, departmentOID, sectionOID){
+                    function data(positionOID, divisionOID, departmentOID, sectionOID){
+                        const thisPositionOID = positionOID;
                         const thisDivisionOID = divisionOID;
                         const thisDepartmentOID = departmentOID;
                         const thisSectionOID = sectionOID;
                         return {
+                            <%=FrmPosition.fieldNames[FrmPosition.FRM_FIELD_POSITION_ID]%> : thisPositionOID,
                             <%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_ID]%> : <%=entKpiSettingList.getOID()%>,
                             <%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TITLE]%> : targetTitle,
                             <%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_STATUS_DOC]%> : docStatus,
