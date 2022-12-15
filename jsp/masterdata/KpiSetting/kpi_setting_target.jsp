@@ -177,12 +177,20 @@
                         for(int i = 0; i < vKpiTargetDetail.size(); i++){
                             KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
                             KpiTarget entKpiTarget = PstKpiTarget.fetchExc(entKpiTargetDetail.getKpiTargetId());
+                            Department entDepartment = new Department();
+                            Section entSection= new Section();
+                            if(entKpiTarget.getDepartmentId() > 0){
+                                  entDepartment = PstDepartment.fetchExc(entKpiTarget.getDepartmentId());
+                            }
+                            if(entKpiTarget.getSectionId() > 0){
+                                entSection = PstSection.fetchExc(entKpiTarget.getSectionId());
+                            }
                     %>
                         <tr>
                             <td><%= i+1 %></td>
                             <td><%= PstDivision.fetchExc(entKpiTarget.getDivisionId()).getDivision() %></td>
-                            <td><%= PstDepartment.fetchExc(entKpiTarget.getDepartmentId()).getDepartment()%></td>
-                            <td><%= PstSection.fetchExc(entKpiTarget.getSectionId()).getSection() %></td>
+                            <td><%= entDepartment.getDepartment()%></td>
+                            <td><%= entSection.getSection() %></td>
                             <td><%= entKpiTarget.getTahun() %></td>
                             <td><%= entKpiTargetDetail.getPeriod() %></td>
                             <td><%= entKpiTargetDetail.getAmount() %></td>

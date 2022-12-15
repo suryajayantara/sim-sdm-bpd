@@ -110,7 +110,8 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
     public static final int ITEM_TYPE_2_COL_OVERALL_COMM = 13;
     public static final int ITEM_TYPE_INPUT_ASS_COMM = 14;
     public static final int ITEM_TYPE_INPUT_EMP_COMM = 15;
-	public static final int ITEM_TYPE_EMPLOYEE_KPI_TARGET = 16;
+    public static final int ITEM_TYPE_EMPLOYEE_KPI_TARGET = 16;
+    public static final int ITEM_TYPE_KPI_EMPLOYEE_POSITION = 17;
     public static final String[] fieldTypesName = {
         "TYPE SPACE",
         "TYPE 2 COLUMNS WITHOUT TEXT",
@@ -128,8 +129,9 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
         "TYPE 2 COL OVERALL COMMENTS",
         "TYPE INPUT ASSESSOR COMMENTS",
         "TYPE INPUT EMPLOYEE COMMENTS",
-		"TYPE EMPLOYEE KPI TARGET"
-		};
+        "TYPE EMPLOYEE KPI TARGET",
+        "TYPE KPI EMPLOYEE POSITION"
+    };
 
     /*      public static final int TYPE_DATA_STRING            = 0;
      public static final int TYPE_DATA_DATE              = 1;
