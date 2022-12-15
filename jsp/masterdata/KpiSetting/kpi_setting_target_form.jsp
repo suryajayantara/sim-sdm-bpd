@@ -356,7 +356,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     <div class="progress mb-3" style="display: none;" id="progress-div">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="progress-bar"></div>
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%" id="progress-bar"></div>
                     </div>
                     <div class="d-flex justify-content-center mt-0">
                         <button class="btn btn-primary" style="color: white" id="btn-create">
@@ -523,7 +523,7 @@
                     }
                 });
                 
-                $("body").on("click", "#btn-create",function(e){
+                $("body").on("click", "#btn-create", function(e){
                     e.preventDefault();
                     $("#alert-error").fadeOut();
                     $("#progress-div").show();
