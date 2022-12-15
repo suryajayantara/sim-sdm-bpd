@@ -174,6 +174,10 @@
         <servlet-name>AjaxTargetPerKpi</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.kpisetting.AjaxTargetPerKpi</servlet-class>
     </servlet>
+    <servlet>    
+        <servlet-name>AjaxUpdateTargetAmount</servlet-name>
+        <servlet-class>com.dimata.harisma.ajax.kpitarget.AjaxUpdateTargetAmount</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AchievementPdf</servlet-name>
         <url-pattern>/servlet/com.dimata.harisma.report.employee.AchievementPdf</url-pattern>
@@ -1662,6 +1666,10 @@
     <servlet-mapping>
         <servlet-name>AjaxTargetPerKpi</servlet-name>
         <url-pattern>/AjaxTargetPerKpi</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AjaxUpdateTargetAmount</servlet-name>
+        <url-pattern>/AjaxUpdateTargetAmount</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -23,10 +23,7 @@ import com.dimata.harisma.entity.masterdata.PstPosition;
 import com.dimata.harisma.entity.masterdata.PstSection;
 import com.dimata.harisma.form.masterdata.FrmDepartment;
 import com.dimata.harisma.form.masterdata.FrmDivision;
-import com.dimata.harisma.form.masterdata.FrmKPI_Type;
-import com.dimata.harisma.form.masterdata.FrmKpiSetting;
 import com.dimata.harisma.form.masterdata.FrmKpiSettingList;
-import com.dimata.harisma.form.masterdata.FrmKpiSettingType;
 import com.dimata.harisma.form.masterdata.FrmKpiTarget;
 import com.dimata.harisma.form.masterdata.FrmKpiTargetDetail;
 import com.dimata.harisma.form.masterdata.FrmPosition;
@@ -140,13 +137,17 @@ public class AjaxTargetPerKpi extends HttpServlet {
             // insert ke tabel detail employe
             String where = PstPosition.fieldNames[PstPosition.FLD_POSITION_ID] + " = " + positionOID;
                    where += " AND " + PstDivision.fieldNames[PstDivision.FLD_DIVISION_ID] + " = " + divisionOID;
-                   where += " AND " + PstDepartment.fieldNames[PstDepartment.FLD_DEPARTMENT_ID] + " = " + departementOID;
-                   where += " AND " + PstSection.fieldNames[PstSection.FLD_SECTION_ID] + " = " + sectionOID;
+            if(departementOID > 0){
+                where += " AND " + PstDepartment.fieldNames[PstDepartment.FLD_DEPARTMENT_ID] + " = " + departementOID;
+            }
+            if(sectionOID > 0){
+                where += " AND " + PstSection.fieldNames[PstSection.FLD_SECTION_ID] + " = " + sectionOID;
+            }    
             Vector vEmploye = PstEmployee.list(0, 0, where, "");
             for(int i = 0; i < vEmploye.size(); i++){
                 Employee entEmploye = (Employee) vEmploye.get(i);
                 KpiTargetDetailEmployee entKpiTargetDetailEmploye = new KpiTargetDetailEmployee();
-                entKpiTargetDetailEmploye.setEmployeeId(entKpiTargetDetailEmploye.getOID());
+                entKpiTargetDetailEmploye.setEmployeeId(entEmploye.getOID());
                 entKpiTargetDetailEmploye.setKpiTargetDetailId(kpiTargetDetailOID);
                 PstKpiTargetDetailEmployee.insertExc(entKpiTargetDetailEmploye);
             }

@@ -4,6 +4,8 @@
     Author     : User
 --%>
 
+<%@page import="com.dimata.harisma.form.masterdata.FrmKpiTargetDetailEmployee"%>
+<%@page import="com.dimata.harisma.form.masterdata.FrmKpiTargetDetail"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingList"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
@@ -45,25 +47,12 @@
         <title>KPI SETTING TARGET</title>  
         
         <link rel="stylesheet" href="../../styles/css_suryawan/CssSuryawan.css" type="text/css">
-        <link rel="stylesheet" href="<%=approot%>/javascripts/datepicker/themes/jquery.ui.all.css">
-        <script src="<%=approot%>/javascripts/jquery.js"></script>
-        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.core.js"></script>
-        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.widget.js"></script>
-        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.datepicker.js"></script>
 
         <link rel="stylesheet" href="../../../../styles/main.css" type="text/css">
 
-        <!--css tanggal-->
-        <link rel="stylesheet" href="<%=approot%>/javascripts/datepicker/themes/jquery.ui.all.css">
-        <script src="<%=approot%>/javascripts/jquery.js"></script>
-        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.core.js"></script>
-        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.widget.js"></script>
-        <script src="<%=approot%>/javascripts/datepicker/jquery.ui.datepicker.js"></script>
         <!--end-->
         <link rel="stylesheet" href="../../styles/main.css" type="text/css">
-        <script src="../../javascripts/jquery.min-1.6.2.js" type="text/javascript"></script>
         <script src="<%=approot%>/javascripts/jquery.js"></script>
-        <script src="../../javascripts/chosen.jquery.js" type="text/javascript"></script>
 
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
@@ -167,10 +156,10 @@
                         <td class="title_tbl">Departemen</td>
                         <td class="title_tbl">Section</td>
                         <td class="title_tbl">Tahun</td>
-                        <td class="title_tbl">periode</td>
-                        <td class="title_tbl">Target(<%= PstKPI_List.strType[entKpiList.getInputType()] %>)</td>
+                        <td class="title_tbl">Periode</td>
+                        <td class="title_tbl" width="5%">Target(<%= PstKPI_List.strType[entKpiList.getInputType()] %>)</td>
                         <td class="title_tbl">Status</td>
-                        <td class="title_tbl">Action</td>
+                        <td class="title_tbl" class="text-center">Action</td>
                     </tr>
                     <%
                         Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 0, PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_SETTING_LIST_ID] + " = " + oidKpiSettingList, "");
@@ -192,10 +181,24 @@
                             <td><%= entDepartment.getDepartment()%></td>
                             <td><%= entSection.getSection() %></td>
                             <td><%= entKpiTarget.getTahun() %></td>
-                            <td><%= entKpiTargetDetail.getPeriod() %></td>
-                            <td><%= entKpiTargetDetail.getAmount() %></td>
-                            <td><%= entKpiTarget.getStatusDoc() %></td>
-                            <td>Edit || Delete</td>
+                            <td><%= PstKpiTargetDetail.period[entKpiTargetDetail.getPeriod()] %></td>
+                            <td>
+                                <span style="cursor: pointer; color: blue;" id="target-<%=entKpiTargetDetail.getOID()%>" class="target">
+                                    <%= Math.round(entKpiTargetDetail.getAmount()) %>
+                                </span>
+                                <input type="number" 
+                                       id="inputtarget-<%=entKpiTargetDetail.getOID()%>" 
+                                       class="input-target" 
+                                       style="display: none; width: 6rem;" 
+                                       value="<%= Math.round(entKpiTargetDetail.getAmount()) %>"
+                                       />
+                            </td>
+                            <td><%= I_DocStatus.fieldDocumentStatus[entKpiTarget.getStatusDoc()] %></td>
+                            <td class="text-center">
+                                Edit 
+                                || 
+                                Delete
+                            </td>
                         </tr>
                         <tr>
                             <td></td>
@@ -205,7 +208,7 @@
                                         <td class="title_tbl">No</td>
                                         <td class="title_tbl">NIK</td>
                                         <td class="title_tbl">Nama</td>
-                                        <td class="title_tbl">Bobot Distribusi</td>
+                                        <td class="title_tbl" width="10%">Bobot Distribusi</td>
                                         <td class="title_tbl">Action</td>
                                     </tr>
                                     <%
@@ -218,7 +221,17 @@
                                             <td><%= j+1 %></td>
                                             <td><%= entEmploye.getEmployeeNum() %></td>
                                             <td><%= entEmploye.getFullName()%></td>
-                                            <td><%= entKpiTargetDetailEmploye.getBobot() %></td>
+                                            <td>
+                                                <span style="cursor: pointer; color: blue;" id="bobot-<%=entKpiTargetDetailEmploye.getOID()%>" class="bobot">
+                                                    <%= Math.round(entKpiTargetDetailEmploye.getBobot()) %>
+                                                </span>
+                                                <input type="number" 
+                                                       id="inputbobot-<%=entKpiTargetDetailEmploye.getOID()%>" 
+                                                       class="input-bobot" 
+                                                       style="display: none; width: 6rem;" 
+                                                       value="<%= Math.round(entKpiTargetDetailEmploye.getBobot()) %>"
+                                                       />
+                                            </td>
                                             <td><center>Edit || Delete</center></td>
                                         </tr>
                                     <% } %>
@@ -244,8 +257,6 @@
             </table>
         </div>
 
-        <script src="../../javascripts/jquery.min.js" type="text/javascript"></script>
-        <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script type="text/javascript">
             var config = {
@@ -296,6 +307,66 @@
                 document.frm.submit();
             }
             <%}%>
+            
+            $("body").on("click", ".target", function(){
+                const targetOID = $(this).attr("id").split("-")[1];
+                $("#inputtarget-"+targetOID).show().focus().select();
+                $(this).hide();
+            });
+            $("body").on("focusout", ".input-target", function(){
+                const targetOID = $(this).attr("id").split("-")[1];
+                const value = $(this).val();
+                if(value != ""){
+                    const data = {
+                        <%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_KPI_TARGET_DETAIL_ID]%> : targetOID,
+                        <%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_AMOUNT]%> : value,
+                        isTarget: true
+                    }
+                    $.ajax({
+                        url: "<%=approot%>/AjaxUpdateTargetAmount",
+                        type: 'POST',
+                        data: data,
+                        success: function() {
+                            $("#target-"+targetOID).text(value);
+                        },
+                        error: function(){
+                            alert("Terjadi kesalahan pada server.");
+                        }
+                    });
+                }
+                $("#target-"+targetOID).show();
+                $(this).hide();
+            });
+            
+            $("body").on("click", ".bobot", function(){
+                const OID = $(this).attr("id").split("-")[1];
+                $("#inputbobot-"+OID).show().focus().select();
+                $(this).hide();
+            });
+            $("body").on("focusout", ".input-bobot", function(){
+                const OID = $(this).attr("id").split("-")[1];
+                const value = $(this).val();
+                if(value != ""){
+                    const data = {
+                        <%=FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_KPI_TARGET_DETAIL_EMPLOYEE_ID]%> : OID,
+                        <%=FrmKpiTargetDetailEmployee.fieldNames[FrmKpiTargetDetailEmployee.FRM_FIELD_BOBOT]%> : value,
+                        isTarget : false
+                    }
+                    $.ajax({
+                        url: "<%=approot%>/AjaxUpdateTargetAmount",
+                        type: 'POST',
+                        data: data,
+                        success: function() {
+                            $("#bobot-"+OID).text(value);
+                        },
+                        error: function(){
+                            alert("Terjadi kesalahan pada server.");
+                        }
+                    });
+                }
+                $("#bobot-"+OID).show();
+                $(this).hide();
+            });
         </script>
     </body>
 </html>
