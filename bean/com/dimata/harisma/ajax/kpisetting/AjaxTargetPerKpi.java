@@ -93,7 +93,7 @@ public class AjaxTargetPerKpi extends HttpServlet {
         processRequest(request, response);
         try {
             long positionOID = FRMQueryString.requestLong(request, FrmPosition.fieldNames[FrmPosition.FRM_FIELD_POSITION_ID]);
-            long kpiSettingListOID = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_ID]);
+            long kpiSettingListOID = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
             String targetTitle = FRMQueryString.requestString(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TITLE]);
             int docStatus = FRMQueryString.requestInt(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_STATUS_DOC]);
             int tahun = FRMQueryString.requestInt(request, FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TAHUN]);

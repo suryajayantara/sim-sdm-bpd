@@ -121,7 +121,7 @@
         </div>
             
         <div class="content-main">
-            <a href="javascript:cmdBack();" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
+        <a href="javascript:cmdBack();" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
             <div class="formstyle" style="margin-top: 1rem;">
                 <!--judul ini merupakan judul dari KPI-->
                 <span><%= entKpiList.getKpi_title() %></span>
