@@ -757,7 +757,22 @@ public class PstEmployee extends DBHandler implements I_DBInterface, I_DBType, I
         }
     }
 
-    
+    public static Employee getNumAndFullname(long oid) throws DBException {
+        try {
+            Employee employee = new Employee();
+            PstEmployee pstEmployee = new PstEmployee(oid);
+            employee.setOID(oid);
+
+            employee.setEmployeeNum(pstEmployee.getString(FLD_EMPLOYEE_NUM));
+            employee.setFullName(pstEmployee.getString(FLD_FULL_NAME));
+            
+            return employee;
+        } catch (DBException dbe) {
+            throw dbe;
+        } catch (Exception e) {
+            throw new DBException(new PstEmployee(0), DBException.UNKNOWN);
+        }
+    }
     
     public static Hashtable fetchExcHashtable(long oid) throws DBException {
         
