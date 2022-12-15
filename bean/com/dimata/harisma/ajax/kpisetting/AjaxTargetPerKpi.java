@@ -119,6 +119,8 @@ public class AjaxTargetPerKpi extends HttpServlet {
             entKpiTargetDetail.setKpiId(entKpiSettingList.getKpiListId());
             entKpiTargetDetail.setKpiSettingListId(entKpiSettingList.getOID());
             
+            // insert ke tabel
+            
             
         } catch (ParseException ex) {
             Logger.getLogger(AjaxTargetPerKpi.class.getName()).log(Level.SEVERE, null, ex);

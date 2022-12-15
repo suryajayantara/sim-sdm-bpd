@@ -4,6 +4,7 @@
     Author     : User
 --%>
 
+<%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingList"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.entity.masterdata.PstPosition"%>
@@ -19,23 +20,21 @@
 <%@ include file = "../../main/checkuser.jsp" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+<%    long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
 
     int iCommand = FRMQueryString.requestCommand(request);
     String urlBack = FRMQueryString.requestString(request, "urlBack");
-
-    CtrlKpiSetting ctrlKpiSetting = new CtrlKpiSetting(request);
-    long iErrCode = ctrlKpiSetting.action(iCommand, oidKpiSetting, request);
-    KpiSetting kpiSetting = ctrlKpiSetting.getKpiSetting();
-    if (iCommand == Command.SAVE) {
-        iCommand = 0;
-
+    
+    KpiSetting entKpiSetting = new KpiSetting();
+    KpiSettingList entKpiSettingList = new KpiSettingList();
+    if(oidKpiSettingList > 0){
+        entKpiSettingList = PstKpiSettingList.fetchExc(oidKpiSettingList);
+        entKpiSetting = PstKpiSetting.fetchExc(entKpiSettingList.getKpiSettingId());
     }
     Vector listKpiSettingTarget = new Vector();
 
-    Vector listKpiSettingTarget = new Vector();
     /*menampung data jabatan dalam vektor*/
-    Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
+    Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(entKpiSetting.getOID());
 
     Vector vKpiGroup = new Vector();
 
@@ -72,14 +71,14 @@
             /*untuk tombol back yang dimana kondisi khususnya, memiliki 1 jsp, tapi jsp tersebut bisa di akses dari beberapa jsp lain*/
             <%if (urlBack.equals("kpi_setting_list_detail.jsp")) {%>
             function cmdBack() {
-                document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=oidKpiSetting%>";
+                document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=entKpiSetting.getOID()%>";
                 document.frm.command.value = "<%= Command.EDIT%>";
                 document.frm.action = "kpi_setting_list_detail.jsp";
                 document.frm.submit();
             }
             <%} else {%>
             function cmdBack() {
-                document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=oidKpiSetting%>";
+                document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=entKpiSetting.getOID()%>";
                 document.frm.command.value = "<%= Command.EDIT%>";
                 document.frm.action = "kpi_setting_form.jsp";
                 document.frm.submit();
@@ -137,158 +136,93 @@
         <div id="menu_utama">
             <span id="menu_title">KPI Setting Detail/KPI Setting Target</span>
         </div>
-        <form name="frm" method="post" action="">
-            <input type="hidden" name="command" value="<%= iCommand%>"> 
-            <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>">
-            <div class="box">
-                <div class="content-main">
-                    <!--judul ini merupakan judul dari KPI-->
-                    <div id="box-title">Pendapatan Bunga kredit Korporasi
-                        <a href="javascript:cmdBack();" style="color:#FFF;float: right;" class="btn-back btn-back1">Kembali</a></div>
-                    <!--End-->
-                    <div id="box-content">
-                        <table>
+            
+        <div class="content-main">
+            <a href="javascript:cmdBack();" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
+            <div class="formstyle" style="margin-top: 1rem;">
+                <!--judul ini merupakan judul dari KPI-->
+                <span>Pendapatan Bunga kredit Korporasi</span>
+                <hr>
+                <table>
+                    <tr>
+                        <td>
+                            <br><div style="font-size: 12px;">Perusahaan:<%=PstCompany.getCompanyName(entKpiSetting.getCompanyId())%></div>
+                            <br><div style="font-size: 12px;">Jabatan        :
+                                <%
+                                    vListPosisi = PstPosition.listWithJoinKpiSettingPosition(entKpiSetting.getOID());
+                                    for (int i = 0; i < vListPosisi.size(); i++) {
+                                        Position objPosisi = (Position) vListPosisi.get(i);
+                                %>
+                                <%=objPosisi.getPosition()%>,
+                                <%
+                                    }
+                                %>
+                            </div>
+                            <br><div style="font-size: 12px;">Status         :<%= I_DocStatus.fieldDocumentStatus[entKpiSetting.getStatus()]%></div>
+                            <br><div style="font-size: 12px;">Tanggal Mulai  :<%= entKpiSetting.getStartDate()%></div>
+                            <br><div style="font-size: 12px;">Tanggal Selesai:<%= entKpiSetting.getValidDate()%></div>
+                            <br><div style="font-size: 12px;">KPI Group      :</div>
+                            <br><div style="font-size: 12px;">KPI            :</div>
+                            <br><div style="font-size: 12px;">Tahun          :<%= entKpiSetting.getTahun()%></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
+                <span style="font-size: 15px"><strong>KPI Target Per Satuan Kerja</strong></span>
+                <form action="kpi_setting_target_form.jsp" method="POST">
+                    <input type="hidden" name="<%= FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID] %>" value="<%= entKpiSettingList.getOID() %>">
+                    <button type="submit" style="color:#fff; border: none;" class="btn-add btn-add1">Tambah Data Target <i class="fa fa-plus"></i></a>
+                </form>
+                <!--<a href="" style="color:#fff;" class="btn-copy btn-copy1">Salin Data Target Sebelumnya <strong><i class="fa fa-copy"></i></strong></a>-->
+            </div>
+            <div class="formstyle" style="margin-bottom: 1rem;">
+                <table class="tblStyle" style="width:100%">
+                    <tr>
+                        <td class="title_tbl"></td>
+                        <td class="title_tbl">Satuan Kerja</td>
+                        <td class="title_tbl">Unit Kerja</td>
+                        <td class="title_tbl">Sub Unit</td>
+                        <td class="title_tbl">Tahun</td>
+                        <td class="title_tbl">periode</td>
+                        <td class="title_tbl">Ka</td>
+                        <td class="title_tbl">Target(%)</td>
+                        <td class="title_tbl">Status</td>
+                        <td class="title_tbl"></td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>Edit || Delete</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="9">
+
+                        <table class="tblStyle" style="width:100%">
+                            <td class="title_tbl">No</td>
+                            <td class="title_tbl">NIK</td>
+                            <td class="title_tbl">Nama</td>
+                            <td class="title_tbl">Bobot Distribusi</td>
+                            <td class="title_tbl">Action</td>
                             <tr>
-                                <td>
-                                    <br><div style="font-size: 12px;">Perusahaan:<%=PstCompany.getCompanyName(kpiSetting.getCompanyId())%></div>
-                                    <br><div style="font-size: 12px;">Jabatan        :
-                                        <%
-                                            Vector vListPosisi = PstPosition.listWithJoinKpiSettingPosition(kpiSetting.getOID());
-                                            for (int i = 0; i < vListPosisi.size(); i++) {
-                                                Position objPosisi = (Position) vListPosisi.get(i);
-                                        %>
-                                        <%=objPosisi.getPosition()%>,
-                                        <%
-                                            }
-                                        %>
-                                    </div>
-                                    <br><div style="font-size: 12px;">Status         :<%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
-                                    <br><div style="font-size: 12px;">Tanggal Mulai  :<%= kpiSetting.getStartDate()%></div>
-                                    <br><div style="font-size: 12px;">Tanggal Selesai:<%= kpiSetting.getValidDate()%></div>
-                                    <br><div style="font-size: 12px;">KPI Group      :</div>
-                                    <br><div style="font-size: 12px;">KPI            :</div>
-                                    <br><div style="font-size: 12px;">Tahun          :<%= kpiSetting.getTahun()%></div>
-                                </td>
+                                <td>1</td>
+                                <td>2352364634</td>
+                                <td>Surya</td>
+                                <td>70%</td>
+                                <td><center>Edit || Delete</center></td>
                             </tr>
                         </table>
-                        <div style="border-top: 1px solid #DDD;">&nbsp;</div>
-                        <h3>KPI Target Per Satuan Kerja</h3>
-                        <div>&nbsp;</div>
-                        <a href="kpi_setting_target_form.jsp?<%= FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>=<%= kpiSetting.getOID()%>" style="color:#fff;" class="btn-add btn-add1">Tambah Data <strong><i class="fa fa-plus"></i></strong></a>
-                        <a href="" style="color:#fff;" class="btn-copy btn-copy1">Salin Data Target Sebelumnya <strong><i class="fa fa-copy"></i></strong></a>
-                        <div>&nbsp;</div>
-                        <table class="tblStyle" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th class="title_tbl">No.</th>
-                                    <th class="title_tbl">Satuan Kerja</th>
-                                    <th class="title_tbl">Unit Kerja</th>
-                                    <th class="title_tbl">Sub Unit</th>
-                                    <th class="title_tbl">Tahun</th>
-                                    <th class="title_tbl">periode</th>
-                                    <th class="title_tbl">Ka</th>
-                                    <th class="title_tbl">Target(%)</th>
-                                    <th class="title_tbl">Status</th>
-                                    <th class="title_tbl">Action</th>
-                                </tr>
-                            </thead>
-
-                            <div style="font-size: 15px">:
-                                <%
-                                    for (int j = 0; j < vListPosisi.size(); j++) {
-                                        Position objPosition = (Position) vListPosisi.get(j);
-                                %>
-                                <%= objPosition.getPosition()%>
-                                <% if (j != vListPosisi.size() - 1) {%>
-                                <br> &nbsp;
-                                <%}%>
-                                <%}%>
-                            </div>
-                            <div style="font-size: 15px">: <%= I_DocStatus.fieldDocumentStatus[kpiSetting.getStatus()]%></div>
-                            <div style="font-size: 15px">: <%= kpiSetting.getStartDate()%></div>
-                            <div style="font-size: 15px">: <%= kpiSetting.getValidDate()%></div>
-                            <div style="font-size: 15px">: <%= kpiSetting.getTahun()%></div>
-                            <div style="font-size: 15px">: 
-                                <%
-                                    String kpiGroupQuery = "hr_kpi_setting_type.`KPI_SETTING_ID`='" + oidKpiSetting + "' AND hr_kpi_setting_type.`KPI_TYPE_ID`='" + kpiType.getOID() + "'";
-                                    vKpiGroup = PstKPI_Group.listWithJoinSettingAndType(kpiGroupQuery);
-                                    if (vKpiGroup.size() > 0) {
-                                        for (int j = 0; j < vKpiGroup.size(); j++) {
-                                            KPI_Group objKpiGroup = (KPI_Group) vKpiGroup.get(j);
-                                %>
-                                <%=objKpiGroup.getGroup_title()%>
-                            </div>
-                            <%}
-                                }%>
-                        </div>
-                    </div>
-                    <%
-                            }
-                        }
-                    %>
-                    <div style="border-top: 1px solid #DDD;">&nbsp;</div>
-                    <%
-                        
-                    %>
-                    <h4>KPI Target Per Satuan Kerja</h4>
-                    <div>&nbsp;</div>
-                    <a href="javascript:cmdAdd('<%=kpiSetting.getOID() %>')" style="color:#fff;" class="btn-add btn-add1">Tambah Data Target<strong>&nbsp;<i class="fa fa-plus"></i></strong></a>
-                    <!--<a href="" style="color:#fff;" class="btn-copy btn-copy1">Salin Data Target Sebelumnya <strong><i class="fa fa-copy"></i></strong></a>-->
-                    <div>&nbsp;</div>
-                    <table class="tblStyle" style="width:100%">
-                        <tr>
-                            <td class="title_tbl"></td>
-                            <td class="title_tbl">Satuan Kerja</td>
-                            <td class="title_tbl">Unit Kerja</td>
-                            <td class="title_tbl">Sub Unit</td>
-                            <td class="title_tbl">Tahun</td>
-                            <td class="title_tbl">periode</td>
-                            <td class="title_tbl">Ka</td>
-                            <td class="title_tbl">Target(%)</td>
-                            <td class="title_tbl">Status</td>
-                            <td class="title_tbl"></td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                            <td>6</td>
-                            <td>7</td>
-                            <td>8</td>
-                            <td>9</td>
-                            <td>Edit || Delete</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td colspan="9">
-
-                                <table class="tblStyle" style="width:100%">
-                                    <td class="title_tbl">No</td>
-                                    <td class="title_tbl">NIK</td>
-                                    <td class="title_tbl">Nama</td>
-                                    <td class="title_tbl">Bobot Distribusi</td>
-                                    <td class="title_tbl">Action</td>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>2352364634</td>
-                                        <td>Surya</td>
-                                        <td>70%</td>
-                                        <td><center>Edit || Delete</center></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>2352364634</td>
-                            <td>Surya</td>
-                            <td>70%</td>
-                            <td><center>Edit || Delete</center></td>
-                        </tr>
-
-                    </table>
-                    </table>
-                    <div>&nbsp;</div>     
-                </div>
+                    </tr>
+                </table> 
             </div>
         </div>
     </form>
@@ -342,14 +276,14 @@
                     /*untuk tombol back yang dimana kondisi khususnya, memiliki 1 jsp, tapi jsp tersebut bisa di akses dari beberapa jsp lain*/
             <%if (urlBack.equals("kpi_setting_list_detail.jsp")) {%>
                     function cmdBack() {
-                        document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=oidKpiSetting%>";
+                        document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=entKpiSetting.getOID()%>";
                         document.frm.command.value = "<%= Command.EDIT%>";
                         document.frm.action = "kpi_setting_list_detail.jsp";
                         document.frm.submit();
                     }
             <%} else {%>
                     function cmdBack() {
-                        document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=oidKpiSetting%>";
+                        document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = "<%=entKpiSetting.getOID()%>";
                         document.frm.command.value = "<%= Command.EDIT%>";
                         document.frm.action = "kpi_setting_form.jsp";
                         document.frm.submit();
