@@ -201,9 +201,13 @@ public class CtrlKpiSetting extends Control implements I_Language {
                         /*contoh menghapus child dulu baru ke parent*/
                         PstKpiSettingPosition kpiSettingPosition = new PstKpiSettingPosition();
                         PstKpiSettingType kpiSettingType = new PstKpiSettingType();
+                        PstKpiSettingGroup kpiSettingGroup = new PstKpiSettingGroup();
+                        PstKpiSettingList kpiSettingList = new PstKpiSettingList();
+                        long settingList = kpiSettingList.deleteKpiListByKpiSetting(oidKpiSetting);
+                        long settingGroup = kpiSettingGroup.deleteGroupByKpiSetting(oidKpiSetting);
                         long status = kpiSettingPosition.deleteByKpiSettingId(oidKpiSetting);
                         long settingType = kpiSettingType.deleteByKpiSetting(oidKpiSetting);
-                        if (status != 0 && settingType !=0 ) {
+                        if (status != 0 && settingType !=0 && settingGroup !=0 && settingList !=0) {
                                 long oid = PstKpiSetting.deleteExc(oidKpiSetting);
                             if (oid != 0) {
                                 msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);

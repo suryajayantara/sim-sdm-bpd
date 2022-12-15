@@ -73,6 +73,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>KPI SETTING</title>
 
+        <!--alert-->
+        <link rel="stylesheet" href="<%=approot%>/styles/sweetalert2.min.css">
+        <script src="<%=approot%>/javascripts/sweetalert2.all.min.js"></script>
+        <!--end-->
+        
         <link rel="stylesheet" href="../../styles/css_suryawan/CssSuryawan.css" type="text/css">
         <link rel="stylesheet" href="../../styles/main.css" type="text/css">
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
@@ -113,6 +118,43 @@
                 document.frm.action = "kpi_setting_list.jsp";
                 document.frm.submit();
             }
+            function cmdDeleteConfirmationKpiSetting(oid) {
+                Swal.fire({
+                    title: 'Apakah Anda Yakin?',
+                    text: "Anda Akan Menghapus Data Kpi Setting Beserta Seluruh Data Yang Ada Di Dalamnya!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya Hapus Data Kpi Setting!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        cmdDelete(oid);
+                    }
+                })
+            }
+//end
+//SWEET ALERT
+            <% if (iCommand == Command.DELETE) {%>
+            $(document).ready(function () {
+                Swal.fire({
+                    title: 'Deleted',
+                    text: "Your data has been deleted!",
+                    icon: 'success'
+                })
+            });
+            <%}%>
+
+            <% if (iCommand == Command.SAVE) {%>
+            $(document).ready(function () {
+                Swal.fire({
+                    title: 'Saved',
+                    text: "Your data has been saved!",
+                    icon: 'success'
+                })
+            });
+            <%}%>
+//END
             function cmdDetail(oid) {
                 document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 document.frm.command.value = "<%= Command.EDIT%>";
@@ -275,11 +317,10 @@
             %>
             <div class="box">
                 <div>
-
+                    
                 </div>
                 <div class="content-main">
                     <!--<a href="javascript:cmdEdit()" style="color:#FFF;" class="btn-edit">Edit</a>-->
-
                     <div>&nbsp;</div>
                     <table class="tblStyle" style="width: 100%;">
                         <tr>
@@ -321,15 +362,21 @@
 
                                     <a href="javascript:cmdDetail('<%=kpiSettingList.getOID()%>')" style="color: #FFF;" class="btn-detail btn-detail1">Detail</a>&nbsp; 
                                     <a href="javascript:cmdEdit('<%=kpiSettingList.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a> &nbsp;
-                                    <a href="javascript:cmdDelete('<%=kpiSettingList.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                    <a href="javascript:cmdDeleteConfirmationKpiSetting('<%=kpiSettingList.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
 
                                 </div>
                             </td>
                         </tr>
                         <%
                                 }
-                            }
+                            }else{
                         %>
+                        <tr>
+                            <td class="text-center" colspan="7"> Data tidak ditemukan. </td>
+                        </tr>
+                        <%
+                            }
+                            %>
                     </table>
 
                     <% }%>

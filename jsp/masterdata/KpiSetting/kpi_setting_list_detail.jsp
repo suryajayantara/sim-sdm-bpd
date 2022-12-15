@@ -28,6 +28,7 @@ Author : User --%>
     long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     long oidKpiSettingType = FRMQueryString.requestLong(request, "kpi_setting_type_id");
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
+    long kpiSettingListId = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]);
     long oidKpiSettingGroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]);
     int iCommand = FRMQueryString.requestCommand(request);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
@@ -54,10 +55,10 @@ Author : User --%>
     }
     KpiSettingType kpiSettingType = ctrlKpiSettingType.getKpiSettingType();
     CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
-    long iErrCodeSettingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
-    if (iCommand == Command.SAVE) {
-        iCommand = 0;
-    }
+        long iErrCodeSettingGroup = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
+        if (iCommand == Command.SAVE) {
+            iCommand = 0;
+        }
     KpiSettingGroup kpiSettingGroup = ctrlKpiSettingGroup.getKpiSettingGroup();
     CtrlKpiSettingList ctrlKpiSettingList = new CtrlKpiSettingList(request);
     long iErrCodeSetttingList = ctrlKpiSettingList.action(iCommand, oidKpiSettingList, request);
