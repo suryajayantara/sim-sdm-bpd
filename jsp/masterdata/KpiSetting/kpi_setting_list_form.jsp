@@ -278,6 +278,12 @@
         <!--end-->
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
+        
+        <!--alert-->
+        <link rel="stylesheet" href="<%=approot%>/styles/sweetalert2.min.css">
+        <script src="<%=approot%>/javascripts/sweetalert2.all.min.js"></script>
+        <!--end-->
+        
     </head>
     <body onload="refreshAndClose()">
         <div class="header">
@@ -390,7 +396,7 @@
                             <a href="javascript:openModal('<%= objKpiGroup.getOID() %>', '<%= objKpiGroup.getGroup_title() %>','<%=objKpiSettingGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-add btn-add1 mx-2">Tambah KPI
                                 <strong><i class="fa fa-plus"></i></strong>
                             </a>
-                            <a href="javascript:cmdDeleteGroup('<%=objKpiGroup.getOID() %>', '<%= oidKpiSetting %>','<%=objKpiSettingGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
+                            <a href="javascript:cmdDeleteConfirmationKpiGroup('<%=objKpiGroup.getOID() %>', '<%= oidKpiSetting %>','<%=objKpiSettingGroup.getOID() %>')" type="hidden" style="color:#FFF;" class="btn-delete btn-delete1">
                                 <strong><i class="fa fa-trash"></i></strong>
                             </a>
                         </div>
@@ -434,7 +440,7 @@
                                 <td>
                                     <div class="responsive-container">
                                         <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>
-                                        <a href="javascript:cmdDeleteKpiSettingList('<%=oidKpiSetting%>', '<%=objKpiList.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
+                                        <a href="javascript:cmdDeleteConfirmationKpiList('<%=oidKpiSetting%>', '<%=objKpiList.getOID()%>')" style="color: #FFF;" class="btn-delete btn-delete1">Delete</a>
                                     </div>
                                 </td>
                             </tr>
@@ -536,6 +542,8 @@
         <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
         <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
         <script language="JavaScript">
+
+            
             $(document).ready(function(){
                 $('[data-toggle="popover"]').popover();
                 $('.select2').select2();
@@ -560,13 +568,28 @@
                 document.FRM_NAME_KPISETTINGLISTFORM.action = "kpi_setting_list_form.jsp";
                 document.FRM_NAME_KPISETTINGLISTFORM.submit();
             }
+            function cmdDeleteConfirmationKpiGroup(oidKpiGroup, oidKpiSetting, kpiSettingGroupOid) {
+                Swal.fire({
+                    title: 'Apakah Anda Yakin?',
+                    text: "Anda Akan Menghapus Data Kpi Group Dengan Data Kpi Jika ada!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya Hapus Data Kpi Group!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        cmdDeleteGroup(oidKpiGroup, oidKpiSetting, kpiSettingGroupOid);
+                    }
+                })
+            }
             function cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList) {
-                    if (confirm("Data KPI List akan terhapus, anda yakin?")) {
+      
                         var strUrl = "";
                         var xmlhttp = new XMLHttpRequest();
                         xmlhttp.onreadystatechange = function () {
                             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                alert("Data berhasil dihapus");
+                                
                                 window.location.reload();
                             }
                         }
@@ -578,9 +601,23 @@
 
                         xmlhttp.open("GET", strUrl, true);
                         xmlhttp.send();
-                    }
+                    
                 }
-
+             function cmdDeleteConfirmationKpiList(oidKpiSetting, oidKpiList) {
+                Swal.fire({
+                    title: 'Apakah Anda Yakin?',
+                    text: "Anda Akan Menghapus Data Kpi List!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya Hapus Data Kpi List!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList);
+                    }
+                })
+            }
             function openModal(oidKpiGroup, groupName, oidkpiSettingGroup) {
                 var strUrl = "";
                 var xmlhttp = new XMLHttpRequest();
