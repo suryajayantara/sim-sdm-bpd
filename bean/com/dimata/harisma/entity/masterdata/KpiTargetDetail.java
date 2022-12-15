@@ -114,6 +114,6 @@ public class KpiTargetDetail extends Entity {
 	}
 
 	public void setIndexPeriod(int indexPeriod) {
-		this.weightValue = indexPeriod;
+		this.indexPeriod = indexPeriod;
 	}
 }

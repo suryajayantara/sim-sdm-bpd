@@ -1,5 +1,6 @@
 <%-- Document : kpi_setting_target Created on : Oct 12, 2022, 2:47:43 PM Author
 : User --%> 
+<%@page import="com.dimata.harisma.form.masterdata.FrmPosition"%>
 <%@page import="com.dimata.qdep.entity.I_DocStatus"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmSection"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmDepartment"%>
@@ -17,8 +18,6 @@
 <%    
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
     int tahun = Calendar.getInstance().get(Calendar.YEAR);
-    String divisionOID = "";
-    String departementOID = "";
 
     KpiSettingList entKpiSettingList = PstKpiSettingList.fetchExc(oidKpiSettingList);
     KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
@@ -114,250 +113,260 @@
         <div id="menu_utama">
             <span id="menu_title">KPI Setting Target Form / KPI Setting Target</span>
         </div>
-        <form name="frm" method="post" action="">
-            <div class="box">
-                <div class="content-main">
-                    <h6 class="fw-bold"><%= entCompany.getCompany()%></h6>
-                    <h6><%= entKpiList.getKpi_title()%></h6>
-                    <hr />
+        <div class="content-main">
+            <form method="POST" action="kpi_setting_target.jsp" id="form-back">
+                <input 
+                    type="hidden"
+                    name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>"
+                    value="<%=entKpiSettingList.getOID()%>"
+                    />
+            </form>
+            <button class="btn-back btn-back1 mb-2" style="color: white; border: none;" id="btn-back" onclick="$('#form-back').submit();">
+                Kembali
+            </button>
+            <div class="formstyle">
+                <h6 class="fw-bold"><%= entCompany.getCompany()%></h6>
+                <h6><%= entKpiList.getKpi_title()%></h6>
+                <hr />
 
-                    <div>
-                        <div class="row">
-                            <div class="col-10">
-                                <div class="mb-3">
-                                    <label for="exampleInputEmail1">Judul Target</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="<%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TITLE]%>"
-                                        id="target-title"
-                                        />
-                                </div>
-                            </div>
-                                        
-                            <div class="col-2">
-                                <div class="mb-3">
-                                    <label for="exampleInputEmail1">Status</label>
-                                    <%
-                                        Vector val_status = new Vector(1, 1);
-                                        Vector key_status = new Vector(1, 1);
-                                        long oidTarget = 0;
-                                        KpiTarget kpiTarget = new KpiTarget();
-
-                                        val_status.add(String.valueOf(I_DocStatus.DOCUMENT_STATUS_DRAFT));
-                                        key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_DRAFT]);
-
-                                        if (oidTarget > 0) {
-                                            val_status.add(String.valueOf(I_DocStatus.DOCUMENT_STATUS_TO_BE_APPROVED));
-                                            key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_TO_BE_APPROVED]);
-
-                                            val_status.add(String.valueOf(I_DocStatus.DOCUMENT_STATUS_CANCELLED));
-                                            key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_CANCELLED]);
-                                        }
-                                    %>
-                                    <%= ControlCombo.draw(FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_STATUS_DOC], "form-control", null, "" + kpiTarget.getStatusDoc(), val_status, key_status, "id='doc-status'")%>
-                                </div>
+                <div>
+                    <div class="row">
+                        <div class="col-10">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1">Judul Target</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="<%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TITLE]%>"
+                                    id="target-title"
+                                    />
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="exampleInputEmail1">Tahun</label>
-                                    <%= ControlCombo.draw(FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TAHUN], "form-control", null, "" + tahun, valTahun, valTahun, " id='tahun'")%>
-                                </div>
+                        <div class="col-2">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1">Status</label>
+                                <%
+                                    Vector val_status = new Vector(1, 1);
+                                    Vector key_status = new Vector(1, 1);
+                                    long oidTarget = 0;
+                                    KpiTarget kpiTarget = new KpiTarget();
+
+                                    val_status.add(String.valueOf(I_DocStatus.DOCUMENT_STATUS_DRAFT));
+                                    key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_DRAFT]);
+
+                                    if (oidTarget > 0) {
+                                        val_status.add(String.valueOf(I_DocStatus.DOCUMENT_STATUS_TO_BE_APPROVED));
+                                        key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_TO_BE_APPROVED]);
+
+                                        val_status.add(String.valueOf(I_DocStatus.DOCUMENT_STATUS_CANCELLED));
+                                        key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_CANCELLED]);
+                                    }
+                                %>
+                                <%= ControlCombo.draw(FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_STATUS_DOC], "form-control", null, "" + kpiTarget.getStatusDoc(), val_status, key_status, "id='doc-status'")%>
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="exampleInputEmail1">Periode</label>
-                                    <%
-                                        Vector periode_value = new Vector(1, 1);
-                                        Vector periode_key = new Vector(1, 1);
-                                        for (int i = 0; i < PstKpiTargetDetail.period.length; i++) {
-                                            periode_key.add(PstKpiTargetDetail.period[i]);
-                                            periode_value.add(String.valueOf(i));
-                                        }
-
-                                    %>
-                                    <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "form-control", "~Pilih Periode~", "", periode_value, periode_key, " id='periode'")%> 
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="exampleInputEmail1">Periode Index</label>
-                                    <select name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_INDEX_PERIOD]%>" id="periode-index" class="form-control">
-
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="exampleInputEmail1">Date From</label>
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="date-from"
-                                        name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_FROM]%>"
-                                        />
-                                </div>
-                            </div>
-
-                            <div class="col">
-                                <div class="mb-3">
-                                    <label for="exampleInputEmail1">Date To</label>
-                                    <input
-                                        type="date"
-                                        class="form-control"
-                                        id="date-to"
-                                        name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_TO]%>"
-                                        />
-                                </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1">Tahun</label>
+                                <%= ControlCombo.draw(FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TAHUN], "form-control", null, "" + tahun, valTahun, valTahun, " id='tahun'")%>
                             </div>
                         </div>
 
-                        <!--looping data position-->
-                        <%
-                            if (vKpiSettingPosition.size() > 0) {
-                                for (int i = 0; i < vKpiSettingPosition.size(); i++) {
-                                    KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(i);
-                                    Position entPosition = PstPosition.fetchExc(entKpiSettingPosition.getPositionId());
-                        %>
-                        <div class="card mb-3">
-                            <div class="card-title p-2" style="background-color: #ededed"><%= entPosition.getPosition()%></div>
-                            <div class="card-body py-0">
-                                <div class="mb-3">
-                                    <div class="row datarow">
-                                        <%
-                                            Vector vPositionDivision = PstPositionDivision.list(0, 0, PstPositionDivision.fieldNames[PstPositionDivision.FLD_POSITION_ID] + " = " + entPosition.getOID(), "");
-                                            if(vPositionDivision.size() > 0){
-                                                for(int j = 0; j < vPositionDivision.size(); j++){
-                                                    String comma = "";
-                                                    PositionDivision entPositionDivision = (PositionDivision) vPositionDivision.get(j);
-                                                    Division entDivision = PstDivision.fetchExc(entPositionDivision.getDivisionId());
-                                                    if((j + 1) != vPositionDivision.size()){
-                                                        comma = ",";
-                                                    }
-                                                    divisionOID += entDivision.getOID() + comma;
-                                        %>
-                                                    <div class="col-3 mb-3">
-                                                        <table>
-                                                            <tr>
-                                                                <td colspan="2">
-                                                                    <span class="fw-bold">Divisi</span>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="width: 1%; vertical-align: top;">
-                                                                    <input 
-                                                                        type="checkbox" 
-                                                                        name="<%= FrmDivision.fieldNames[FrmDivision.FRM_FIELD_DIVISION_ID] %>-<%= i %>-<%= j %>" 
-                                                                        class="division-checkbox division-checkbox-<%= i %>" 
-                                                                        id="division-<%= i %>-<%= j %>"
-                                                                        value="<%=entDivision.getOID()%>"
-                                                                        />
-                                                                </td>
-                                                                <td>
-                                                                    <label class="me-2 checkbox-inline" for="division-<%= i %>-<%= j %>"><%= entDivision.getDivision() %></label> <br/>
-                                                                    <table class="mt-1 department-table" style="display: none" id="departementtable-<%= i %>-<%= j %>">
-                                                                        <tr>
-                                                                            <td colspan="2">
-                                                                                <span class="fw-bold">Department</span><br/>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <%
-                                                                            Vector vDepartment = PstDepartment.listVerySimple(PstDepartment.fieldNames[PstDepartment.FLD_DIVISION_ID]+ " = " + entDivision.getOID());
-                                                                            for(int k = 0; k < vDepartment.size(); k++){
-                                                                                Department entDepartment = (Department) vDepartment.get(k);
-                                                                        %>
-                                                                        <tr>
-                                                                            <td style="width: 1%; vertical-align: top;">
-                                                                                <input 
-                                                                                    type="checkbox" 
-                                                                                    name="<%= FrmDepartment.fieldNames[FrmDepartment.FRM_FIELD_DEPARTMENT_ID] %>-<%= i %>-<%= j %>-<%= k %>" 
-                                                                                    class="department-checkbox department-checkbox-<%=entDivision.getOID()%>" 
-                                                                                    id="department-<%= i %>-<%= j %>-<%= k %>"
-                                                                                    value="<%=entDepartment.getOID()%>"/>
-                                                                            </td>
-                                                                            <td>
-                                                                                <label class="me-2 checkbox-inline" for="department-<%= i %>-<%= j %>-<%= k %>"><%= entDepartment.getDepartment()%></label><br>
-                                                                                <table class="mt-1" style="display: none" id="sectiontable-<%= i %>-<%= j %>-<%= k %>">
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1">Periode</label>
+                                <%
+                                    Vector periode_value = new Vector(1, 1);
+                                    Vector periode_key = new Vector(1, 1);
+                                    for (int i = 0; i < PstKpiTargetDetail.period.length; i++) {
+                                        periode_key.add(PstKpiTargetDetail.period[i]);
+                                        periode_value.add(String.valueOf(i));
+                                    }
+
+                                %>
+                                <%=ControlCombo.draw(FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_PERIOD], "form-control", "~Pilih Periode~", "", periode_value, periode_key, " id='periode'")%> 
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1">Periode Index</label>
+                                <select name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_INDEX_PERIOD]%>" id="periode-index" class="form-control">
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1">Date From</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="date-from"
+                                    name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_FROM]%>"
+                                    />
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="mb-3">
+                                <label for="exampleInputEmail1">Date To</label>
+                                <input
+                                    type="date"
+                                    class="form-control"
+                                    id="date-to"
+                                    name="<%=FrmKpiTargetDetail.fieldNames[FrmKpiTargetDetail.FRM_FIELD_DATE_TO]%>"
+                                    />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--looping data position-->
+                    <%
+                        if (vKpiSettingPosition.size() > 0) {
+                            for (int i = 0; i < vKpiSettingPosition.size(); i++) {
+                                KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(i);
+                                Position entPosition = PstPosition.fetchExc(entKpiSettingPosition.getPositionId());
+                    %>
+                    <div class="card mb-3">
+                        <div class="card-title p-2" style="background-color: #ededed"><%= entPosition.getPosition()%></div>
+                        <div class="card-body py-0">
+                            <div class="mb-3">
+                                <div class="row datarow">
+                                    <input 
+                                        type="hidden" 
+                                        class="position-oid postion-oid-<%= i %>" 
+                                        id="position-<%= i %>"
+                                        value="<%=entPosition.getOID()%>"
+                                        />
+                                    <%
+                                        Vector vPositionDivision = PstPositionDivision.list(0, 0, PstPositionDivision.fieldNames[PstPositionDivision.FLD_POSITION_ID] + " = " + entPosition.getOID(), "");
+                                        if(vPositionDivision.size() > 0){
+                                            for(int j = 0; j < vPositionDivision.size(); j++){
+                                                String comma = "";
+                                                PositionDivision entPositionDivision = (PositionDivision) vPositionDivision.get(j);
+                                                Division entDivision = PstDivision.fetchExc(entPositionDivision.getDivisionId());
+                                    %>
+                                                <div class="col-3 mb-3">
+                                                    <table>
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <span class="fw-bold">Divisi</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="width: 1%; vertical-align: top;">
+                                                                <input 
+                                                                    type="checkbox" 
+                                                                    name="<%= FrmDivision.fieldNames[FrmDivision.FRM_FIELD_DIVISION_ID] %>-<%= i %>-<%= j %>" 
+                                                                    class="division-checkbox division-checkbox-<%= i %>" 
+                                                                    id="division-<%= i %>-<%= j %>"
+                                                                    value="<%=entDivision.getOID()%>"
+                                                                    />
+                                                            </td>
+                                                            <td>
+                                                                <label class="me-2 checkbox-inline" for="division-<%= i %>-<%= j %>"><%= entDivision.getDivision() %></label> <br/>
+                                                                <table class="mt-1 department-table" style="display: none" id="departementtable-<%= i %>-<%= j %>">
+                                                                    <tr>
+                                                                        <td colspan="2">
+                                                                            <span class="fw-bold">Department</span><br/>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <%
+                                                                        Vector vDepartment = PstDepartment.listVerySimple(PstDepartment.fieldNames[PstDepartment.FLD_DIVISION_ID]+ " = " + entDivision.getOID());
+                                                                        for(int k = 0; k < vDepartment.size(); k++){
+                                                                            Department entDepartment = (Department) vDepartment.get(k);
+                                                                    %>
+                                                                    <tr>
+                                                                        <td style="width: 1%; vertical-align: top;">
+                                                                            <input 
+                                                                                type="checkbox" 
+                                                                                name="<%= FrmDepartment.fieldNames[FrmDepartment.FRM_FIELD_DEPARTMENT_ID] %>-<%= i %>-<%= j %>-<%= k %>" 
+                                                                                class="department-checkbox department-checkbox-<%=entDivision.getOID()%>" 
+                                                                                id="department-<%= i %>-<%= j %>-<%= k %>"
+                                                                                value="<%=entDepartment.getOID()%>"/>
+                                                                        </td>
+                                                                        <td>
+                                                                            <label class="me-2 checkbox-inline" for="department-<%= i %>-<%= j %>-<%= k %>"><%= entDepartment.getDepartment()%></label><br>
+                                                                            <table class="mt-1" style="display: none" id="sectiontable-<%= i %>-<%= j %>-<%= k %>">
+                                                                                <%
+                                                                                    Vector vSection = PstSection.list(0, 0, PstSection.fieldNames[PstSection.FLD_DEPARTMENT_ID]+ " = " + entDepartment.getOID(), "");
+                                                                                    if(vSection.size() > 0){
+                                                                                %>
+                                                                                    <tr>
+                                                                                        <td colspan="2">
+                                                                                            <span class="fw-bold">Section</span><br/>
+                                                                                        </td>
+                                                                                    </tr>
                                                                                     <%
-                                                                                        Vector vSection = PstSection.list(0, 0, PstSection.fieldNames[PstSection.FLD_DEPARTMENT_ID]+ " = " + entDepartment.getOID(), "");
-                                                                                        if(vSection.size() > 0){
+                                                                                        for(int l = 0; l < vSection.size(); l++){
+                                                                                            Section entSection = (Section) vSection.get(l);
                                                                                     %>
-                                                                                        <tr>
-                                                                                            <td colspan="2">
-                                                                                                <span class="fw-bold">Section</span><br/>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <%
-                                                                                            for(int l = 0; l < vSection.size(); l++){
-                                                                                                Section entSection = (Section) vSection.get(l);
-                                                                                        %>
-                                                                                        <tr>
-                                                                                            <td style="width: 1%; vertical-align: top;">
-                                                                                                <input 
-                                                                                                    type="checkbox" 
-                                                                                                    name="<%= FrmSection.fieldNames[FrmSection.FRM_FIELD_SECTION_ID] %>-<%= i %>-<%= j %>-<%= k %>-<%= l %>" 
-                                                                                                    id="section-<%= i %>-<%= j %>-<%= k %>-<%= l %>"
-                                                                                                    class="section-checkbox section-checkbox-<%=entDepartment.getOID()%>"
-                                                                                                    value="<%=entSection.getOID()%>"
-                                                                                                    />
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <label class="me-2 checkbox-inline" for="section-<%= i %>-<%= j %>-<%= k %>-<%= l %>"><%= entSection.getSection()%></label>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    <%      }
-                                                                                       } %>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <% } %>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
-                                        <%      }
-                                           }else{ %>
-                                               <p>Tidak ada data.</p>
-                                        <% } %>
-                                    </div>
+                                                                                    <tr>
+                                                                                        <td style="width: 1%; vertical-align: top;">
+                                                                                            <input 
+                                                                                                type="checkbox" 
+                                                                                                name="<%= FrmSection.fieldNames[FrmSection.FRM_FIELD_SECTION_ID] %>-<%= i %>-<%= j %>-<%= k %>-<%= l %>" 
+                                                                                                id="section-<%= i %>-<%= j %>-<%= k %>-<%= l %>"
+                                                                                                class="section-checkbox section-checkbox-<%=entDepartment.getOID()%>"
+                                                                                                value="<%=entSection.getOID()%>"
+                                                                                                />
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <label class="me-2 checkbox-inline" for="section-<%= i %>-<%= j %>-<%= k %>-<%= l %>"><%= entSection.getSection()%></label>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                <%      }
+                                                                                   } %>
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% } %>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                    <%      }
+                                       }else{ %>
+                                           <p>Tidak ada data.</p>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
-                        <% }
-                        } else { %>
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <p>Tidak ada data posisi.</p>
-                            </div>
+                    </div>
+                    <% }
+                    } else { %>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p>Tidak ada data posisi.</p>
                         </div>
-                        <% } %>
                     </div>
-                    <div class="alert alert-danger alert-dismissible fade show" id="alert-error" role="alert" style="display: none;">
-                        <strong>Error</strong> <span id="error-message"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="alert alert-success alert-dismissible fade show" id="alert-success" role="alert" style="display: none;">
-                        <strong>Sukses</strong> <span id="success-message"></span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div class="progress mb-3" style="display: none;" id="progress-div">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%" id="progress-bar"></div>
-                    </div>
-                    <div class="d-flex justify-content-center mt-0">
-                        <button class="btn btn-primary" style="color: white" id="btn-create">
-                            Create Target
-                        </button>
-                    </div>
+                    <% } %>
+                </div>
+                <div class="alert alert-danger alert-dismissible fade show" id="alert-error" role="alert" style="display: none;">
+                    <strong>Error</strong> <span id="error-message"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="alert alert-success alert-dismissible fade show" id="alert-success" role="alert" style="display: none;">
+                    <strong>Sukses</strong> <span id="success-message"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <div class="progress mb-3" style="display: none;" id="progress-div">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-label="Animated striped example" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%" id="progress-bar"></div>
+                </div>
+                <div class="d-flex justify-content-center mt-0">
+                    <button class="btn btn-primary" style="color: white" id="btn-create">
+                        Create Target
+                    </button>
                 </div>
             </div>
-        </form>
+        </div>
         <div class="footer-page">
             <table>
                 <%if (headerStyle && !verTemplate.equalsIgnoreCase("0")) {%>
@@ -518,7 +527,6 @@
                 $("body").on("click", "#btn-create", function(e){
                     e.preventDefault();
                     $("#alert-error").fadeOut();
-                    $("#progress-div").show();
                     const targetTitle = $("#target-title").val();
                     const docStatus = $("#doc-status").val();
                     const tahun = $("#tahun").val();
@@ -532,6 +540,7 @@
                     $(".datarow").each(function(indexRow, objectRow){
                         let current = 0;
                         const totalLoop = $(".division-checkbox-" + indexRow + ":checked").size();
+                        const positionOID = $("#position-" + indexRow).val();
                         $(".division-checkbox-" + indexRow + ":checked").each(function(indexDivision, objectDivision){ 
                             if ($(objectDivision).is(":checked")){
                                 current =  indexDivision + 1;
@@ -550,16 +559,16 @@
                                                 checkedSectionCount++;
                                                 const sectionOID =  $(objectSection).val();
                                                 
-                                                ajaxPost(data(divisionOID, departemenOID, sectionOID), current, totalLoop);
+                                                ajaxPost(data(positionOID, divisionOID, departemenOID, sectionOID), current, totalLoop);
                                             }
                                         });
                                         if(checkedSectionCount === 0){
-                                            ajaxPost(data(divisionOID, departemenOID, 0), current, totalLoop);
+                                            ajaxPost(data(positionOID, divisionOID, departemenOID, 0), current, totalLoop);
                                         }
                                     }
                                 });
                                 if(checkedDepartmentCount === 0){
-                                    ajaxPost(data(divisionOID, 0, 0), current, totalLoop);
+                                    ajaxPost(data(positionOID, divisionOID, 0, 0), current, totalLoop);
                                 }
                             }
                         });
@@ -571,6 +580,7 @@
                     }
                     
                     function ajaxPost(data, current, total) {
+                        $("#progress-div").show();
                         $.ajax({
                             url: "<%=approot%>/AjaxTargetPerKpi",
                             type: 'POST',
@@ -583,6 +593,7 @@
                                 if(progress === 100){
                                     $("#alert-success").children("#success-message").text("Data berhasil disimpan.");
                                     $("#alert-success").fadeIn();
+                                    $("#form-back").submit();
                                 }
                             },
                             error: function(){
@@ -591,12 +602,15 @@
                         });
                     }
 
-                    function data(divisionOID, departmentOID, sectionOID){
+                    function data(positionOID, divisionOID, departmentOID, sectionOID){
+                        const thisPositionOID = positionOID;
                         const thisDivisionOID = divisionOID;
                         const thisDepartmentOID = departmentOID;
                         const thisSectionOID = sectionOID;
+                        const kpiSettingListOID = "<%=entKpiSettingList.getOID()%>";
                         return {
-                            <%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_ID]%> : <%=entKpiSettingList.getOID()%>,
+                            <%=FrmPosition.fieldNames[FrmPosition.FRM_FIELD_POSITION_ID]%> : thisPositionOID,
+                            <%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%> : kpiSettingListOID,
                             <%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TITLE]%> : targetTitle,
                             <%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_STATUS_DOC]%> : docStatus,
                             <%=FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_TAHUN]%> : tahun,
