@@ -99,6 +99,7 @@ public class AjaxTargetPerKpi extends HttpServlet {
             KpiSettingList entKpiSettingList = PstKpiSettingList.fetchExc(kpiSettingListOID);
             KpiSetting entKpiSetting = PstKpiSetting.fetchExc(entKpiSettingList.getKpiSettingId());
             
+            // insert ke tabel target
             KpiTarget entKpiTarget = new KpiTarget();
             entKpiTarget.setTitle(targetTitle);
             entKpiTarget.setTahun(tahun);
@@ -109,12 +110,14 @@ public class AjaxTargetPerKpi extends HttpServlet {
             entKpiTarget.setCompanyId(entKpiSetting.getCompanyId());
             entKpiTarget.setCreateDate(new Date());
             
+            // insert ke target detail
             KpiTargetDetail entKpiTargetDetail = new KpiTargetDetail();
             entKpiTargetDetail.setPeriod(periode);
             entKpiTargetDetail.setIndexPeriod(periodeIndex);
             entKpiTargetDetail.setDateFrom(newDateFrom);
             entKpiTargetDetail.setDateTo(newDateTo);
             entKpiTargetDetail.setKpiId(entKpiSettingList.getKpiListId());
+            entKpiTargetDetail.setKpiSettingListId(entKpiSettingList.getOID());
             
             
         } catch (ParseException ex) {
