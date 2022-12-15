@@ -29,6 +29,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 	public static final int FLD_KPI_GROUP_ID = 7;
 	public static final int FLD_WEIGHT_VALUE = 8;
 	public static final int FLD_KPI_SETTING_LIST_ID = 9;
+	public static final int FLD_INDEX_PERIOD = 10;
 
 	public static String[] fieldNames = {
 		"KPI_TARGET_DETAIL_ID",
@@ -40,7 +41,8 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 		"AMOUNT",
 		"KPI_GROUP_ID",
 		"WEIGHT_VALUE",
-                "KPI_SETTING_LIST_ID"
+                "KPI_SETTING_LIST_ID",
+                "INDEX PERIOD"
 	};
 
 	public static int[] fieldTypes = {
@@ -54,6 +56,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 		TYPE_LONG,
 		TYPE_FLOAT,
 		TYPE_LONG,
+		TYPE_INT
 	};
 	
 	public static final int PERIOD_BULAN = 0;
@@ -134,6 +137,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 			entKpiTargetDetail.setAmount(pstKpiTargetDetail.getdouble(FLD_AMOUNT));
 			entKpiTargetDetail.setKpiGroupId(pstKpiTargetDetail.getLong(FLD_KPI_GROUP_ID));
 			entKpiTargetDetail.setWeightValue(pstKpiTargetDetail.getdouble(FLD_WEIGHT_VALUE));
+			entKpiTargetDetail.setIndexPeriod(pstKpiTargetDetail.getInt(FLD_INDEX_PERIOD));
 			return entKpiTargetDetail;
 		} catch (DBException dbe) {
 			throw dbe;
@@ -160,6 +164,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 				pstKpiTargetDetail.setDouble(FLD_AMOUNT, entKpiTargetDetail.getAmount());
 				pstKpiTargetDetail.setLong(FLD_KPI_GROUP_ID, entKpiTargetDetail.getKpiGroupId());
 				pstKpiTargetDetail.setDouble(FLD_WEIGHT_VALUE, entKpiTargetDetail.getWeightValue());
+				pstKpiTargetDetail.setInt(FLD_INDEX_PERIOD, entKpiTargetDetail.getIndexPeriod());
 				pstKpiTargetDetail.update();
 				return entKpiTargetDetail.getOID();
 			}
@@ -205,6 +210,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 			pstKpiTargetDetail.setDouble(FLD_AMOUNT, entKpiTargetDetail.getAmount());
 			pstKpiTargetDetail.setLong(FLD_KPI_GROUP_ID, entKpiTargetDetail.getKpiGroupId());
 			pstKpiTargetDetail.setDouble(FLD_WEIGHT_VALUE, entKpiTargetDetail.getWeightValue());
+			pstKpiTargetDetail.setInt(FLD_INDEX_PERIOD, entKpiTargetDetail.getIndexPeriod());
 			pstKpiTargetDetail.insert();
 			entKpiTargetDetail.setOID(pstKpiTargetDetail.getLong(FLD_KPI_TARGET_DETAIL_ID));
 		} catch (DBException dbe) {
@@ -231,6 +237,7 @@ public class PstKpiTargetDetail extends DBHandler implements I_DBInterface, I_DB
 			entKpiTargetDetail.setKpiGroupId(rs.getLong(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_GROUP_ID]));
 			entKpiTargetDetail.setWeightValue(rs.getDouble(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_WEIGHT_VALUE]));
 			entKpiTargetDetail.setKpiSettingListId(rs.getLong(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_SETTING_LIST_ID]));
+			entKpiTargetDetail.setIndexPeriod(rs.getInt(PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_INDEX_PERIOD]));
 		} catch (Exception e) {
 		}
 	}

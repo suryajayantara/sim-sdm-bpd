@@ -29,6 +29,8 @@ public class FrmKpiTargetDetail extends FRMHandler implements I_FRMInterface, I_
 	public static final int FRM_FIELD_AMOUNT = 6;
 	public static final int FRM_FIELD_KPI_GROUP_ID = 7;
 	public static final int FRM_FIELD_WEIGHT_VALUE = 8;
+	public static final int FRM_FIELD_KPI_SETTING_LIST_ID = 9;
+	public static final int FRM_FIELD_INDEX_PERIOD = 10;
 
 	public static String[] fieldNames = {
 		"FRM_FIELD_KPI_TARGET_DETAIL_ID",
@@ -39,7 +41,9 @@ public class FrmKpiTargetDetail extends FRMHandler implements I_FRMInterface, I_
 		"FRM_FIELD_DATE_TO",
 		"FRM_FIELD_AMOUNT",
 		"FRM_FIELD_KPI_GROUP_ID",
-		"FRM_FIELD_WEIGHT_VALUE"
+		"FRM_FIELD_WEIGHT_VALUE",
+		"KPI_SETTING_LIST_ID",
+		"FRM_FIELD_INDEX_PERIOD"
 	};
 
 	public static int[] fieldTypes = {
@@ -51,7 +55,9 @@ public class FrmKpiTargetDetail extends FRMHandler implements I_FRMInterface, I_
 		TYPE_STRING,
 		TYPE_FLOAT,
 		TYPE_LONG,
-		TYPE_LONG
+		TYPE_LONG,
+		TYPE_LONG,
+		TYPE_INT
 	};
 
 	public FrmKpiTargetDetail() {
@@ -97,6 +103,8 @@ public class FrmKpiTargetDetail extends FRMHandler implements I_FRMInterface, I_
 			entKpiTargetDetail.setAmount(getFloat(FRM_FIELD_AMOUNT));
 			entKpiTargetDetail.setKpiGroupId(getLong(FRM_FIELD_KPI_GROUP_ID));
 			entKpiTargetDetail.setWeightValue(getFloat(FRM_FIELD_WEIGHT_VALUE));
+			entKpiTargetDetail.setKpiSettingListId(getLong(FRM_FIELD_KPI_SETTING_LIST_ID));
+			entKpiTargetDetail.setIndexPeriod(getInt(FRM_FIELD_WEIGHT_VALUE));
 		} catch (Exception e) {
 			System.out.println("Error on requestEntityObject : " + e.toString());
 		}

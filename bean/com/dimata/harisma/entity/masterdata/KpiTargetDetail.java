@@ -23,6 +23,7 @@ public class KpiTargetDetail extends Entity {
 	private double amount = 0;
 	private double weightValue = 0;
 	private long kpiSettingListId = 0;
+	private int indexPeriod = 0;
 
 	public long getKpiTargetId() {
 		return kpiTargetId;
@@ -106,5 +107,13 @@ public class KpiTargetDetail extends Entity {
 
 	public void setKpiSettingListId(long kpiSettingListId) {
 		this.kpiSettingListId = kpiSettingListId;
+	}
+        
+        public int getIndexPeriod() {
+		return indexPeriod;
+	}
+
+	public void setIndexPeriod(int indexPeriod) {
+		this.weightValue = indexPeriod;
 	}
 }
