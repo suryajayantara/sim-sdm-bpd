@@ -154,7 +154,6 @@
                 document.frm.command.value = "<%= Command.DELETE%>";
                 document.frm.action = "kpi_type.jsp";
                 document.frm.submit();
-
             }
 
             function cmdDeleteConfirmation(oid) {
@@ -192,9 +191,6 @@
                 })
             });
             <%}%>
-
-
-
         </script>
 
     </head>
