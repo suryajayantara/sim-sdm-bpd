@@ -422,6 +422,7 @@ function hideObjectForMasterdata(){
                                                       </td>
                                                     </tr>
                                                     <%}%>
+                                                    <%if(currType != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){%>
                                                     <tr align="left" valign="top"> 
                                                       <td valign="top" width="17%"> 
                                                         KPI Link</td>
@@ -441,13 +442,19 @@ function hideObjectForMasterdata(){
                                                             <input readonly onclick="javascript:openKPIList()" type="text" name="<%=FrmAssessmentFormItem.fieldNames[FrmAssessmentFormItem.FRM_FIELD_KPI_LIST_ID] %>text" value="<%=kpiList.getKpi_title() %>">
                                                       </td>
                                                     </tr>
+                                                    <%}%>
+                                                    
+                                                    <%if(currType != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){%>
                                                     <tr align="left" valign="top"> 
                                                       <td valign="top" width="17%"> 
                                                         Formula</td>
                                                        <td width="83%"> 
                                                             <input type="text" name="<%=FrmAssessmentFormItem.fieldNames[FrmAssessmentFormItem.FRM_FIELD_FORMULA] %>" value="<%=assessmentFormItem.getFormula()%>">
                                                       </td>
-                                                    </tr> 
+                                                    </tr>
+                                                    <%}%>
+                                                    
+                                                    <%if(currType != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){%>
                                                     <tr align="left" valign="top"> 
                                                       <td valign="top" width="17%"> 
                                                         KPI Target | Unit | Note </td>
@@ -456,14 +463,18 @@ function hideObjectForMasterdata(){
                                                            <input type="text" size="15" maxlength="15" name="<%=FrmAssessmentFormItem.fieldNames[FrmAssessmentFormItem.FRM_FIELD_KPI_UNIT ] %>" value="<%=assessmentFormItem.getKpiUnit() %>">
                                                            <input type="text" size="45" maxlength="128" name="<%=FrmAssessmentFormItem.fieldNames[FrmAssessmentFormItem.FRM_FIELD_KPI_NOTE] %>" value="<%=assessmentFormItem.getKpiNote() %>">
                                                       </td>
-                                                    </tr> 
+                                                    </tr>
+                                                    <%}%>
+                                                    
+                                                    <%if(currType != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){%>
                                                     <tr align="left" valign="top"> 
                                                       <td valign="top" width="17%"> 
                                                         Weight </td>
                                                        <td width="83%">
                                                            <input type="text" name="<%=FrmAssessmentFormItem.fieldNames[FrmAssessmentFormItem.FRM_FIELD_WEIGHT_POINT] %>" value="<%=assessmentFormItem.getWeightPoint() %>">
                                                       </td>
-                                                    </tr> 
+                                                    </tr>
+                                                    <%}%>
                                                     <%if(currType==PstAssessmentFormItem.ITEM_TYPE_COL_2_HEADER ||
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_COL_1_WITH_TEXT ||
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_COL_2_WITHOUT_TEXT ||
@@ -479,7 +490,8 @@ function hideObjectForMasterdata(){
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_EMP_COMM ||                                                                                                          
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_CHECK ||                                                                                                          
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_CHECK_HEADER ||                                                                                                         
-													  currType==PstAssessmentFormItem.ITEM_TYPE_EMPLOYEE_KPI_TARGET
+                                                      currType==PstAssessmentFormItem.ITEM_TYPE_EMPLOYEE_KPI_TARGET ||
+                                                      currType==PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION
                                                       ){
                                                     %>
                                                     <tr align="left" valign="top"> 
@@ -510,7 +522,8 @@ function hideObjectForMasterdata(){
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_ASS_COMM||                                                                                                          
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_EMP_COMM ||                                                                                                          
                                                       currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_CHECK ||                                                                                                          
-                                                      currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_CHECK_HEADER                                                                                                         
+                                                      currType==PstAssessmentFormItem.ITEM_TYPE_INPUT_CHECK_HEADER ||
+                                                      currType==PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION
                                                       ){
                                                     %>
                                                     <tr align="left" valign="top"> 
@@ -638,6 +651,8 @@ function hideObjectForMasterdata(){
                                                         <textarea name="<%= frmAssessmentFormItem.fieldNames[frmAssessmentFormItem.FRM_FIELD_ITEM_POIN_6] %>" cols="60" rows="2" class="formElemen"><%= (assessmentFormItem.getItemPoin6()!=null?assessmentFormItem.getItemPoin6():"") %></textarea></td>
                                                     </tr>
                                                     <%}%>
+                                                    
+                                                    <%if(currType != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){%>
                                                     <tr align="left" valign="top"> 
                                                       <td valign="top" width="17%"> 
                                                         Height</td>
@@ -666,6 +681,7 @@ function hideObjectForMasterdata(){
                                                          <%//=frmAssessmentFormItem.getErrorMsg(FrmAssessmentFormItem.FRM_FIELD_TYPE)%>
                                                       </td>
                                                     </tr>
+                                                    <%}%>
                                                   </table>
                                                 </td>
                                               </tr>

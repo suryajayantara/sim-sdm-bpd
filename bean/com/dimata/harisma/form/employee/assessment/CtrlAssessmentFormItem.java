@@ -17,13 +17,30 @@ package com.dimata.harisma.form.employee.assessment;
 /* java package */ 
 
 import com.dimata.harisma.entity.employee.assessment.AssessmentFormItem;
+import com.dimata.harisma.entity.employee.assessment.AssessmentFormMainPosition;
+import com.dimata.harisma.entity.employee.assessment.AssessmentFormSection;
 import com.dimata.harisma.entity.employee.assessment.PstAssessmentFormItem;
+import com.dimata.harisma.entity.employee.assessment.PstAssessmentFormMainPosition;
+import com.dimata.harisma.entity.employee.assessment.PstAssessmentFormSection;
+import com.dimata.harisma.entity.masterdata.KPI_List;
+import com.dimata.harisma.entity.masterdata.KpiSetting;
+import com.dimata.harisma.entity.masterdata.KpiSettingList;
+import com.dimata.harisma.entity.masterdata.KpiSettingPosition;
+import com.dimata.harisma.entity.masterdata.KpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.PstKPI_List;
+import com.dimata.harisma.entity.masterdata.PstKpiSetting;
+import com.dimata.harisma.entity.masterdata.PstKpiSettingList;
+import com.dimata.harisma.entity.masterdata.PstKpiSettingPosition;
+import com.dimata.harisma.entity.masterdata.PstKpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.PstPosition;
+import com.dimata.harisma.form.masterdata.FrmPosition;
 import com.dimata.qdep.db.DBException;
 import com.dimata.qdep.form.Control;
 import com.dimata.qdep.form.FRMMessage;
 import com.dimata.qdep.system.I_DBExceptionInfo;
 import com.dimata.util.Command;
 import com.dimata.util.lang.I_Language;
+import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -116,7 +133,55 @@ public class CtrlAssessmentFormItem extends Control implements I_Language
                                 
 				if(assFormItem.getOID()==0){
 					try{
-						long oid = pstAssFormItem.insertExc(this.assFormItem);
+                                                if(this.assFormItem.getType() == PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){
+                                                    long assFormSectionOID = this.assFormItem.getAssFormSection();
+                                                    AssessmentFormSection entAssessmentFormSection = PstAssessmentFormSection.fetchExc(assFormSectionOID);
+                                                    String whereFormMainId = PstAssessmentFormSection.fieldNames[PstAssessmentFormSection.FLD_ASS_FORM_MAIN_ID] + " = " + entAssessmentFormSection.getAssFormMainId();
+                                                    Vector vAssessmentFormMainPosition = PstAssessmentFormMainPosition.list(0, 0, whereFormMainId, "");
+                                                    
+                                                    String wherePositionId = PstPosition.fieldNames[PstPosition.FLD_POSITION_ID] + " IN (";
+                                                    for(int i = 0; i < vAssessmentFormMainPosition.size(); i++){
+                                                        AssessmentFormMainPosition entAssessmentFormMainPosition = (AssessmentFormMainPosition) vAssessmentFormMainPosition.get(i);
+                                                        wherePositionId += entAssessmentFormMainPosition.getPositionId();
+                                                        if((i+1) != vAssessmentFormMainPosition.size()){
+                                                            wherePositionId += ", ";
+                                                        } else {
+                                                            wherePositionId += ")";
+                                                        }
+                                                    }
+                                                    
+                                                    Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, wherePositionId, "");
+                                                    String whereKpiSettingId = PstKpiSetting.fieldNames[PstKpiSetting.FLD_KPI_SETTING_ID] + " IN (";
+                                                    for(int i = 0; i < vKpiSettingPosition.size(); i++){
+                                                        KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(i);
+                                                        whereKpiSettingId += entKpiSettingPosition.getKpiSettingId();
+                                                        if((i+1) != vKpiSettingPosition.size()){
+                                                            whereKpiSettingId += ", ";
+                                                        } else {
+                                                            whereKpiSettingId += ")";
+                                                        }
+                                                    }
+                                                    
+                                                    Vector vKpiSettingList = PstKpiSettingList.list(0, 0, whereKpiSettingId, "");
+                                                    for(int i = 0; i < vKpiSettingList.size(); i++){
+                                                        KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
+                                                        KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+                                                        Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 1, PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_ID] + " = " + entKpiList.getOID(), "");
+                                                        KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(0);
+                                                        this.assFormItem.setTitle(entKpiList.getKpi_title());
+                                                        this.assFormItem.setKpiListId(entKpiList.getOID());
+                                                        this.assFormItem.setKpiUnit(PstKPI_List.strType[entKpiList.getInputType()]);
+                                                        this.assFormItem.setKpiTarget((float)entKpiTargetDetail.getAmount());
+                                                        this.assFormItem.setWeightPoint((float)entKpiTargetDetail.getWeightValue());
+                                                        this.assFormItem.setNumber(i + 1);
+                                                        this.assFormItem.setOrderNumber(i + 2);
+                                                        this.assFormItem.setPage(1);
+                                                        this.assFormItem.setHeight(1);
+                                                        pstAssFormItem.insertExc(this.assFormItem);
+                                                    }
+                                                } else {
+                                                    long oid = pstAssFormItem.insertExc(this.assFormItem);
+                                                }
 					}catch(DBException dbexc){
 						excCode = dbexc.getErrorCode();
 						msgString = getSystemMessage(excCode);

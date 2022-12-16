@@ -1115,6 +1115,115 @@ public class ControlForm {
         // System.out.println(strItem);
         return strItem;
     }
+    
+    private static String createItemTypeKpiEmployeePosition(AssessmentFormItem assessmentFormItem) {
+        String strItem = "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='pageCover'>";
+        strItem += "<tr>";
+        strItem += "  <td width='90%' height='100%'>";
+        strItem += "    <table width='100%' border='0' cellspacing='0' cellpadding='0'>";
+        strItem += "        <tr>";
+        strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
+        strItem += "            <b>" + assessmentFormItem.getNumber() + ".</b>";
+        strItem += "            </td>";
+        strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
+        strItem += "            <b>" + assessmentFormItem.getTitle() + "</b>";
+        if (assessmentFormItem.getTitle_L2().length() > 0) {
+            strItem += "            <br><b><i>" + assessmentFormItem.getTitle_L2() + "</i></b>";
+        }
+        strItem += "            <br></td>";
+        strItem += "<td  width='30' colspan='2' class='pageCover'> Target:<input type='text' readonly size='10'  value='" + assessmentFormItem.getKpiTarget() + "'> <input type='text' readonly size='15'  value='" + assessmentFormItem.getKpiUnit() + "'" + "&nbsp;&nbsp;</td><td  width='100' colspan='2' class='pageCover'>&nbsp;&nbsp;Note:<input type='text' readonly size='64'  value='" + assessmentFormItem.getKpiNote() + "'></td>";
+        strItem += "<td width='30' colspan='2' class='pageCover'>Weight:<input type='text' readonly size='10'  value='" + assessmentFormItem.getWeightPoint() +"'></td>";
+
+        strItem += "        </tr>";
+        int countNumber = 1;
+        for (int i = 0; i < 6; i++) {
+            String strPoin_1 = "";
+            String strPoin_2 = "";
+
+            String strTempPoin = "";
+            switch (i) {
+                case 0:
+                    strTempPoin = assessmentFormItem.getItemPoin1();
+                    break;
+                case 1:
+                    strTempPoin = assessmentFormItem.getItemPoin2();
+                    break;
+                case 2:
+                    strTempPoin = assessmentFormItem.getItemPoin3();
+                    break;
+                case 3:
+                    strTempPoin = assessmentFormItem.getItemPoin4();
+                    break;
+                case 4:
+                    strTempPoin = assessmentFormItem.getItemPoin5();
+                    break;
+                case 5:
+                    strTempPoin = assessmentFormItem.getItemPoin6();
+                    break;
+            }
+            int splitPos = strTempPoin.indexOf("(");
+            if (splitPos > -1) {
+                strPoin_1 = strTempPoin.substring(0, splitPos);
+                strPoin_2 = strTempPoin.substring(splitPos, strTempPoin.length());
+            } else {
+                strPoin_1 = strTempPoin;
+            }
+            if (strPoin_1.length() > 0 || !(strPoin_1.equals(""))) {
+                strItem += "        <tr>";
+                strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
+                strItem += "            " + countNumber + ".";
+                countNumber = countNumber + 1;
+                strItem += "            </td>";
+                strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
+                strItem += "            " + strPoin_1;
+                if (strPoin_2.length() > 0) {
+                    strItem += "            <br><i>" + strPoin_2 + "</i>";
+                }
+                strItem += "            <br><br>";
+                strItem += "            </td>";
+                strItem += "        </tr>";
+            }
+        }
+        strItem += "    </table>";
+        for (int i = 1; i < assessmentFormItem.getHeight(); i++) {
+            strItem += "<br/>";
+        }
+        strItem += "  </td>";
+        strItem += "  <td width='10%' height='100%' align='right' valign='top'>";
+        strItem += "              <table width='58' height='42' class='pageInput'>";
+        strItem += "                <tr>";
+        strItem += "                    <td width='70'></td>";
+        strItem += "                </tr>";
+        strItem += "              </table>";
+        strItem += "  </td>";
+        strItem += " </tr>";
+        strItem += "</table>";
+
+        int maxNumber = SessAssessmentFormItem.getMaxNumber(assessmentFormItem.getAssFormSection());
+        if ( false && maxNumber == assessmentFormItem.getNumber()) {
+            strItem += "<br><table width='100%' border='0' cellspacing='0' cellpadding='0' >";
+            strItem += "<tr>";
+            strItem += "<td alight='left'>";
+            strItem += "<font size='4'><b>PERFORMANCE %</b></font> (add ratings) <font size='4'><b>____________________ / ____ = </b></font>";
+            strItem += "</td>";
+            strItem += "<td alight='right'>";
+            strItem += "              <table width='58' height='42' class='pageInput'>";
+            strItem += "                <tr>";
+            strItem += "                    <td width='70' alight='right'>";
+            strItem += "<font size='4'> %</font>";
+            strItem += "                    </td>";
+            strItem += "                </tr>";
+            strItem += "              </table>";
+            strItem += "</td>";
+            strItem += "<td>";
+            strItem += "(average %)";
+            strItem += "</td>";
+            strItem += "</tr>";
+            strItem += "</table>";
+        }
+        // System.out.println(strItem);
+        return strItem;
+    }
 
     public static String createPage(long mainOid, int page) {
         System.out.println("::::::::::: CREATE PAGE " + page);
@@ -1208,11 +1317,16 @@ public class ControlForm {
                             case PstAssessmentFormItem.ITEM_TYPE_INPUT_ASS_COMM:
                                 strPage += createItemType1ColCommentsAssessor(assItem);
                                 break;
+                            case PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION:
+                                strPage += createItemTypeKpiEmployeePosition(assItem);
+                                break;
                         }
-                        strPage += "</td>";
-                        strPage += "<td width='6%' valign='top'>";
-                        strPage += createSpliterItem(assItem.getOID());
-                        strPage += "</td></tr>"; 
+                        if(assItem.getType() != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){
+                            strPage += "</td>";
+                            strPage += "<td width='6%' valign='top'>";
+                            strPage += createSpliterItem(assItem.getOID());
+                            strPage += "</td></tr>";
+                        }
                     }
                 }
                 if (assSection.getPage() == page && assSection.getPredicateEvaluationId() != 0) {

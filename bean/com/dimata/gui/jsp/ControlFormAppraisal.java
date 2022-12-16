@@ -1565,7 +1565,8 @@ public class ControlFormAppraisal {
                                 || assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_COL_1_WITH_TEXT
                                 || assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_INPUT_CHECK
                                 || assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_2_COL_ASS_COMM
-                                || assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_2_COL_OVERALL_COMM) {
+                                || assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_2_COL_OVERALL_COMM
+                                || assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION) {
                             if (hAppraisal.get(String.valueOf(assItem.getOID())) != null) {
                                 appraisal = (Appraisal) hAppraisal.get(String.valueOf(assItem.getOID()));
                                 totalRating = totalRating + (float) appraisal.getRating();
@@ -1635,9 +1636,12 @@ public class ControlFormAppraisal {
                             case PstAssessmentFormItem.ITEM_TYPE_INPUT_ASS_COMM:
                                 strPage += createItemType1ColCommentsAssessor(assItem, appraisal);
                                 break;
-							case PstAssessmentFormItem.ITEM_TYPE_EMPLOYEE_KPI_TARGET:
-								strPage += createItemFromEmployeeKpi(appMain, assSection, assItem, appraisal, vRating);
-								break;
+                            case PstAssessmentFormItem.ITEM_TYPE_EMPLOYEE_KPI_TARGET:
+                                strPage += createItemFromEmployeeKpi(appMain, assSection, assItem, appraisal, vRating);
+                                break;
+                            case PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION:
+                                strPage += createItemType1ColWithText(appMain, assSection, assItem, appraisal);
+                                break;
                         }
                         strPage += "</td>";
                         strPage += "</tr>";

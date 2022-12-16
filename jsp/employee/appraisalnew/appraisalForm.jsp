@@ -107,7 +107,8 @@
                             assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_COL_1_WITH_TEXT||
                             assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_INPUT_CHECK||
                             assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_2_COL_ASS_COMM||
-                            assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_2_COL_OVERALL_COMM
+                            assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_2_COL_OVERALL_COMM||
+                            assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION
                         ){
                                 long tempHrAppMainOid = oidAppraisalMain;
                                 long tempAppraisalOid = FRMQueryString.requestLong(request, FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_APPRAISAL_ID]+assItem.getOID());
