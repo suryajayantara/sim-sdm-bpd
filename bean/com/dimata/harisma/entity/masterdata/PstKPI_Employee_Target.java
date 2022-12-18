@@ -332,7 +332,6 @@ public class PstKPI_Employee_Target extends DBHandler implements I_DBInterface, 
 				group.setKpi_group_id(rs.getLong("KPI_GROUP_ID"));
 				group.setGroup_title(rs.getString("GROUP_TITLE"));
 				temp.add(group);
-				
 				lists.add(temp);
             }
             rs.close();

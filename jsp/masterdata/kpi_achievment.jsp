@@ -125,8 +125,8 @@
             msgString = ctrlKPI_Employee_Achiev.getMessage();
             //long empId = 504404524286105253L;
             long empId = emplx.getOID();
-            //String whereEmployeeID = " hket."+ PstKPI_Employee_Target.fieldNames[PstKPI_Employee_Target.FLD_EMPLOYEE_ID] + " = " + empId ;
-			String whereEmployeeID =  PstKPI_Employee_Target.fieldNames[PstKPI_Employee_Target.FLD_EMPLOYEE_ID] + " = " + empId ;
+//            String whereEmployeeID = " hket."+ PstKPI_Employee_Target.fieldNames[PstKPI_Employee_Target.FLD_EMPLOYEE_ID] + " = " + empId ;
+	    String whereEmployeeID =  PstKPI_Employee_Target.fieldNames[PstKPI_Employee_Target.FLD_EMPLOYEE_ID] + " = " + empId ;
             Vector listKpiTarget = PstKPI_Employee_Target.list(0, 0, whereEmployeeID, "") ; 
 
 %>

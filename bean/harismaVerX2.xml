@@ -57,7 +57,7 @@
     </database-->
     <database>
         <dbdriver>com.mysql.jdbc.Driver</dbdriver>
-        <dburl>jdbc:mysql://localhost:3306/hairisma_bpd</dburl>
+        <dburl>jdbc:mysql://localhost:3306/hairisma_dev_kpi</dburl>
         <dbuser>root</dbuser>
         <dbpasswd></dbpasswd>
         <dbminconn>2</dbminconn>

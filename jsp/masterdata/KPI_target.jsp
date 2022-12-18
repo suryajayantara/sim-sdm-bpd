@@ -547,6 +547,7 @@
                                 </div>
                                 <div id="caption">Status</div>
                                 <div id="divinput">
+                                    
                                     <%
                                         Vector val_status = new Vector(1, 1);
                                         Vector key_status = new Vector(1, 1);
@@ -560,9 +561,11 @@
 
                                             val_status.add(String.valueOf(I_DocStatus.DOCUMENT_STATUS_CANCELLED));
                                             key_status.add(I_DocStatus.fieldDocumentStatus[I_DocStatus.DOCUMENT_STATUS_CANCELLED]);
-                                        }
+                                       }
                                     %>
+                                    
                                     <%= ControlCombo.draw(FrmKpiTarget.fieldNames[FrmKpiTarget.FRM_FIELD_STATUS_DOC], "chosen-select", null, "" + kpiTarget.getStatusDoc(), val_status, key_status, "style='width : 20%' id='status-doc'")%> 
+                               
                                 </div>
                             </td>
                         </tr>
