@@ -126,8 +126,8 @@
             //long empId = 504404524286105253L;
             long empId = emplx.getOID();
 //            String whereEmployeeID = " hket."+ PstKPI_Employee_Target.fieldNames[PstKPI_Employee_Target.FLD_EMPLOYEE_ID] + " = " + empId ;
-	    String whereEmployeeID =  PstKPI_Employee_Target.fieldNames[PstKPI_Employee_Target.FLD_EMPLOYEE_ID] + " = " + empId ;
-            Vector listKpiTarget = PstKPI_Employee_Target.list(0, 0, whereEmployeeID, "") ; 
+	    String whereEmployeeID =  PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_EMPLOYEE_ID] + " = " + empId ;
+            Vector listKpiTarget = PstKpiTargetDetailEmployee.list(0, 0, whereEmployeeID, "") ; 
 
 %>
 <html><!-- #BeginTemplate "/Templates/main.dwt" -->
@@ -365,82 +365,45 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                                                                                                 <td class="listgentitle" width="15%"><strong>Target</strong></td>
                                                                                             </tr>
                                                                                             <%
-                                                                                                int number = 0;
-                                                                                                int numbAlpha = 0;
-                                                                                                boolean isSub = false;
-                                                                                                long oidParent = 0;
                                                                                                 for (int i = 0; i < listKpiTarget.size(); i++) {
-                                                                                                    KPI_Employee_Target empTarget = (KPI_Employee_Target) listKpiTarget.get(i);
-
-                                                                                                    KPI_List kpi_list = new KPI_List();
-                                                                                                    try {
-                                                                                                        kpi_list = PstKPI_List.fetchExc(empTarget.getKpiListId());
-                                                                                                    } catch (Exception exc) {
-                                                                                                    }
-
-                                                                                                    if (kpi_list.getParentId() > 0) {
-                                                                                                        isSub = true;
-                                                                                                        KPI_List kpiParent = new KPI_List();
-                                                                                                        try {
-                                                                                                            kpiParent = PstKPI_List.fetchExc(kpi_list.getParentId());
-                                                                                                        } catch (Exception exc) {
-                                                                                                        }
-
-                                                                                                        if (oidParent != kpi_list.getParentId()) {
-                                                                                                            number++;
-                                                                                                            numbAlpha = 0;
+                                                                                                    KpiTargetDetailEmployee objKpiTargetEmployee = (KpiTargetDetailEmployee) listKpiTarget.get(i);
+                                                                                                    KpiTargetDetail targetDetail = PstKpiTargetDetail.fetchExc(objKpiTargetEmployee.getKpiTargetDetailId());
+                                                                                                    KPI_List objKpiList = PstKPI_List.fetchExc(targetDetail.getKpiId());
                                                                                             %>
+                                                                                            
+                                                                              
                                                                                             <tr>
-                                                                                                <td class="listgensell" style="text-align: center" colspan="2"><%=number%></td>
-                                                                                                <td class="listgensell" colspan="2"style="padding: 5px"><strong><%=kpiParent.getKpi_title()%></strong></td>
-                                                                                            </tr>
-                                                                                            <%
-                                                                                                        oidParent = kpiParent.getOID();
-                                                                                                    } else {
-                                                                                                        numbAlpha++;
-                                                                                                    }
-                                                                                                } else {
-                                                                                                    number++;
-                                                                                                }
-                                                                                            %>
-                                                                                            <tr>
+
+                                                                                                <td class="listgensell" colspan="2" style="text-align: center"><%=i+1%></td>
+                                                                                                <td class="listgensell" style="padding: 5px"><b><%=objKpiList.getKpi_title()%></b></td>
                                                                                                 <%
-                                                                                                    if (isSub) {
-                                                                                                %>
-                                                                                                <td class="listgensell" colspan="2" style="text-align: right; padding-right: 10px"><%=alphanumeric[numbAlpha]%></td>
-                                                                                                <%
-                                                                                                } else {
-                                                                                                %>
-                                                                                                <td class="listgensell" colspan="2" style="text-align: center"><%=number%></td>
-                                                                                                <%
-                                                                                                    }
-                                                                                                %>
-                                                                                                <td class="listgensell" style="padding: 5px"><b><%=kpi_list.getKpi_title()%></b></td>
-                                                                                                <%
-                                                                                                    switch (kpi_list.getInputType()) {
+                                                                                                    switch (objKpiList.getInputType()) {
                                                                                                         case PstKPI_List.TYPE_WAKTU:
                                                                                                 %>
-                                                                                                <td class="listgensell"style="padding: 5px"><b><%= Formater.formatDate(empTarget.getStartDate(), "yyyy-MM-dd") + " - " + Formater.formatDate(empTarget.getEndDate(), "yyyy-MM-dd")%></b></td>
+                                                                                                <td class="listgensell"style="padding: 5px"><b><%= Formater.formatDate(targetDetail.getDateFrom(), "yyyy-MM-dd") + " - " + Formater.formatDate(targetDetail.getDateTo(), "yyyy-MM-dd")%></b></td>
                                                                                                 <%
                                                                                                         break;
                                                                                                     case PstKPI_List.TYPE_JUMLAH:
                                                                                                 %>
-                                                                                                <td class="listgensell"><b><%= String.format("%,.0f", empTarget.getTarget())%></b></td>
+                                                                                                <td class="listgensell"><b><%= String.format("%,.0f", targetDetail.getAmount())%></b></td>
                                                                                                 <%
                                                                                                         break;
                                                                                                     case PstKPI_List.TYPE_PERSENTASE:
                                                                                                 %>
-                                                                                                <td class="listgensell"><b><%= String.format("%,.0f", empTarget.getTarget())%> %</b></td>
+                                                                                                <td class="listgensell"><b><%= String.format("%,.0f", targetDetail.getAmount())%> %</b></td>
                                                                                                 <%
                                                                                                             break;
                                                                                                     }
                                                                                                 %>
                                                                                            </tr>
+                                                                             
+                                                                                                
                                                                                             <tr>
                                                                                                 <td class="listgensell" colspan="2">&nbsp;</td>
                                                                                                 <td class="listgensell" colspan="3" style="padding: 10px">
                                                                                                     <%
-                                                                                                        String whereTargetDetailEmp = PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID]+"="+empTarget.getKpiTargetDetailId();
+                                                                                                        String whereTargetDetailEmp = PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID]+"="+targetDetail.getOID()
+                                                                                                         +" AND "+ PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_EMPLOYEE_ID]+"="+objKpiTargetEmployee.getEmployeeId();
                                                                                                         Vector listEmployeeTarget = PstKpiTargetDetailEmployee.list(0, 0, whereTargetDetailEmp, "");
                                                                                                         if (listEmployeeTarget.size()>0){
                                                                                                     %>
@@ -452,7 +415,9 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                                                                                                                     <td class="listgentitle" width="15%"><strong>Nama</strong></td>
                                                                                                                     <td class="listgentitle" width="15%"><strong>Satuan Kerja</strong></td>
                                                                                                                     <td class="listgentitle" width="10%"><strong>Achievment Score</strong></td>
-                                                                                                                    <td class="listgentitle" width="10%"><strong>Action</strong></td>
+                                                                                                                    <td class="listgentitle" width="10%"><strong>Score</strong></td>
+                                                                                                                    <td class="listgentitle" width="10%"><strong>status</strong></td>
+                                                                                                                    <td class="listgentitle" width="10%"><strong>Notes</strong></td>
                                                                                                                 </tr>  
                                                                                                                 <%
                                                                                                                     int no = 0;
@@ -472,8 +437,8 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                                                                                                                             <td class="listgensell"><%=empDetail.getFullName()%></td>
                                                                                                                             <td class="listgensell"><%=PstEmployee.getDivisionName(empDetail.getDivisionId())%></td>
                                                                                                                             <%
-                                                                                                                            String whereClauseAchiev = "" + PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_EMPLOYEE_ID] + " = " + empDetail.getOID() + " AND " + PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_KPI_LIST_ID] + " = " + empTarget.getKpiListId()
-                                                                                                                                        + " AND " + PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_TARGET_ID] + " = " + empTarget.getKpiEmployeeTargetId();
+                                                                                                                            String whereClauseAchiev = "" + PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_EMPLOYEE_ID] + " = " + empDetail.getOID() + " AND " + PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_KPI_LIST_ID] + " = " + targetDetail.getKpiId()
+                                                                                                                                        + " AND " + PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_TARGET_ID] + " = " + targetDetail.getOID();
                                                                                                                                 listKPI_Employee_Achiev = PstKPI_Employee_Achiev.list(start, recordToGet, whereClauseAchiev, orderClause);
                                                                                                                                 double score = 0;
                                                                                                                                 for (int x = 0; x < listKPI_Employee_Achiev.size(); x++) {
@@ -488,12 +453,31 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                                                                                                                             <%
                                                                                                                                 if (empId == empDetail.getOID()){
                                                                                                                                     %>
-                                                                                                                                        <td class="listgensell"><a href="javascript:cmdAddAchievment('<%=empId%>','<%=kpi_list.getOID()%>','<%=empTarget.getKpiEmployeeTargetId()%>')">Add Achievment</a></td>
+                                                                                                                                        <td class="listgensell">
+                                                                                                                                            <input class="achievement" type="number" id="achievement-<%=targetDetail.getOID()%>">
+                                                                                                                                    </td>
                                                                                                                                     <%
                                                                                                                                 } else {
                                                                                                                                     %><td class="listgensell">&nbsp;</td><%
                                                                                                                                 }
                                                                                                                             %>
+                                                                                                                                <td>
+                                                                                                                                    <select class="status" id="status-<%=targetDetail.getOID() %>">
+                                                                                                                                    <option><%=
+                                                                                                                                        PstKPI_Employee_Achiev.typeAchiev[PstKPI_Employee_Achiev.TYPE_IN_PROGRESS]
+                                                                                                                                        %></option>
+                                                                                                                                        <option><%=
+                                                                                                                                        PstKPI_Employee_Achiev.typeAchiev[PstKPI_Employee_Achiev.TYPE_FINISH]
+                                                                                                                                        %></option>
+                                                                                                                                    <option></option>
+                                                                                                                                    </select>
+                                                                                                                            </td>
+                                                                                                                                <td>
+                                                                                                                                    <textarea class="notes" id="notes-<%=targetDetail.getOID() %>"></textarea> 
+                                                                                                                            </td>
+                                                                                                            <input type="hidden" id="kpiListId-<%=targetDetail.getOID() %>" value="<%=targetDetail.getKpiId()%>">
+                                                                                                            <input type="hidden" id="targetId-<%=targetDetail.getOID() %>" value="<%=targetDetail.getKpiTargetId() %>">
+                                                                                                            <input type="hidden" id="employeeId-<%=targetDetail.getOID() %>" value="<%=kpiTargetDetailEmployee.getOID() %>">
                                                                                                                         </tr>
                                                                                                                         <%
                                                                                                                     }
@@ -555,11 +539,70 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
             <%}%>
         </table>
     </body>
+     <script src="<%=approot%>/javascripts/jquery.js"></script>
     <!-- #BeginEditable "script" -->
     <script language="JavaScript">
+           $("body").on("change", ".achievement, .status, .notes", function(e){
+            let isReady = {};
+            const targetDetail = $(this).attr("id").split("-")[1];
+            const achievement = parseInt($("#achievement-"+targetDetail).val());
+            const status = parseInt($("#status-"+targetDetail).val());
+            const notes = parseInt($("#notes-"+targetDetail).val());
+            const kpiListId = parseInt($("#kpiListId-"+targetDetail).val());
+            const targetId = parseInt($("#targetId-"+targetDetail).val());
+            const employeeId = parseInt($("#employeeId-"+targetDetail).val());
+            const data = { 
+                <%=FrmKPI_Employee_Achiev.fieldNames[FrmKPI_Employee_Achiev.FRM_FIELD_ACHIEVMENT] %> : achievement,
+                <%=FrmKPI_Employee_Achiev.fieldNames[FrmKPI_Employee_Achiev.FRM_FIELD_STATUS] %> : status,
+                 <%=FrmKPI_Employee_Achiev.fieldNames[FrmKPI_Employee_Achiev.FRM_FIELD_ACHIEV_NOTE] %> : notes,
+                  <%=FrmKPI_Employee_Achiev.fieldNames[FrmKPI_Employee_Achiev.FRM_FIELD_KPI_LIST_ID] %> : kpiListId,
+                  <%=FrmKPI_Employee_Achiev.fieldNames[FrmKPI_Employee_Achiev.FRM_FIELD_TARGET_ID] %> : targetId,
+                 <%=FrmKPI_Employee_Achiev.fieldNames[FrmKPI_Employee_Achiev.FRM_FIELD_EMPLOYEE_ID] %> : employeeId
+                 }
+            if(achievement < 0){
+                isReady.achievement = false;
+            }
+            if(status <= 0){
+                isReady.status = false;
+            }
+            if(notes <= 0){
+                isReady.notes = false;
+            }
+            if(kpiListId <= 0){
+                isReady.kpiListId = false;
+            }
+              if(targetId <= 0){
+                isReady.targetId = false;
+            }
+              if(employeeId <= 0){
+                isReady.employeeId = false;
+            }
+
+            if(Object.keys(isReady).length <= 0){
+                const form = $("#formtargetdetail-"+targetDetail);
+                $.ajax({
+                  url: "<%= approot %>/AjaxKpiTargetDetailForm",
+                  data: form.serialize(),
+                  type: 'POST',
+                  beforeSend: function() {
+                        $("#loading-" + targetDetail).fadeIn("slow");
+                  },
+                  success: function(res) {
+                        form.parent().css("background-color", "#BDF5C3");
+                  },
+                  error: function(err) {
+                        form.parent().css("background-", "#F7D8D8");
+                  },
+                  complete: function() {
+                        $("#loading-" + targetDetail).fadeOut("slow");
+                  }
+                });
+            }
+            
+        });
+                                
                 //var oBody = document.body;
                 //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
     </script>
     <!-- #EndEditable -->
     <!-- #EndTemplate --></html>
-
