@@ -159,7 +159,7 @@
                         <td class="title_tbl">Periode</td>
                         <td class="title_tbl" width="5%">Target(<%= PstKPI_List.strType[entKpiList.getInputType()] %>)</td>
                         <td class="title_tbl">Status</td>
-                        <td class="title_tbl" class="text-center">Action</td>
+                        <!--<td class="title_tbl //" class="text-center">Action</td>-->
                     </tr>
                     <%
                         Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 0, PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_SETTING_LIST_ID] + " = " + oidKpiSettingList, "");
@@ -194,11 +194,11 @@
                                        />
                             </td>
                             <td><%= I_DocStatus.fieldDocumentStatus[entKpiTarget.getStatusDoc()] %></td>
-                            <td class="text-center">
+                            <!--<td class="text-center">
                                 Edit 
                                 || 
                                 Delete
-                            </td>
+                            </td>-->
                         </tr>
                         <tr>
                             <td></td>
@@ -209,7 +209,7 @@
                                         <td class="title_tbl">NIK</td>
                                         <td class="title_tbl">Nama</td>
                                         <td class="title_tbl" width="10%">Bobot Distribusi</td>
-                                        <td class="title_tbl">Action</td>
+                                        <!--<td class="title_tbl">Action</td>-->
                                     </tr>
                                     <%
                                         Vector vKpiTargetDetailEmploye = PstKpiTargetDetailEmployee.list(0, 0, PstKpiTargetDetailEmployee.fieldNames[PstKpiTargetDetailEmployee.FLD_KPI_TARGET_DETAIL_ID] + " = " + entKpiTargetDetail.getOID(), "");
@@ -232,7 +232,7 @@
                                                        value="<%= Math.round(entKpiTargetDetailEmploye.getBobot()) %>"
                                                        />
                                             </td>
-                                            <td><center>Edit || Delete</center></td>
+                                            <!--<td><center>Edit || De //lete</center></td>-->
                                         </tr>
                                     <% } %>
                                 </table>
