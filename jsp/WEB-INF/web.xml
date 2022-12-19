@@ -178,6 +178,10 @@
         <servlet-name>AjaxUpdateTargetAmount</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.kpitarget.AjaxUpdateTargetAmount</servlet-class>
     </servlet>
+    <servlet>    
+        <servlet-name>AjaxInsertRealitation</servlet-name>
+        <servlet-class>com.dimata.harisma.ajax.realitation.AjaxInsertRealitation</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AchievementPdf</servlet-name>
         <url-pattern>/servlet/com.dimata.harisma.report.employee.AchievementPdf</url-pattern>
@@ -1670,6 +1674,10 @@
     <servlet-mapping>
         <servlet-name>AjaxUpdateTargetAmount</servlet-name>
         <url-pattern>/AjaxUpdateTargetAmount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AjaxInsertRealitation</servlet-name>
+        <url-pattern>/AjaxInsertRealitation</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
