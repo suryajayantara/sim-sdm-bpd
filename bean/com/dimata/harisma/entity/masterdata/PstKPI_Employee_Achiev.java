@@ -116,7 +116,9 @@ public class PstKPI_Employee_Achiev extends DBHandler implements I_DBInterface, 
 	
 	public static final String[] typeAchiev = {
 		"In Progress",
-		"Finish"
+		"Finish",
+                "To Be Approve",
+                "To Be Corrected"
 	};
 
    public PstKPI_Employee_Achiev() {
