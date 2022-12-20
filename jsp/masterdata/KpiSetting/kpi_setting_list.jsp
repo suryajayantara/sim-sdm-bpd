@@ -134,27 +134,7 @@
                 })
             }
 //end
-//SWEET ALERT
-            <% if (iCommand == Command.DELETE) {%>
-            $(document).ready(function () {
-                Swal.fire({
-                    title: 'Deleted',
-                    text: "Your data has been deleted!",
-                    icon: 'success'
-                })
-            });
-            <%}%>
 
-            <% if (iCommand == Command.SAVE) {%>
-            $(document).ready(function () {
-                Swal.fire({
-                    title: 'Saved',
-                    text: "Your data has been saved!",
-                    icon: 'success'
-                })
-            });
-            <%}%>
-//END
             function cmdDetail(oid) {
                 document.frm.<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>.value = oid;
                 document.frm.command.value = "<%= Command.EDIT%>";

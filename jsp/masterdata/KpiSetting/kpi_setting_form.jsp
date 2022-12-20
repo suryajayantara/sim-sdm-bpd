@@ -813,27 +813,7 @@
                 })
             }
 //end
-//SWEET ALERT
-            <% if (iCommand == Command.DELETE) {%>
-            $(document).ready(function () {
-                Swal.fire({
-                    title: 'Deleted',
-                    text: "Your data has been deleted!",
-                    icon: 'success'
-                })
-            });
-            <%}%>
 
-            <% if (iCommand == Command.SAVE) {%>
-            $(document).ready(function () {
-                Swal.fire({
-                    title: 'Saved',
-                    text: "Your data has been saved!",
-                    icon: 'success'
-                })
-            });
-            <%}%>
-//END
     var popup;
 
     function init(oidKpiSetting, oidKpiSettingType, oidKpiType) {
