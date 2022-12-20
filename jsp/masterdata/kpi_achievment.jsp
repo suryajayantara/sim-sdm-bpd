@@ -369,6 +369,12 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                                                                                                     KpiTargetDetailEmployee objKpiTargetEmployee = (KpiTargetDetailEmployee) listKpiTarget.get(i);
                                                                                                     KpiTargetDetail targetDetail = PstKpiTargetDetail.fetchExc(objKpiTargetEmployee.getKpiTargetDetailId());
                                                                                                     KPI_List objKpiList = PstKPI_List.fetchExc(targetDetail.getKpiId());
+                                                                                                    KPI_Employee_Achiev objKpiEmployeeAchiev = new KPI_Employee_Achiev();
+                                                                                                     String whereKpiAndEmployeeId =  PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_KPI_LIST_ID] + " = " + targetDetail.getKpiId() +" AND "+ PstKPI_Employee_Achiev.fieldNames[PstKPI_Employee_Achiev.FLD_EMPLOYEE_ID] + " = " + objKpiTargetEmployee.getEmployeeId() ;
+                                                                                                    Vector vKpiEmployeeAchiev = PstKPI_Employee_Achiev.list(0, 1, whereKpiAndEmployeeId, "");
+                                                                                                    if(vKpiEmployeeAchiev.size() > 0){
+                                                                                                        objKpiEmployeeAchiev = (KPI_Employee_Achiev) vKpiEmployeeAchiev.get(0);
+                                                                                                    }
                                                                                             %>
                                                                                             
                                                                               
@@ -454,7 +460,7 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                                                                                                                                 if (empId == empDetail.getOID()){
                                                                                                                                     %>
                                                                                                                                         <td class="listgensell">
-                                                                                                                                            <input class="achievement" type="number" id="achievement-<%=targetDetail.getOID()%>">
+                                                                                                                                            <input class="achievement" type="number" id="achievement-<%=targetDetail.getOID()%>" value="<%=objKpiEmployeeAchiev.getAchievement()%> ">
                                                                                                                                     </td>
                                                                                                                                     <%
                                                                                                                                 } else {
@@ -463,21 +469,33 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                                                                                                                             %>
                                                                                                                                 <td>
                                                                                                                                     <select class="status" id="status-<%=targetDetail.getOID() %>">
-                                                                                                                                    <option><%=
+                                                                                                                                       <% 
+                                                                                                                                           String InProgress = "";
+                                                                                                                                           String Finish = "";         
+                                                                                                                                           if (objKpiEmployeeAchiev.getStatus() == PstKPI_Employee_Achiev.TYPE_IN_PROGRESS){ 
+                                                                                                                                           InProgress = "selected";
+                                                                                                                                           
+                                                                                                                                       }
+                                                                                                                                           if (objKpiEmployeeAchiev.getStatus() == PstKPI_Employee_Achiev.TYPE_FINISH){ 
+                                                                                                                                           Finish = "selected";
+                                                                                                                                           }
+                                                                                                                                        %>
+                                                                                                                                    <option value="<%=PstKPI_Employee_Achiev.TYPE_IN_PROGRESS%>"><%=
                                                                                                                                         PstKPI_Employee_Achiev.typeAchiev[PstKPI_Employee_Achiev.TYPE_IN_PROGRESS]
                                                                                                                                         %></option>
-                                                                                                                                        <option><%=
+                                                                                                                                        <option value="<%=PstKPI_Employee_Achiev.TYPE_FINISH%>"><%=
                                                                                                                                         PstKPI_Employee_Achiev.typeAchiev[PstKPI_Employee_Achiev.TYPE_FINISH]
                                                                                                                                         %></option>
                                                                                                                                     <option></option>
                                                                                                                                     </select>
                                                                                                                             </td>
                                                                                                                                 <td>
-                                                                                                                                    <textarea class="notes" id="notes-<%=targetDetail.getOID() %>"></textarea> 
+                                                                                                                                    <textarea class="notes" id="notes-<%=targetDetail.getOID() %>"><%=objKpiEmployeeAchiev.getAchievNote() %></textarea> 
                                                                                                                             </td>
                                                                                                             <input type="hidden" id="kpiListId-<%=targetDetail.getOID() %>" value="<%=targetDetail.getKpiId()%>">
                                                                                                             <input type="hidden" id="targetId-<%=targetDetail.getOID() %>" value="<%=targetDetail.getKpiTargetId() %>">
                                                                                                             <input type="hidden" id="employeeId-<%=targetDetail.getOID() %>" value="<%=kpiTargetDetailEmployee.getOID() %>">
+                                                                                                            <input type="hidden" id="oidKpiEmployeeAchiev-<%=targetDetail.getOID() %>" value="<%=objKpiEmployeeAchiev.getOID() %>">
                                                                                                                         </tr>
                                                                                                                         <%
                                                                                                                     }
@@ -579,22 +597,21 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
             }
 
             if(Object.keys(isReady).length <= 0){
-                const form = $("#formtargetdetail-"+targetDetail);
                 $.ajax({
-                  url: "<%= approot %>/AjaxKpiTargetDetailForm",
-                  data: form.serialize(),
+                  url: "<%= approot %>/AjaxInsertRealitation",
+                  data: data,
                   type: 'POST',
                   beforeSend: function() {
-                        $("#loading-" + targetDetail).fadeIn("slow");
+//                        $("#loading-" + targetDetail).fadeIn("slow");
                   },
                   success: function(res) {
-                        form.parent().css("background-color", "#BDF5C3");
+//                        form.parent().css("background-color", "#BDF5C3");
                   },
                   error: function(err) {
-                        form.parent().css("background-", "#F7D8D8");
+//                        form.parent().css("background-", "#F7D8D8");
                   },
                   complete: function() {
-                        $("#loading-" + targetDetail).fadeOut("slow");
+//                        $("#loading-" + targetDetail).fadeOut("slow");
                   }
                 });
             }

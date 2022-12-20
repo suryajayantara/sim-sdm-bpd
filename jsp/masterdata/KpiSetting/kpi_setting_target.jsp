@@ -31,6 +31,8 @@
     KpiSetting entKpiSetting = new KpiSetting();
     KpiSettingList entKpiSettingList = new KpiSettingList();
     KpiSettingGroup entKpiSettingGroup = new KpiSettingGroup();
+    
+    
     KPI_List entKpiList = new KPI_List();
     KPI_Group entKpiGroup = new KPI_Group();
     if(oidKpiSettingList > 0){
@@ -110,7 +112,11 @@
         </div>
             
         <div class="content-main">
+        <form name="frm" method ="post" action="">
+          <input type="hidden" name="command" value="<%=iCommand%>">
+          <input type="hidden" name="hidden_kpi_setting_id" value="<%=entKpiSetting.getOID()%>">
         <a href="javascript:cmdBack();" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
+        </form>
             <div class="formstyle" style="margin-top: 1rem;">
                 <!--judul ini merupakan judul dari KPI-->
                 <span><%= entKpiList.getKpi_title() %></span>
