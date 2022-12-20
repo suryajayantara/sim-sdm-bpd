@@ -112,11 +112,22 @@
         </div>
             
         <div class="content-main">
-        <form name="frm" method ="post" action="">
-          <input type="hidden" name="command" value="<%=iCommand%>">
-          <input type="hidden" name="hidden_kpi_setting_id" value="<%=entKpiSetting.getOID()%>">
-        <a href="javascript:cmdBack();" style="color:#FFF;" class="btn-back btn-back1">Kembali</a>
-        </form>
+            <form method="POST" action="kpi_setting_list_detail.jsp" id="form-back">
+                <input 
+                    type="hidden"
+                    name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>"
+                    value="<%=entKpiSetting.getOID()%>"
+                    />
+                <input 
+                    type="hidden"
+                    name="command"
+                    value="<%=Command.EDIT%>"
+                    />
+            </form>
+            <button class="btn-back btn-back1 mb-2" style="color: white; border: none;" id="btn-back" onclick="$('#form-back').submit();">
+                Kembali
+            </button>
+                    
             <div class="formstyle" style="margin-top: 1rem;">
                 <!--judul ini merupakan judul dari KPI-->
                 <span><%= entKpiList.getKpi_title() %></span>
@@ -158,11 +169,12 @@
                 <table class="tblStyle" style="width:100%">
                     <tr>
                         <td class="title_tbl">No.</td>
-                        <td class="title_tbl">Divisi</td>
-                        <td class="title_tbl">Departemen</td>
-                        <td class="title_tbl">Section</td>
+                        <td class="title_tbl">Satuan Kerja</td>
+                        <td class="title_tbl">Unit</td>
+                        <td class="title_tbl">Sub Unit</td>
                         <td class="title_tbl">Tahun</td>
                         <td class="title_tbl">Periode</td>
+                        <td class="title_tbl">Periode Index</td>
                         <td class="title_tbl" width="5%">Target(<%= PstKPI_List.strType[entKpiList.getInputType()] %>)</td>
                         <td class="title_tbl">Status</td>
                         <!--<td class="title_tbl //" class="text-center">Action</td>-->
@@ -188,6 +200,7 @@
                             <td><%= entSection.getSection() %></td>
                             <td><%= entKpiTarget.getTahun() %></td>
                             <td><%= PstKpiTargetDetail.period[entKpiTargetDetail.getPeriod()] %></td>
+                            <td><%= entKpiTargetDetail.getIndexPeriod() %></td>
                             <td>
                                 <span style="cursor: pointer; color: blue;" id="target-<%=entKpiTargetDetail.getOID()%>" class="target">
                                     <%= Math.round(entKpiTargetDetail.getAmount()) %>
@@ -198,6 +211,7 @@
                                        style="display: none; width: 6rem;" 
                                        value="<%= Math.round(entKpiTargetDetail.getAmount()) %>"
                                        />
+                                <span><%= entKpiList.getValue_type() %></span>
                             </td>
                             <td><%= I_DocStatus.fieldDocumentStatus[entKpiTarget.getStatusDoc()] %></td>
                             <!--<td class="text-center">
@@ -237,6 +251,7 @@
                                                        style="display: none; width: 6rem;" 
                                                        value="<%= Math.round(entKpiTargetDetailEmploye.getBobot()) %>"
                                                        />
+                                                <span><%= entKpiList.getValue_type() %></span>
                                             </td>
                                             <!--<td><center>Edit || De //lete</center></td>-->
                                         </tr>
