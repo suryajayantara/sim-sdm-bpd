@@ -307,7 +307,7 @@
                                 <div id="divinput">
                                     <select name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_POSITION_ID]%>" style="width: 20%;" data-placeholder='Select Jabatan...'  multiple="multiple" class="select2 custom-select form-select-sm col-6" value="<%=oidKpiSetting%>">
                                         <%
-                                            Vector listPosition = PstPosition.list(0, 0, "", "");
+                                            Vector listPosition = PstPosition.list(0, 0, PstPosition.fieldNames[PstPosition.FLD_VALID_STATUS] + " = 1", "");
                                             for (int i = 0; i < listPosition.size(); i++) {
                                                 Position objPosition = (Position) listPosition.get(i);
                                                 String selected = "";
@@ -547,7 +547,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type <%=iCommand%></h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Pilih Kpi Type</h5>
                     </div>
                     <div class="modal-body">
                         <form name="FRM_NAME_KPISETTINGTYPE" method ="GET" action="">
@@ -562,7 +562,7 @@
                                     <option value="">=Select=</option>
                                     <%
                                         boolean showKpi = true;
-                                        Vector listKpiType = PstKPI_Type.list(0, 0, "", "");
+                                        Vector listKpiType = PstKPI_Type.list(0, 0, "", "NUMBER_INDEX");
                                         for (int i = 0; i < listKpiType.size(); i++) {
                                             KPI_Type objKpiType = (KPI_Type) listKpiType.get(i);
                                             String selected = "";

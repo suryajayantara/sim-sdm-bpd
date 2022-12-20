@@ -126,7 +126,7 @@
             </button>
             <div class="formstyle">
                 <h6 class="fw-bold"><%= entCompany.getCompany()%></h6>
-                <h6><%= entKpiList.getKpi_title()%></h6>
+                <h6>KPI : <%= entKpiList.getKpi_title()%></h6>
                 <hr />
 
                 <div>
@@ -245,7 +245,12 @@
                                         value="<%=entPosition.getOID()%>"
                                         />
                                     <%
-                                        Vector vPositionDivision = PstPositionDivision.list(0, 0, PstPositionDivision.fieldNames[PstPositionDivision.FLD_POSITION_ID] + " = " + entPosition.getOID(), "");
+                                        Vector vPositionDivision = PstPositionDivision.list(
+                                                0, 
+                                                0, 
+                                                PstPositionDivision.fieldNames[PstPositionDivision.FLD_POSITION_ID] + " = " + entPosition.getOID(), 
+                                                ""
+                                        );
                                         if(vPositionDivision.size() > 0){
                                             for(int j = 0; j < vPositionDivision.size(); j++){
                                                 String comma = "";
@@ -255,11 +260,7 @@
                                                 <div class="col-3 mb-3">
                                                     <table>
                                                         <tr>
-                                                            <td colspan="2">
-                                                                <span class="fw-bold">Divisi</span>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
+                                                            <!--satuan kerja-->
                                                             <td style="width: 1%; vertical-align: top;">
                                                                 <input 
                                                                     type="checkbox" 
@@ -272,17 +273,16 @@
                                                             <td>
                                                                 <label class="me-2 checkbox-inline" for="division-<%= i %>-<%= j %>"><%= entDivision.getDivision() %></label> <br/>
                                                                 <table class="mt-1 department-table" style="display: none" id="departementtable-<%= i %>-<%= j %>">
-                                                                    <tr>
-                                                                        <td colspan="2">
-                                                                            <span class="fw-bold">Department</span><br/>
-                                                                        </td>
-                                                                    </tr>
                                                                     <%
-                                                                        Vector vDepartment = PstDepartment.listVerySimple(PstDepartment.fieldNames[PstDepartment.FLD_DIVISION_ID]+ " = " + entDivision.getOID());
+                                                                        Vector vDepartment = PstDepartment.listVerySimple(
+                                                                                PstDepartment.fieldNames[PstDepartment.FLD_DIVISION_ID]+ " = " + entDivision.getOID() + 
+                                                                                " AND " + PstDepartment.fieldNames[PstDepartment.FLD_VALID_STATUS] + " = 1"
+                                                                        );
                                                                         for(int k = 0; k < vDepartment.size(); k++){
                                                                             Department entDepartment = (Department) vDepartment.get(k);
                                                                     %>
                                                                     <tr>
+                                                                        <!--Unit-->
                                                                         <td style="width: 1%; vertical-align: top;">
                                                                             <input 
                                                                                 type="checkbox" 
@@ -295,19 +295,21 @@
                                                                             <label class="me-2 checkbox-inline" for="department-<%= i %>-<%= j %>-<%= k %>"><%= entDepartment.getDepartment()%></label><br>
                                                                             <table class="mt-1" style="display: none" id="sectiontable-<%= i %>-<%= j %>-<%= k %>">
                                                                                 <%
-                                                                                    Vector vSection = PstSection.list(0, 0, PstSection.fieldNames[PstSection.FLD_DEPARTMENT_ID]+ " = " + entDepartment.getOID(), "");
+                                                                                    Vector vSection = PstSection.list(
+                                                                                            0, 
+                                                                                            0, 
+                                                                                            PstSection.fieldNames[PstSection.FLD_DEPARTMENT_ID]+ " = " + entDepartment.getOID() + 
+                                                                                            " AND " + PstSection.fieldNames[PstSection.FLD_VALID_STATUS] + " = 1",
+                                                                                            ""
+                                                                                    );
                                                                                     if(vSection.size() > 0){
                                                                                 %>
-                                                                                    <tr>
-                                                                                        <td colspan="2">
-                                                                                            <span class="fw-bold">Section</span><br/>
-                                                                                        </td>
-                                                                                    </tr>
                                                                                     <%
                                                                                         for(int l = 0; l < vSection.size(); l++){
                                                                                             Section entSection = (Section) vSection.get(l);
                                                                                     %>
                                                                                     <tr>
+                                                                                        <!--SUb Unit-->
                                                                                         <td style="width: 1%; vertical-align: top;">
                                                                                             <input 
                                                                                                 type="checkbox" 
