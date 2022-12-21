@@ -49,7 +49,7 @@ Queentandoor :
     <database>
         <dbdriver>com.mysql.jdbc.Driver</dbdriver>
         <!--<dburl>jdbc:mysql://192.168.20.40:3306/dev_hairisma_bpd</dburl>-->
-        <dburl>jdbc:mysql://localhost:3306/hairisma_dev_kpi</dburl>
+        <dburl>jdbc:mysql://localhost:3306/hairisma_bpd</dburl>
         <dbuser>root</dbuser>
         <dbpasswd></dbpasswd>
 <!--        <dburl>jdbc:mysql://localhost:3306/hairisma_bpd</dburl>

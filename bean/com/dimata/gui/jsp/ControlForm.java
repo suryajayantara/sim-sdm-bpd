@@ -186,7 +186,8 @@ public class ControlForm {
                 + "   <br /> "
                 + "   dan training individu yang diperlukan)</em></li>"
                 + " </ul>";
-        return strItem;
+//      return strItem;
+        return "";
     }
 
     private static String createMainRating() {

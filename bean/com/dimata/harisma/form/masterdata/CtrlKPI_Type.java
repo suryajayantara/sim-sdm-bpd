@@ -111,108 +111,146 @@ public class CtrlKPI_Type extends Control implements I_Language {
             case Command.ADD:
                 break;
 
+            case Command.SAVE:
+                if (oidKPI_Type != 0) {
+                    try {
+                        kPI_Type = PstKPI_Type.fetchExc(oidKPI_Type);
+                        kPI_Type.setKpi_type_id(kPI_Type.getOID());
+                    } catch (Exception exc) {
+                    }
+                }
 
-          case Command.SAVE :
-				if(oidKPI_Type != 0){
-					try{
-						kPI_Type = PstKPI_Type.fetchExc(oidKPI_Type);
-                                                kPI_Type.setKpi_type_id(kPI_Type.getOID());
-					}catch(Exception exc){
-					}
-				}
+                frmKPI_Type.requestEntityObject(kPI_Type);
 
-				frmKPI_Type.requestEntityObject(kPI_Type);
+                if (frmKPI_Type.errorSize() > 0) {
+                    msgString = FRMMessage.getMsg(FRMMessage.MSG_INCOMPLATE);
+                    return RSLT_FORM_INCOMPLETE;
+                }
 
-				if(frmKPI_Type.errorSize()>0) {
-					msgString = FRMMessage.getMsg(FRMMessage.MSG_INCOMPLATE);
-					return RSLT_FORM_INCOMPLETE ;
-				}
+                if (kPI_Type.getOID() == 0) {
+                    try {
+                        long oid = pstKPI_Type.insertExc(this.kPI_Type);
+                        PstKPITypeCompany.deleteByKPITypeId(oid);
+                        String oid_company[] = FRMQueryString.requestStringValues(request, "company");
+                        String companiesOID = "(";
+                        if (oid_company != null) {
+                            for (int uu = 0; uu < oid_company.length; uu++) {
+                                KPITypeCompany objMapKpiTypeComp = new KPITypeCompany();
+                                objMapKpiTypeComp.setKpiTypeId(oid);
+                                objMapKpiTypeComp.setCompanyId(Long.parseLong(oid_company[uu]));
+                                PstKPITypeCompany.insertExc(objMapKpiTypeComp);
+                                companiesOID = "" + oid_company[uu];
+                                if((uu + 1) != oid_company.length){
+                                    companiesOID += ",";
+                                } else {
+                                    companiesOID += ")";
+                                }
+                            }
+                        }
 
-				if(kPI_Type.getOID()==0){
-					try{
-						long oid = pstKPI_Type.insertExc(this.kPI_Type);
-                                                  PstKPITypeCompany.deleteByKPITypeId(oid);
-                                                  String oid_company[] = FRMQueryString.requestStringValues(request, "company");
-                                                    if(oid_company != null){
-                                                        for(int uu = 0 ; uu < oid_company.length;uu++){
-                                                            KPITypeCompany objMapKpiTypeComp = new KPITypeCompany();
-                                                            objMapKpiTypeComp.setKpiTypeId(oid);
-                                                            objMapKpiTypeComp.setCompanyId(Long.parseLong(oid_company[uu]));
-                                                            PstKPITypeCompany.insertExc(objMapKpiTypeComp);
-                                                        }
-                                                    }
+                        PstKpiTypeDivision.deleteByKPITypeId(oid);
+                        String oid_division[] = FRMQueryString.requestStringValues(request, "division");
+                        if (oid_division != null) {
+                            for (int ux = 0; ux < oid_division.length; ux++) {
+                                KpiTypeDivision objMapKpiTypeDiv = new KpiTypeDivision();
+                                objMapKpiTypeDiv.setKpiTypeId(oid);
+                                objMapKpiTypeDiv.setDivisionId(Long.parseLong(oid_division[ux]));
+                                PstKpiTypeDivision.insertExc(objMapKpiTypeDiv);
+                            }
+                        } else {
+                            Vector vDivision = PstDivision.list(
+                                    0, 
+                                    0, 
+                                    PstDivision.fieldNames[PstDivision.FLD_VALID_STATUS] + " = " + PstDivision.VALID_ACTIVE +
+                                    " AND " + PstDivision.fieldNames[PstDivision.FLD_COMPANY_ID] + " IN " + companiesOID , 
+                                    ""
+                            );
+                            for (int i = 0; i < vDivision.size(); i++) {
+                                Division entDivision = (Division) vDivision.get(i);
+                                KpiTypeDivision objMapKpiTypeDiv = new KpiTypeDivision();
+                                objMapKpiTypeDiv.setKpiTypeId(oid);
+                                objMapKpiTypeDiv.setDivisionId(entDivision.getOID());
+                                PstKpiTypeDivision.insertExc(objMapKpiTypeDiv);
+                            }
+                        }
+                    } catch (DBException dbexc) {
+                        excCode = dbexc.getErrorCode();
+                        msgString = getSystemMessage(excCode);
+                        return getControlMsgId(excCode);
+                    } catch (Exception exc) {
+                        msgString = getSystemMessage(I_DBExceptionInfo.UNKNOWN);
+                        return getControlMsgId(I_DBExceptionInfo.UNKNOWN);
+                    }
 
-                                                    PstKpiTypeDivision.deleteByKPITypeId(oid);
-                                                  String oid_division[] = FRMQueryString.requestStringValues(request, "division");
-                                                    if(oid_division != null){
-                                                        for(int ux = 0 ; ux < oid_division.length;ux++){
-                                                            KpiTypeDivision objMapKpiTypeDiv = new KpiTypeDivision();
-                                                            objMapKpiTypeDiv.setKpiTypeId(oid);
-                                                            objMapKpiTypeDiv.setDivisionId(Long.parseLong(oid_division[ux]));
-                                                            PstKpiTypeDivision.insertExc(objMapKpiTypeDiv);
+                } else {
+                    try {
+                        PstKPITypeCompany.deleteByKPITypeId(this.kPI_Type.getOID());
+                        String oid_company[] = FRMQueryString.requestStringValues(request, "company");
+                        String companiesOID = "(";
+                        if (oid_company != null) {
+                            for (int uu = 0; uu < oid_company.length; uu++) {
+                                KPITypeCompany objMapKpiTypeComp = new KPITypeCompany();
+                                objMapKpiTypeComp.setKpiTypeId(this.kPI_Type.getOID());
+                                objMapKpiTypeComp.setCompanyId(Long.parseLong(oid_company[uu]));
+                                PstKPITypeCompany.insertExc(objMapKpiTypeComp);
+                                companiesOID += "" + oid_company[uu];
+                                if((uu + 1) != oid_company.length){
+                                    companiesOID += ",";
+                                } else {
+                                    companiesOID += ")";
+                                }
+                            }
+                        }
 
-                                                        }
-                                                    }
-					}catch(DBException dbexc){
-						excCode = dbexc.getErrorCode();
-						msgString = getSystemMessage(excCode);
-						return getControlMsgId(excCode);
-					}catch (Exception exc){
-						msgString = getSystemMessage(I_DBExceptionInfo.UNKNOWN);
-						return getControlMsgId(I_DBExceptionInfo.UNKNOWN);
-					}
+                        PstKPITypeDivsion.deleteByKPITypeId(this.kPI_Type.getOID());
+                        String oid_division[] = FRMQueryString.requestStringValues(request, "division");
+                        if (oid_division != null) {
+                            for (int xx = 0; xx < oid_division.length; xx++) {
+                                KpiTypeDivision objMapKPITypeDivision = new KpiTypeDivision();
+                                objMapKPITypeDivision.setKpiTypeId(this.kPI_Type.getOID());
+                                objMapKPITypeDivision.setDivisionId(Long.parseLong(oid_division[xx]));
+                                PstKPITypeDivsion.insertExc(objMapKPITypeDivision);
+                            }
+                        } else {
+                            Vector vDivision = PstDivision.list(
+                                    0, 
+                                    0, 
+                                    PstDivision.fieldNames[PstDivision.FLD_VALID_STATUS] + " = " + PstDivision.VALID_ACTIVE +
+                                    " AND " + PstDivision.fieldNames[PstDivision.FLD_COMPANY_ID] + " IN " + companiesOID , 
+                                    ""
+                            );
+                            for (int i = 0; i < vDivision.size(); i++) {
+                                Division entDivision = (Division) vDivision.get(i);
+                                KpiTypeDivision objMapKpiTypeDiv = new KpiTypeDivision();
+                                objMapKpiTypeDiv.setKpiTypeId(this.kPI_Type.getOID());
+                                objMapKpiTypeDiv.setDivisionId(entDivision.getOID());
+                                PstKpiTypeDivision.insertExc(objMapKpiTypeDiv);
+                            }
+                        }
 
-				}else{
-					try {
-                                                  PstKPITypeCompany.deleteByKPITypeId(this.kPI_Type.getOID());
-                                                  String oid_company[] = FRMQueryString.requestStringValues(request, "company");
-                                                    if(oid_company != null){
-                                                        for(int uu = 0 ; uu < oid_company.length;uu++){
-                                                            KPITypeCompany objMapKpiTypeComp = new KPITypeCompany();
-                                                            objMapKpiTypeComp.setKpiTypeId(this.kPI_Type.getOID());
-                                                            objMapKpiTypeComp.setCompanyId(Long.parseLong(oid_company[uu]));
-                                                            PstKPITypeCompany.insertExc(objMapKpiTypeComp);
-                                                        }
-                                                    }
-                                                    
-                                                    
-                                                    PstKPITypeDivsion.deleteByKPITypeId(this.kPI_Type.getOID());
-                                                    String oid_division[] = FRMQueryString.requestStringValues(request, "division");
-                                                    if(oid_division != null){
-                                                        for(int xx = 0 ; xx < oid_division.length;xx++){
-                                                            KpiTypeDivision objMapKPITypeDivision = new KpiTypeDivision();
-                                                            objMapKPITypeDivision.setKpiTypeId(this.kPI_Type.getOID());
-                                                            objMapKPITypeDivision.setDivisionId(Long.parseLong(oid_division[xx]));
-                                                            PstKPITypeDivsion.insertExc(objMapKPITypeDivision);
-                                                        }
-                                                    }
-                                                    
-						long oid = pstKPI_Type.updateExc(this.kPI_Type);
-					}catch (DBException dbexc){
-						excCode = dbexc.getErrorCode();
-						msgString = getSystemMessage(excCode);
-					}catch (Exception exc){
-						msgString = getSystemMessage(I_DBExceptionInfo.UNKNOWN); 
-					}
+                        long oid = pstKPI_Type.updateExc(this.kPI_Type);
+                    } catch (DBException dbexc) {
+                        excCode = dbexc.getErrorCode();
+                        msgString = getSystemMessage(excCode);
+                    } catch (Exception exc) {
+                        msgString = getSystemMessage(I_DBExceptionInfo.UNKNOWN);
+                    }
 
-				}
-				break;
+                }
+                break;
 
-			case Command.EDIT :
-				if (oidKPI_Type != 0) {
-					try {
-						kPI_Type = PstKPI_Type.fetchExc(oidKPI_Type);
-					} catch (DBException dbexc){
-						excCode = dbexc.getErrorCode();
-						msgString = getSystemMessage(excCode);
-					} catch (Exception exc){ 
-						msgString = getSystemMessage(I_DBExceptionInfo.UNKNOWN);
-					}
-				}
-				break;
-
-           
-            
+            case Command.EDIT:
+                if (oidKPI_Type != 0) {
+                    try {
+                        kPI_Type = PstKPI_Type.fetchExc(oidKPI_Type);
+                    } catch (DBException dbexc) {
+                        excCode = dbexc.getErrorCode();
+                        msgString = getSystemMessage(excCode);
+                    } catch (Exception exc) {
+                        msgString = getSystemMessage(I_DBExceptionInfo.UNKNOWN);
+                    }
+                }
+                break;
 
             case Command.ASK:
                 if (oidKPI_Type != 0) {
