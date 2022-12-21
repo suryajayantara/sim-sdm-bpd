@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.dimata.qdep.form.FRMQueryString;
+import java.io.PrintWriter;
 import java.util.Date;
 
 /**
@@ -58,7 +59,10 @@ public class AjaxInsertRealitation extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        response.getWriter().print("Hellow GET");
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+        long oid = 7362763;
+        out.println("{ok:"+oid+"}");
     }
 
     /**
@@ -84,7 +88,7 @@ public class AjaxInsertRealitation extends HttpServlet {
             String achievementNote = FRMQueryString.requestString(request, FrmKPI_Employee_Achiev.fieldNames[FrmKPI_Employee_Achiev.FRM_FIELD_ACHIEV_NOTE]);
             
             if(kpiEmployeeAchievOID > 0){
-                KPI_Employee_Achiev entKpiEmployeeAchiev = PstKPI_Employee_Achiev.fetchExc(kpiEmployeeAchievOID);
+                KPI_Employee_Achiev entKpiEmployeeAchiev = PstKPI_Employee_Achiev.fetchExc(kpiEmployeeAchievOID);   
                 entKpiEmployeeAchiev.setKpiListId(kpiListOID);
                 entKpiEmployeeAchiev.setTargetId(kpiTargetOID);
                 entKpiEmployeeAchiev.setEmployeeId(employeeOID);
@@ -93,7 +97,7 @@ public class AjaxInsertRealitation extends HttpServlet {
                 entKpiEmployeeAchiev.setAchievNote(achievementNote);
                 entKpiEmployeeAchiev.setEntryDate(new Date());
 
-                PstKPI_Employee_Achiev.updateExc(entKpiEmployeeAchiev);
+                kpiEmployeeAchievOID = PstKPI_Employee_Achiev.updateExc(entKpiEmployeeAchiev);
             } else {
                 KPI_Employee_Achiev entKpiEmployeeAchiev = new KPI_Employee_Achiev();
                 entKpiEmployeeAchiev.setKpiListId(kpiListOID);
@@ -104,8 +108,11 @@ public class AjaxInsertRealitation extends HttpServlet {
                 entKpiEmployeeAchiev.setAchievNote(achievementNote);
                 entKpiEmployeeAchiev.setEntryDate(new Date());
 
-                PstKPI_Employee_Achiev.insertExc(entKpiEmployeeAchiev);
+                kpiEmployeeAchievOID = PstKPI_Employee_Achiev.insertExc(entKpiEmployeeAchiev);
             }
+            response.setContentType("application/json");
+            PrintWriter out = response.getWriter();
+            out.println("{oid:"+kpiEmployeeAchievOID+"}");
         } catch(Exception error){}
     }
 

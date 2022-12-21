@@ -24,9 +24,10 @@
 <!DOCTYPE html>
 <%    
     long oidKpiSettingList = FRMQueryString.requestLong(request, FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]);
-
+    long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
     int iCommand = FRMQueryString.requestCommand(request);
     String urlBack = FRMQueryString.requestString(request, "urlBack");
+    String from = FRMQueryString.requestString(request, "from");
     
     KpiSetting entKpiSetting = new KpiSetting();
     KpiSettingList entKpiSettingList = new KpiSettingList();
@@ -112,7 +113,7 @@
         </div>
             
         <div class="content-main">
-            <form method="POST" action="kpi_setting_list_detail.jsp" id="form-back">
+            <form method="POST" action="<%=from%>" id="form-back">
                 <input 
                     type="hidden"
                     name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>"
@@ -156,9 +157,8 @@
                     </tr>
                 </table>
             </div>
-
             <div style="display: flex; justify-content: space-between; margin-top: 2rem;">
-                <span style="font-size: 15px"><strong>KPI Target Per Satuan Kerja</strong></span>
+                <span style="font-size: 15px"><strong>KPI Target Per <%=entKpiList.getKpi_title()%></strong></span>
                 <form action="kpi_setting_target_form.jsp" method="POST">
                     <input type="hidden" name="<%= FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID] %>" value="<%= entKpiSettingList.getOID() %>">
                     <button type="submit" style="color:#fff; border: none;" class="btn-add btn-add1">Tambah Data Target <i class="fa fa-plus"></i></a>

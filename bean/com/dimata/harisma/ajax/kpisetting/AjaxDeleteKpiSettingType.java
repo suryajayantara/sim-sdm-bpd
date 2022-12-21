@@ -17,6 +17,7 @@ import com.dimata.harisma.entity.masterdata.PstKpiSettingType;
 import com.dimata.harisma.form.masterdata.FrmKPI_List;
 import com.dimata.harisma.form.masterdata.FrmKPI_Type;
 import com.dimata.harisma.form.masterdata.FrmKpiSetting;
+import com.dimata.harisma.form.masterdata.FrmKpiSettingGroup;
 import com.dimata.harisma.form.masterdata.FrmKpiSettingType;
 import com.dimata.qdep.form.FRMQueryString;
 import com.dimata.util.Command;
@@ -48,6 +49,7 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
         int isFormKpiSettingType = FRMQueryString.requestInt(request, "isFormKpiSettingType");
         long oidKpiSettingType = FRMQueryString.requestLong(request, FrmKpiSettingType.fieldNames[FrmKpiSettingType.FRM_FIELD_KPI_SETTING_TYPE_ID]);
         long oidKpiSetting = FRMQueryString.requestLong(request, FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]);
+        long oidKpiSettinggroup = FRMQueryString.requestLong(request, FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]);
         long oidKpiType = FRMQueryString.requestLong(request, FrmKPI_Type.fieldNames[FrmKPI_Type.FRM_FIELD_KPI_TYPE_ID]);
         int iCommand = FRMQueryString.requestCommand(request);
 
@@ -55,7 +57,7 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
             if(iCommand == Command.DELETE){
                 if((oidKpiSettingType != 0) && (isFormKpiSettingType == 1)){
                     // untuk menghapus KPI Setting List
-                    String kpiSettingListQuery = "KPI_SETTING_ID ='"+ oidKpiSetting +"'";
+                    String kpiSettingListQuery = "KPI_SETTING_GROUP_ID ='"+ oidKpiSettinggroup +"'";
                     Vector vKpiSettingList = PstKpiSettingList.list(0, 0, kpiSettingListQuery, "");
                     if (vKpiSettingList.size() > 0){
                     for(int i = 0; i < vKpiSettingList.size(); i++){
@@ -64,7 +66,7 @@ public class AjaxDeleteKpiSettingType extends HttpServlet {
                     }
                    }
                     // untuk menghapus KPI Setting Group
-                    String kpiSettingGroupQuery = "KPI_SETTING_ID = '"+ oidKpiSetting + "'";
+                    String kpiSettingGroupQuery = "KPI_SETTING_TYPE_ID = '"+ oidKpiSettingType + "'";
                     Vector vKpiSettingGroup = PstKpiSettingGroup.list(0, 0, kpiSettingGroupQuery, "");
                     if(vKpiSettingGroup.size() > 0){
                         for(int j = 0; j < vKpiSettingGroup.size(); j++){

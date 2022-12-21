@@ -344,6 +344,11 @@ Author : User --%>
                                             name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>"
                                             value="<%=entKpiSettingList.getOID()%>"
                                             />
+                                        <input 
+                                            type="hidden"
+                                            name="from"
+                                            value="kpi_setting_list_detail.jsp"
+                                            />
                                     </form>
                                     <button
                                         onclick="document.getElementById('form-<%=i%>-<%=j%>-<%=k%>').submit();"

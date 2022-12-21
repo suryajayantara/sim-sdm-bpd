@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="com.dimata.harisma.entity.masterdata.PstKPI_List"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiDistribution"%>
 <%@page import="com.dimata.harisma.form.masterdata.CtrlKpiSettingGroup"%>
 <%@page import="com.dimata.harisma.form.masterdata.FrmKpiSettingGroup"%>
@@ -433,7 +434,7 @@
                                 <td>
                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                                     <center>
-                                        <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1">Edit</a>
+                                        <%= PstKPI_List.strType[objKpiList.getInputType()] %>
                                     </center>
                                 </td>
                                 <td>10</td>

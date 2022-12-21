@@ -134,7 +134,7 @@
     if (iCommand == Command.EDIT && kpiSettingType != null && kpiSettingType.exists()) {
 
     }
-    
+
     CtrlKpiSettingGroup ctrlKpiSettingGroup = new CtrlKpiSettingGroup(request);
     if (typeform == 3) {
         long iErrCode = ctrlKpiSettingGroup.action(iCommand, oidKpiSettingGroup, request);
@@ -220,12 +220,12 @@
         <script href="../../styles/bootstrap 5.0/js/bootstrap.bundle.js" type="text/javascript"></script>
 
         <!--end-->
-        
-                <!--alert-->
+
+        <!--alert-->
         <link rel="stylesheet" href="<%=approot%>/styles/sweetalert2.min.css">
         <script src="<%=approot%>/javascripts/sweetalert2.all.min.js"></script>
         <!--end-->
-        
+
         <link rel="stylesheet" href="../../stylesheets/chosen.css" >
         <link rel="stylesheet" href="../../stylesheets/custom.css" >
     </head>
@@ -417,7 +417,7 @@
                 <input type="hidden" name="command" value="<%=iCommand%>">
                 <input type="hidden" name="typeform" value="3">
                 <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>" value="<%=kpiSettingList.getOID()%>">
-                <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId() %>">
+                <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_GROUP_ID]%>" value="<%=kpiSettingGroup.getKpiGroupId()%>">
                 <input type="hidden" name="<%=FrmKpiSettingGroup.fieldNames[FrmKpiSettingGroup.FRM_FIELD_KPI_SETTING_GROUP_ID]%>" value="<%=kpiSettingGroup.getOID()%>">
                 <input type="hidden" name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>" value="<%=kpiSetting.getOID()%>">
                 <input type="hidden" name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_LIST_ID]%>" value="<%=kpiSettingList.getKpiListId()%>">
@@ -442,8 +442,8 @@
                             <td class="p-3" value="<%= objKpiGroup.getOID()%>"> <%= objKpiGroup.getGroup_title()%> </td>
                             <td class="text-center">
                                 <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #ffc107;" class="btn-small">Edit</a> ||
-                                <a href="javascript:cmdDeleteConfirmationKpiGroup('<%=objKpiGroup.getOID()%>','<%= oidKpiSetting%>', '<%= objKpiSettingGroup.getOID() %>')" style="color: #FFF; background-color: #d9534f;" class="btn-small">Delete</a>
+
+                                <a href="javascript:cmdDeleteConfirmationKpiGroup('<%=objKpiGroup.getOID()%>','<%= oidKpiSetting%>', '<%= objKpiSettingGroup.getOID()%>')" style="color: #FFF; background-color: #d9534f;" class="btn-small">Delete</a>
                             </td>
                         </tr>
                         <tr>
@@ -475,10 +475,31 @@
                                             <td><%= k + 1%></td>
                                             <td value="<%=entKpiList.getOID()%>"><%= entKpiList.getKpi_title()%></td>
                                             <td> <%= entKpiDistribution.getDistribution()%> </td>
-                                            <td> - </td>
+                                            <td> <%=PstKPI_List.strType[] %></td>
                                             <td width="5%" class="text-center">
-                                                <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
-                                                <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF; background-color: #ffc107;" class="btn-small">Edit</a>
+                                                <form method="POST" action="kpi_setting_target.jsp" id="form-<%=i%>-<%=j%>-<%=k%>">
+                                                    <input 
+                                                        type="hidden"
+                                                        name="<%=FrmKpiSettingList.fieldNames[FrmKpiSettingList.FRM_FIELD_KPI_SETTING_LIST_ID]%>"
+                                                        value="<%=entKpiSettingList.getOID()%>"
+                                                        />
+                                                    <input 
+                                                        type="hidden"
+                                                        name="<%=FrmKpiSetting.fieldNames[FrmKpiSetting.FRM_FIELD_KPI_SETTING_ID]%>"
+                                                        value="<%=entKpiSettingList.getKpiSettingId()%>"
+                                                        />
+                                                    <input 
+                                                        type="hidden"
+                                                        name="from"
+                                                        value="kpi_setting_form.jsp"
+                                                        />
+                                                </form>
+                                                <button
+                                                    id="button_edit_to_kpi_target-<%=i%>-<%=j%>-<%=k%>"
+                                                    class="btn-small class_button_edit_to_kpi_target"
+                                                    style="color: #fff; background-color: #ffc107; border: none;"
+                                                    >Edit</button>  
+
                                             </td>
                                             <td> - </td>
                                             <td width="5%" class="text-center">
@@ -613,48 +634,57 @@
 <script src="../../styles/select2/js/select2.full.min.js" type="text/javascript"></script>
 <script src="../../javascripts/bootstrap.bundle.min.js" type="text/javascript"></script>
 <script language="JavaScript">
-                                        //var oBody = document.body;
-                                        //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+    $("body").on("click", ".class_button_edit_to_kpi_target", function(event){
+        event.preventDefault();
+        
+        const indexI = $(this).attr("id").split("-")[1];
+        const indexJ = $(this).attr("id").split("-")[2];
+        const indexK = $(this).attr("id").split("-")[3];
+        console.log(indexI, indexJ, indexK);
+        $("#form-"+ indexI + "-" + indexJ + "-" + indexK).submit()
+    })
+                                                    //var oBody = document.body;
+                                                    //var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
 
-                                        $(function () {
-                                            //Initialize Select2 Elements
-                                            $('.select2').select2()
+                                                    $(function () {
+                                                        //Initialize Select2 Elements
+                                                        $('.select2').select2()
 
-                                            //Initialize Select2 Elements
+                                                        //Initialize Select2 Elements
 
-                                            $('.select2bs4').select2({
-                                                theme: 'bootstrap4'
-                                            })
+                                                        $('.select2bs4').select2({
+                                                            theme: 'bootstrap4'
+                                                        })
 
-                                            // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
+                                                        // untuk mengubah command menjadi 0 setelah insert data agar saat reload data tidak terinput lagi
     <% if (iCommandInUrl == Command.SAVE) {%>
-                                            let url = new URL(window.location.href);
-                                            let params = new URLSearchParams(url.search);
-                                            params.set('command', <%= Command.EDIT%>);
-                                            window.history.pushState({}, '', '?' + params.toString());
+                                                        let url = new URL(window.location.href);
+                                                        let params = new URLSearchParams(url.search);
+                                                        params.set('command', <%= Command.EDIT%>);
+                                                        window.history.pushState({}, '', '?' + params.toString());
     <% }%>
-                                        })
+                                                    })
 
-                                        var config = {
-                                            '.chosen-select': {},
-                                            '.chosen-select-deselect': {allow_single_deselect: true},
-                                            '.chosen-select-no-single': {disable_search_threshold: 10},
-                                            '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
-                                            '.chosen-select-width': {width: "100%"}
-                                        }
-                                        for (var selector in config) {
-                                            $(selector).chosen(config[selector]);
-                                        }
+                                                    var config = {
+                                                        '.chosen-select': {},
+                                                        '.chosen-select-deselect': {allow_single_deselect: true},
+                                                        '.chosen-select-no-single': {disable_search_threshold: 10},
+                                                        '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
+                                                        '.chosen-select-width': {width: "100%"}
+                                                    }
+                                                    for (var selector in config) {
+                                                        $(selector).chosen(config[selector]);
+                                                    }
 
-                                        $(function () {
-                                            $('#only-number').on('keydown', '#number', function (e) {
-                                                -1 !== $
-                                                        .inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || /65|67|86|88/
-                                                        .test(e.keyCode) && (!0 === e.ctrlKey || !0 === e.metaKey)
-                                                        || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode)
-                                                        && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
-                                            });
-                                        })
+                                                    $(function () {
+                                                        $('#only-number').on('keydown', '#number', function (e) {
+                                                            -1 !== $
+                                                                    .inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) || /65|67|86|88/
+                                                                    .test(e.keyCode) && (!0 === e.ctrlKey || !0 === e.metaKey)
+                                                                    || 35 <= e.keyCode && 40 >= e.keyCode || (e.shiftKey || 48 > e.keyCode || 57 < e.keyCode)
+                                                                    && (96 > e.keyCode || 105 < e.keyCode) && e.preventDefault()
+                                                        });
+                                                    })
 </script>
 
 <script language="JavaScript">
@@ -730,88 +760,88 @@
         document.FRM_NAME_KPISETTINGLIST.submit();
     }
     function cmdDeleteConfirmationKpiGroup(oidKpiGroup, oidKpiSetting, kpiSettingGroupId) {
-                Swal.fire({
-                    title: 'Apakah Anda Yakin?',
-                    text: "Anda Akan Menghapus Data Kpi Group Dan Kpi Jika Masih Ada!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya Hapus Data Kpi Group!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        cmdDeleteKpiGroup(oidKpiGroup, oidKpiSetting, kpiSettingGroupId);
-                    }
-                })
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            text: "Anda Akan Menghapus Data Kpi Group Dan Kpi Jika Masih Ada!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya Hapus Data Kpi Group!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                cmdDeleteKpiGroup(oidKpiGroup, oidKpiSetting, kpiSettingGroupId);
             }
+        })
+    }
 
     function cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType) {
-            var strUrl = "";
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    window.location.reload();
-                }
+        var strUrl = "";
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                window.location.reload();
             }
-            strUrl = "<%= approot%>/AjaxDeleteKpiSettingType";
-            strUrl += "?FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiSettingType;
-            strUrl += "&FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting;
-            strUrl += "&FRM_FIELD_KPI_TYPE_ID=" + oidKpiType;
-            strUrl += "&isFormKpiSettingType=1";
-            strUrl += "&command=<%=Command.DELETE%>";
-            xmlhttp.open("GET", strUrl, true);
-            xmlhttp.send();
-        
+        }
+        strUrl = "<%= approot%>/AjaxDeleteKpiSettingType";
+        strUrl += "?FRM_FIELD_KPI_SETTING_TYPE_ID=" + oidKpiSettingType;
+        strUrl += "&FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting;
+        strUrl += "&FRM_FIELD_KPI_TYPE_ID=" + oidKpiType;
+        strUrl += "&isFormKpiSettingType=1";
+        strUrl += "&command=<%=Command.DELETE%>";
+        xmlhttp.open("GET", strUrl, true);
+        xmlhttp.send();
+
     }
     function cmdDeleteConfirmationKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType) {
-                Swal.fire({
-                    title: 'Apakah Anda Yakin?',
-                    text: "Anda Akan Menghapus Data Kpi Type Serta Kpi Group Dan Kpi Jika Masih Ada!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya Hapus Data Kpi Type!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType);
-                    }
-                })
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            text: "Anda Akan Menghapus Data Kpi Type Serta Kpi Group Dan Kpi Jika Masih Ada!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya Hapus Data Kpi Type!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                cmdDeleteKpiType(oidKpiSettingType, oidKpiSetting, oidKpiType);
             }
+        })
+    }
 //delete kpi list
     function cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList) {
-            var strUrl = "";
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                    window.location.reload();
-                }
+        var strUrl = "";
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                window.location.reload();
             }
-            strUrl = "<%= approot%>/AjaxDeleteKpiSettingList";
-            strUrl += "?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting;
-            strUrl += "&FRM_FIELD_KPI_LIST_ID=" + oidKpiList;
-            strUrl += "&isFormKpiSettingList=1";
-            strUrl += "&command=<%=Command.DELETE%>";
+        }
+        strUrl = "<%= approot%>/AjaxDeleteKpiSettingList";
+        strUrl += "?FRM_FIELD_KPI_SETTING_ID=" + oidKpiSetting;
+        strUrl += "&FRM_FIELD_KPI_LIST_ID=" + oidKpiList;
+        strUrl += "&isFormKpiSettingList=1";
+        strUrl += "&command=<%=Command.DELETE%>";
 
-            xmlhttp.open("GET", strUrl, true);
-            xmlhttp.send();
-        
+        xmlhttp.open("GET", strUrl, true);
+        xmlhttp.send();
+
     }
     function cmdDeleteConfirmationKpiList(oidKpiSetting, oidKpiList) {
-                Swal.fire({
-                    title: 'Apakah Anda Yakin?',
-                    text: "Anda Akan Menghapus Data Kpi!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Ya Hapus Data Kpi!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList);
-                    }
-                })
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            text: "Anda Akan Menghapus Data Kpi!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya Hapus Data Kpi!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                cmdDeleteKpiSettingList(oidKpiSetting, oidKpiList);
             }
+        })
+    }
 //end
 
     var popup;
