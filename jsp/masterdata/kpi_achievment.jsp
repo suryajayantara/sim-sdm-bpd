@@ -612,13 +612,12 @@ function cmdAddAchievment(oidEmp,kpiListId,targetId){
                   url: "<%= approot %>/AjaxInsertRealitation",
                   data: data,
                   type: 'POST',
+                  dataType: "json",
                   beforeSend: function() {
 //                        $("#loading-" + targetDetail).fadeIn("slow");
                   },
                   success: function(res) {
-//                        form.parent().css("background-color", "#BDF5C3");
-//                        $("#oidKpiEmployeeAchiev-"+targetDetail).val
-                        console.log(res);
+                      $("#oidKpiEmployeeAchiev-"+targetDetail).val(res.insertedId);
                   },
                   error: function(err) {
 //                        form.parent().css("background-", "#F7D8D8");

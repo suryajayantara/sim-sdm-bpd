@@ -40,7 +40,7 @@ public class AjaxInsertRealitation extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -112,7 +112,7 @@ public class AjaxInsertRealitation extends HttpServlet {
             }
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
-            out.println("{oid:"+kpiEmployeeAchievOID+"}");
+            out.println("{\"insertedId\": " + kpiEmployeeAchievOID + "}");
         } catch(Exception error){}
     }
 
