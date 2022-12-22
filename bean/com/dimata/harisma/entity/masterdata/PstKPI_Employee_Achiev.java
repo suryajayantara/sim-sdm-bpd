@@ -114,6 +114,8 @@ public class PstKPI_Employee_Achiev extends DBHandler implements I_DBInterface, 
 	public static final int TYPE_DRAFT = 0;
         public static final int TYPE_IN_PROGRESS = 1;
 	public static final int TYPE_FINISH = 2;
+        public static final int TYPE_TO_BE_APPROVE = 3;
+        public static final int TYPE_TO_BE_CORRECTED = 4;
 	
 	public static final String[] typeAchiev = {
                 "Draft",

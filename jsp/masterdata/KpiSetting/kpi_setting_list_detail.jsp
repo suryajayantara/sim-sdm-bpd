@@ -309,7 +309,7 @@ Author : User --%>
                                         <center>Satuan Ukur</center>
                                         </th>
                                         <th class="title_tbl" width="2%">
-                                        <center>Bobot</center>
+                                        <center>Bobot Penilaian</center>
                                         </th>
                                         <th class="title_tbl" width="2%">
                                         <center>Target</center>

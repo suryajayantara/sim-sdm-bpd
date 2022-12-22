@@ -410,7 +410,7 @@
                                     <th class="title_tbl" style="width: 20%;"> Kpi Performance </th>
                                     <th class="title_tbl">Distribution Option</th>
                                     <th class="title_tbl">Satuan Ukur</th>
-                                    <th class="title_tbl">Bobot</th>
+                                    <th class="title_tbl">Bobot Penilaian</th>
                                     <th class="title_tbl">Action</th>
                                     
                                 </tr>
@@ -421,7 +421,8 @@
                                 vKpiList = PstKPI_List.listWithJoinSettingAndGroup(queryKpiList);
                                 if(vKpiList.size() > 0){
                                     for(int j = 0; j < vKpiList.size(); j++){
-                                        KPI_List objKpiList = (KPI_List) vKpiList. get(j);    
+                                        KPI_List objKpiList = (KPI_List) vKpiList. get(j);
+                                        KPI_List entKpiList = PstKPI_List.fetchExc(objKpiList.getOID());
                             %>
                             <tr>
                                 <td value="<%=objKpiList.getOID() %>">
@@ -434,10 +435,12 @@
                                 <td>
                                     <!--button ini ditampilkan ketika user klik tombol simpan di bawah tabel kpi type-->
                                     <center>
-                                        <%= PstKPI_List.strType[objKpiList.getInputType()] %>
+                                        <%= PstKPI_List.strType[entKpiList.getInputType()] %>
                                     </center>
                                 </td>
-                                <td>10</td>
+                                <td>
+                                <center><input type="number"></center>
+                                </td>
                                 <td>
                                     <div class="responsive-container">
                                         <a href="javascript:cmdEdit('<%=kpiSetting.getOID()%>')" style="color: #FFF;" class="btn-edit btn-edit1 mx-2">Edit</a>

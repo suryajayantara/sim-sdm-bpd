@@ -475,7 +475,7 @@
                                             <td><%= k + 1%></td>
                                             <td value="<%=entKpiList.getOID()%>"><%= entKpiList.getKpi_title()%></td>
                                             <td> <%= entKpiDistribution.getDistribution()%> </td>
-                                            <td> <%=PstKPI_List.strType[] %></td>
+                                            <td> <%=PstKPI_List.strType[entKpiList.getInputType()]%></td>
                                             <td width="5%" class="text-center">
                                                 <form method="POST" action="kpi_setting_target.jsp" id="form-<%=i%>-<%=j%>-<%=k%>">
                                                     <input 
@@ -499,7 +499,6 @@
                                                     class="btn-small class_button_edit_to_kpi_target"
                                                     style="color: #fff; background-color: #ffc107; border: none;"
                                                     >Edit</button>  
-
                                             </td>
                                             <td> - </td>
                                             <td width="5%" class="text-center">
