@@ -44,14 +44,14 @@ public class SessAssessmentMain
             AppraisalMain appMain = new AppraisalMain();
             try{
                 appMain = PstAppraisalMain.fetchExc(appraisalMainOid);
-                long levelOid = appMain.getEmpLevelId();
-                Level level = new Level();
-                level = PstLevel.fetchExc(levelOid);
-                String strWhere = "afmd."+PstAssessmentFormMainDetail.fieldNames[PstAssessmentFormMainDetail.FLD_GROUP_RANK_ID]
-                        +"="+level.getGroupRankId();
+//                long levelOid = appMain.getEmpLevelId();
+//                Level level = new Level();
+//                level = PstLevel.fetchExc(levelOid);
+//                String strWhere = "afmd."+PstAssessmentFormMainDetail.fieldNames[PstAssessmentFormMainDetail.FLD_GROUP_RANK_ID]
+//                        +"="+level.getGroupRankId();
                 //update by satrya 2014-06-09 Vector vAssMain = PstAssessmentFormMain.list(0, 0, strWhere, "");
-                Vector vAssMain = PstAssessmentFormMain.listJoinDetail(0, 0, strWhere, "");
-                assessmentFormMain = (AssessmentFormMain)vAssMain.get(0);
+//                Vector vAssMain = PstAssessmentFormMain.listJoinDetail(0, 0, strWhere, "");
+                assessmentFormMain = PstAssessmentFormMain.fetchExc(appMain.getAssFormMainId());
                 return assessmentFormMain;
             }catch(Exception ex){}
             return assessmentFormMain;

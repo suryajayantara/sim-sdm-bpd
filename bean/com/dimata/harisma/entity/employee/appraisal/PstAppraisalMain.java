@@ -77,6 +77,8 @@ public class PstAppraisalMain extends DBHandler implements I_DBInterface, I_DBTy
         public static final int FLD_DATA_PERIOD_FROM    = 31;
         public static final int FLD_DATA_PERIOD_TO      = 32;
         
+        public static final int FLD_ASS_FORM_MAIN_ID      = 33;
+        
 	public static final  String[] fieldNames = {
 		"HR_APP_MAIN_ID",
 		"EMPLOYEE_ID",
@@ -110,7 +112,8 @@ public class PstAppraisalMain extends DBHandler implements I_DBInterface, I_DBTy
                 "APPROVAL_6_ID",
                 "TIME_APPROVAL_6",
                 "DATA_PERIOD_FROM",
-                "DATA_PERIOD_TO"
+                "DATA_PERIOD_TO",
+                "ASS_FORM_MAIN_ID"
 	 }; 
 
 	public static final  int[] fieldTypes = {
@@ -146,7 +149,8 @@ public class PstAppraisalMain extends DBHandler implements I_DBInterface, I_DBTy
                 TYPE_LONG,
                 TYPE_DATE,
                 TYPE_DATE,
-                TYPE_DATE
+                TYPE_DATE,
+                TYPE_LONG
 	 }; 
 
 	public PstAppraisalMain(){
@@ -259,6 +263,7 @@ public class PstAppraisalMain extends DBHandler implements I_DBInterface, I_DBTy
                         appraisalMain.setTimeApproval6(pstAppraisalMain.getDate(FLD_TIME_APPROVAL_6));
                         appraisalMain.setDataPeriodFrom(pstAppraisalMain.getDate(FLD_DATA_PERIOD_FROM));
                         appraisalMain.setDataPeriodTo(pstAppraisalMain.getDate(FLD_DATA_PERIOD_TO));                        
+                        appraisalMain.setAssFormMainId(pstAppraisalMain.getLong(FLD_ASS_FORM_MAIN_ID));                        
 			return appraisalMain; 
 		}catch(DBException dbe){ 
 			throw dbe; 
@@ -304,6 +309,7 @@ public class PstAppraisalMain extends DBHandler implements I_DBInterface, I_DBTy
                         pstAppraisalMain.setDate(FLD_TIME_APPROVAL_6, appraisalMain.getTimeApproval6());
                         pstAppraisalMain.setDate(FLD_DATA_PERIOD_FROM, appraisalMain.getDataPeriodFrom());
                         pstAppraisalMain.setDate(FLD_DATA_PERIOD_TO, appraisalMain.getDataPeriodTo());
+                        pstAppraisalMain.setLong(FLD_ASS_FORM_MAIN_ID, appraisalMain.getAssFormMainId());
 			pstAppraisalMain.insert(); 
 			appraisalMain.setOID(pstAppraisalMain.getlong(FLD_APP_MAIN_ID));
 		}catch(DBException dbe){ 
@@ -352,6 +358,7 @@ public class PstAppraisalMain extends DBHandler implements I_DBInterface, I_DBTy
                         pstAppraisalMain.setDate(FLD_TIME_APPROVAL_6, appraisalMain.getTimeApproval6());
                         pstAppraisalMain.setDate(FLD_DATA_PERIOD_FROM, appraisalMain.getDataPeriodFrom());
                         pstAppraisalMain.setDate(FLD_DATA_PERIOD_TO, appraisalMain.getDataPeriodTo());
+                        pstAppraisalMain.setLong(FLD_ASS_FORM_MAIN_ID, appraisalMain.getAssFormMainId());
                         
                         pstAppraisalMain.update(); 
                         return appraisalMain.getOID();
@@ -447,6 +454,7 @@ public class PstAppraisalMain extends DBHandler implements I_DBInterface, I_DBTy
                     appraisalMain.setTimeApproval6(rs.getDate(PstAppraisalMain.fieldNames[PstAppraisalMain.FLD_TIME_APPROVAL_6]));
                     appraisalMain.setDataPeriodFrom(rs.getDate(PstAppraisalMain.fieldNames[PstAppraisalMain.FLD_DATA_PERIOD_FROM]));                    
                     appraisalMain.setDataPeriodTo(rs.getDate(PstAppraisalMain.fieldNames[PstAppraisalMain.FLD_DATA_PERIOD_TO]));                                        
+                    appraisalMain.setAssFormMainId(rs.getLong(PstAppraisalMain.fieldNames[PstAppraisalMain.FLD_ASS_FORM_MAIN_ID]));                                        
 		}catch(Exception e){ }
 	}
 

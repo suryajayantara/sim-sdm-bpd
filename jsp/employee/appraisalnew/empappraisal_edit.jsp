@@ -1,4 +1,11 @@
  
+<%@page import="com.dimata.harisma.entity.employee.assessment.AssessmentFormSection"%>
+<%@page import="com.dimata.harisma.entity.employee.assessment.PstAssessmentFormSection"%>
+<%@page import="com.dimata.harisma.entity.employee.assessment.PstAssessmentFormItem"%>
+<%@page import="com.dimata.harisma.entity.employee.assessment.AssessmentFormItem"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="com.dimata.harisma.entity.employee.assessment.AssessmentFormMain"%>
+<%@page import="com.dimata.harisma.entity.employee.assessment.PstAssessmentFormMain"%>
 <% 
 /* 
  * Page Name  		:  empappraisal_edit.jsp
@@ -102,6 +109,24 @@
         boolean isReq = false;
         
         if(iCommand==Command.SAVE){
+            long assFormMainId = FRMQueryString.requestLong(request, "ASS_FORM_MAIN_ID");
+            long positionId = 0;
+            
+            CareerPath entCareerPath = new CareerPath();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDateFrom = sdf.format(datePeriodFrom);
+            String formattedDateTo = sdf.format(datePeriodTo);
+            Vector vEmpCarrier = PstCareerPath.list(0, 1, 
+                    "EMPLOYEE_ID = " + employee.getOID() + " AND WORK_FROM >= '"+formattedDateFrom+"' AND WORK_TO <= '"+formattedDateTo+"'", 
+                    "WORK_FROM DESC"
+            );
+            if(vEmpCarrier.size() > 0){
+                entCareerPath = (CareerPath) vEmpCarrier.get(0);
+                positionId = entCareerPath.getPositionId();
+            } else {
+                positionId = employee.getPositionId();
+            }
+            
             appraisalMain.setDateAssumedPosition(dateAssPos);
             appraisalMain.setDateJoinedHotel(dateJoinHotel);
             appraisalMain.setDateOfAssessment(dateAss);
@@ -109,9 +134,126 @@
             appraisalMain.setDateOfNextAssessment(dateAssNext);
             appraisalMain.setDataPeriodFrom(datePeriodFrom);
             appraisalMain.setDataPeriodTo(datePeriodTo);
+            appraisalMain.setAssFormMainId(assFormMainId);
+            
             if(appraisalMain.getOID()>0){
                 try{
+                    Vector vAssessmentFormSection = PstAssessmentFormSection.list(0, 1, 
+                            "ASS_FORM_MAIN_ID = " + appraisalMain.getAssFormMainId() + " AND PAGE = 1", 
+                            ""
+                    );
+                    if(vAssessmentFormSection.size() > 0){
+                        AssessmentFormSection entAssessmentFormSection = (AssessmentFormSection) vAssessmentFormSection.get(0);
+
+                        Vector vAssessmentFormItem = PstAssessmentFormItem.list(0, 0, 
+                                "ASS_FORM_SECTION_ID = " + entAssessmentFormSection.getOID() + " AND PAGE = 1 AND NUMBER > 0 AND TYPE = " + PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION, 
+                                ""
+                        );
+                        for(int i = 0; i < vAssessmentFormItem.size(); i++){
+                            AssessmentFormItem entAssessmentFormItem = (AssessmentFormItem) vAssessmentFormItem.get(i);
+                            PstAssessmentFormItem.deleteExc(entAssessmentFormItem.getOID());
+                        }
+                    }
+                    
                     oidAppraisalMain = PstAppraisalMain.updateExc(appraisalMain);
+                    
+                    String kpiSettingId = "(";
+                    Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, 
+                            "POSITION_ID = " + positionId, 
+                            ""
+                    );
+                    for(int i = 0; i < vKpiSettingPosition.size(); i++){
+                        KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(i);
+                        kpiSettingId += entKpiSettingPosition.getKpiSettingId();
+                        if((i + 1) != vKpiSettingPosition.size()){
+                            kpiSettingId += ",";
+                        }else{
+                            kpiSettingId += ")";
+                        }
+                    }
+
+                    Vector vKpiSetting = PstKpiSetting.list(0, 0, 
+                            "KPI_SETTING_ID IN " + kpiSettingId + " AND TAHUN = YEAR(NOW()) AND START_DATE < CURDATE() AND VALID_DATE > CURDATE()", 
+                            ""
+                    );
+                    kpiSettingId = "(";
+                    for(int i = 0; i < vKpiSetting.size(); i++){
+                        KpiSetting entKpiSetting= (KpiSetting) vKpiSetting.get(i);
+                        kpiSettingId += entKpiSetting.getOID();
+                        if((i + 1) != vKpiSetting.size()){
+                            kpiSettingId += ",";
+                        }else{
+                            kpiSettingId += ")";
+                        }
+                    }
+
+                    Vector vKpiTargetDetailEmployee = PstKpiTargetDetailEmployee.list(0, 0, 
+                            "EMPLOYEE_ID = " + employee.getOID(), 
+                            ""
+                    );
+                    String kpiTargetDetailId = "(";
+                    for(int i = 0; i < vKpiTargetDetailEmployee.size(); i++){
+                        KpiTargetDetailEmployee entKpiTargetDetailEmployee = (KpiTargetDetailEmployee) vKpiTargetDetailEmployee.get(i);
+                        kpiTargetDetailId += entKpiTargetDetailEmployee.getKpiTargetDetailId();
+                        if((i + 1) != vKpiTargetDetailEmployee.size()){
+                            kpiTargetDetailId += ",";
+                        }else{
+                            kpiTargetDetailId += ")";
+                        }
+                    }
+
+                    Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 0, 
+                            "KPI_TARGET_DETAIL_ID IN " + kpiTargetDetailId, 
+                            ""
+                    );
+                    String kpiSettingListid = "(";
+                    for(int i = 0; i < vKpiTargetDetail.size(); i++){
+                        KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
+                        kpiSettingListid += entKpiTargetDetail.getKpiSettingListId();
+                        if((i + 1) != vKpiTargetDetail.size()){
+                            kpiSettingListid += ",";
+                        }else{
+                            kpiSettingListid += ")";
+                        }
+                    }
+
+                    Vector vKpiSettingList = PstKpiSettingList.list(0, 0, 
+                            "KPI_SETTING_ID IN " + kpiSettingId + " AND KPI_SETTING_LIST_ID IN " + kpiSettingListid, 
+                            ""
+                    );
+                    for(int i = 0; i < vKpiSettingList.size(); i++){
+                        KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
+                        KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+                        vKpiTargetDetail = PstKpiTargetDetail.list(0, 1, PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_ID] + " = " + entKpiList.getOID(), "");
+                        KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(0);
+                        Vector vAssFormSection = PstAssessmentFormSection.list(0, 1, 
+                                "ASS_FORM_MAIN_ID = " + assFormMainId + " AND PAGE = 1", 
+                                ""
+                        );
+                        AssessmentFormSection entAssFormSection = (AssessmentFormSection) vAssFormSection.get(0);
+
+                        AssessmentFormItem entAssessmentFormItem = new AssessmentFormItem();
+                        entAssessmentFormItem.setTitle(entKpiList.getKpi_title());
+                        entAssessmentFormItem.setKpiListId(entKpiList.getOID());
+                        entAssessmentFormItem.setKpiUnit(PstKPI_List.strType[entKpiList.getInputType()]);
+                        entAssessmentFormItem.setKpiTarget((float) entKpiTargetDetail.getAmount());
+                        entAssessmentFormItem.setWeightPoint((float) entKpiTargetDetail.getWeightValue());
+                        entAssessmentFormItem.setNumber(i + 1);
+                        entAssessmentFormItem.setOrderNumber(i + 2);
+                        entAssessmentFormItem.setPage(1);
+                        entAssessmentFormItem.setHeight(1);
+                        entAssessmentFormItem.setAssFormSection(entAssFormSection.getOID());
+                        entAssessmentFormItem.setType(PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION);
+                        entAssessmentFormItem.setTitle_L2("");
+                        entAssessmentFormItem.setItemPoin1("");
+                        entAssessmentFormItem.setItemPoin2("");
+                        entAssessmentFormItem.setItemPoin3("");
+                        entAssessmentFormItem.setItemPoin4("");
+                        entAssessmentFormItem.setItemPoin5("");
+                        entAssessmentFormItem.setItemPoin6("");
+                        PstAssessmentFormItem.insertExc(entAssessmentFormItem);
+                    }
+                    
                     if(oidAppraisalMain>0){
                         errMsg = "appraisal main has been saved";
                         isSuccessSaved = true;
@@ -121,15 +263,105 @@
                 }
             }else{
                 if(employee.getOID()>0 && assessor.getOID()>0){
-                    appraisalMain.setEmployeeId(employee.getOID());
-                    appraisalMain.setEmpDepartmentId(employee.getDepartmentId());
-                    appraisalMain.setEmpPositionId(employee.getPositionId());
-                    appraisalMain.setEmpLevelId(employee.getLevelId());
-                    appraisalMain.setAssesorId(assessor.getOID());
-                    appraisalMain.setAssesorPositionId(assessor.getPositionId());
-
-                    try{
+                    try{                        
+                        appraisalMain.setEmployeeId(employee.getOID());
+                        appraisalMain.setEmpDepartmentId(employee.getDepartmentId());
+                        appraisalMain.setEmpPositionId(positionId);
+                        appraisalMain.setEmpLevelId(employee.getLevelId());
+                        appraisalMain.setAssesorId(assessor.getOID());
+                        appraisalMain.setAssesorPositionId(assessor.getPositionId());
                         oidAppraisalMain = PstAppraisalMain.insertExc(appraisalMain);
+                        
+                        String kpiSettingId = "(";
+                        Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, 
+                                "POSITION_ID = " + positionId, 
+                                ""
+                        );
+                        for(int i = 0; i < vKpiSettingPosition.size(); i++){
+                            KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(i);
+                            kpiSettingId += entKpiSettingPosition.getKpiSettingId();
+                            if((i + 1) != vKpiSettingPosition.size()){
+                                kpiSettingId += ",";
+                            }else{
+                                kpiSettingId += ")";
+                            }
+                        }
+                        
+                        Vector vKpiSetting = PstKpiSetting.list(0, 0, 
+                                "KPI_SETTING_ID IN " + kpiSettingId + " AND TAHUN = YEAR(NOW()) AND START_DATE < CURDATE() AND VALID_DATE > CURDATE()", 
+                                ""
+                        );
+                        kpiSettingId = "(";
+                        for(int i = 0; i < vKpiSetting.size(); i++){
+                            KpiSetting entKpiSetting= (KpiSetting) vKpiSetting.get(i);
+                            kpiSettingId += entKpiSetting.getOID();
+                            if((i + 1) != vKpiSettingPosition.size()){
+                                kpiSettingId += ",";
+                            }else{
+                                kpiSettingId += ")";
+                            }
+                        }
+                        
+                        Vector vKpiTargetDetailEmployee = PstKpiTargetDetailEmployee.list(0, 0, 
+                                "EMPLOYEE_ID = " + employee.getOID(), 
+                                ""
+                        );
+                        String kpiTargetDetailId = "(";
+                        for(int i = 0; i < vKpiTargetDetailEmployee.size(); i++){
+                            KpiTargetDetailEmployee entKpiTargetDetailEmployee = (KpiTargetDetailEmployee) vKpiTargetDetailEmployee.get(i);
+                            kpiTargetDetailId += entKpiTargetDetailEmployee.getKpiTargetDetailId();
+                            if((i + 1) != vKpiTargetDetailEmployee.size()){
+                                kpiTargetDetailId += ",";
+                            }else{
+                                kpiTargetDetailId += ")";
+                            }
+                        }
+                        
+                        Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 0, 
+                                "KPI_TARGET_DETAIL_ID IN " + kpiTargetDetailId, 
+                                ""
+                        );
+                        String kpiSettingListid = "(";
+                        for(int i = 0; i < vKpiTargetDetail.size(); i++){
+                            KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(i);
+                            kpiTargetDetailId += entKpiTargetDetail.getKpiTargetId();
+                            if((i + 1) != vKpiTargetDetail.size()){
+                                kpiSettingListid += ",";
+                            }else{
+                                kpiSettingListid += ")";
+                            }
+                        }
+                        
+                        Vector vKpiSettingList = PstKpiSettingList.list(0, 0, 
+                                "KPI_SETTING_ID IN " + kpiSettingId + " AND KPI_SETTING_LIST_ID IN " + kpiSettingListid, 
+                                ""
+                        );
+                        for(int i = 0; i < vKpiSettingList.size(); i++){
+                            KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
+                            KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+                            vKpiTargetDetail = PstKpiTargetDetail.list(0, 1, PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_ID] + " = " + entKpiList.getOID(), "");
+                            KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(0);
+                            Vector vAssFormSection = PstAssessmentFormSection.list(0, 1, 
+                                    "ASS_FORM_MAIN_ID = " + assFormMainId + " AND PAGE = 1", 
+                                    ""
+                            );
+                            AssessmentFormSection entAssFormSection = (AssessmentFormSection) vAssFormSection.get(0);
+                            
+                            AssessmentFormItem entAssessmentFormItem = new AssessmentFormItem();
+                            entAssessmentFormItem.setTitle(entKpiList.getKpi_title());
+                            entAssessmentFormItem.setKpiListId(entKpiList.getOID());
+                            entAssessmentFormItem.setKpiUnit(PstKPI_List.strType[entKpiList.getInputType()]);
+                            entAssessmentFormItem.setKpiTarget((float) entKpiTargetDetail.getAmount());
+                            entAssessmentFormItem.setWeightPoint((float) entKpiTargetDetail.getWeightValue());
+                            entAssessmentFormItem.setNumber(i + 1);
+                            entAssessmentFormItem.setOrderNumber(i + 2);
+                            entAssessmentFormItem.setPage(1);
+                            entAssessmentFormItem.setHeight(1);
+                            entAssessmentFormItem.setAssFormSection(entAssFormSection.getOID());
+                            entAssessmentFormItem.setType(PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION);
+                            PstAssessmentFormItem.insertExc(entAssessmentFormItem);
+                        }
+
                         if(oidAppraisalMain>0){
                             isSuccessSaved = true;
                             errMsg = "appraisal main has been saved";
@@ -754,6 +986,23 @@ function showObjectForMenu(){
                                                                 <%//=Formater.formatDate(appraisalMain.getDateOfAssessment(),"yyyy MM dd")%>
                                                                 <%=ControlDatePopup.writeDate(FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_DATA_PERIOD_TO],appraisalMain.getDataPeriodTo())%>
                                                                <!-- <a href="javascript:cmdClearDateLast()">Clear Date</a>-->
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td width="12%" nowrap> 
+                                                                <div align="left">Choose Form</div>
+                                                            </td>
+                                                            <td width="88%" nowrap>:
+                                                                <select name="ASS_FORM_MAIN_ID">
+                                                                    <option value="0">~Pilih Form~</option>
+                                                                    <%
+                                                                        Vector vAssFormMain = PstAssessmentFormMain.list(0, 0, "", "");
+                                                                        for(int i = 0; i < vAssFormMain.size(); i++){
+                                                                            AssessmentFormMain entAssessmentFormMain = (AssessmentFormMain) vAssFormMain.get(i);
+                                                                    %>
+                                                                    <option value="<%= entAssessmentFormMain.getOID() %>" <% if(appraisalMain.getAssFormMainId() == entAssessmentFormMain.getOID()){%> selected <%} %>><%= entAssessmentFormMain.getTitle() %></option>
+                                                                    <% } %>
+                                                                </select>
                                                             </td>
                                                         </tr>
                                                     </table>

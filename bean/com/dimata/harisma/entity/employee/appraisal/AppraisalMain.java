@@ -47,6 +47,8 @@ public class AppraisalMain extends Entity{
     
     private Date dataPeriodFrom;
     private Date dataPeriodTo;
+    
+    private long assFormMainId;
 
     public Date getAssessorSignDate() {
         return assessorSignDate;
@@ -392,6 +394,15 @@ public class AppraisalMain extends Entity{
         this.dataPeriodTo = dataPeriodTo;
     }
     
-    
+    public long getAssFormMainId() {
+        return assFormMainId;
+    }
+
+    /**
+     * @param dataPeriodTo the dataPeriodTo to set
+     */
+    public void setAssFormMainId(long assFormMainId) {
+        this.assFormMainId = assFormMainId;
+    }
     
 }

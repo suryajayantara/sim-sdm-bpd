@@ -65,7 +65,7 @@ if(iCommand==Command.VIEW){
             AssessmentFormMain assessmentFormCreator = PstAssessmentFormMain.fetchExc(oidAssessmentFormMain);
             strViewForm = ControlForm.createFormMain(assessmentFormCreator);
         }else{
-            strViewForm = ControlForm.createPage(oidAssessmentFormMain,currPage);
+            strViewForm = ControlForm.createPage(oidAssessmentFormMain,currPage, request);
         }
     }catch(Exception ex){}
 }
@@ -78,8 +78,9 @@ if(iCommand==Command.VIEW){
 <head>
 <!-- #BeginEditable "doctitle" --> 
 <title>HARISMA - Master Data Division</title>
-<script language="JavaScript">
 
+<script src="<%=approot%>/javascripts/jquery.js"></script>
+<script language="JavaScript">
 function cmdGoToPage(page){
     //alert(page);
     document.frmAssessmentFormSection.page.value=page;
@@ -293,7 +294,7 @@ function hideObjectForMasterdata(){
                           <tr> 
                             <td valign="top">
                                 <!-- #BeginEditable "content" -->
-                                <form name="frmAssessmentFormSection" method ="post" action="">
+                                <form name="frmAssessmentFormSection" method ="get" action="">
                                     <input type="hidden" name="command" value="<%=String.valueOf((iCommand==Command.GOTO?Command.VIEW:iCommand))%>">
                                     <input type="hidden" name="start" value="<%=String.valueOf(start)%>">
                                     <input type="hidden" name="hidden_ass_form_main_id" value="<%=String.valueOf(oidAssessmentFormMain)%>">  
@@ -401,6 +402,19 @@ function hideObjectForMasterdata(){
 <script language="JavaScript">
 	//var oBody = document.body;
 	//var oSuccess = oBody.attachEvent('onkeydown',fnTrapKD);
+    $("body").on("change", "#position-select", function(e){
+          // Ambil objek URLSearchParams dari URL saat ini
+          const searchParams = new URLSearchParams(window.location.search);
+
+          // Ubah nilai parameter yang diberikan
+          searchParams.set("position_id", $(this).val());
+
+          // Buat URL baru dengan parameter yang diubah
+          const newURL = window.location.protocol+"//"+window.location.host + window.location.pathname+"?"+ searchParams.toString();
+
+          // Gunakan metode pushState untuk mengubah URL tanpa reload halaman
+          window.location.href = newURL;
+    })
 </script>
 <!-- #EndEditable -->
 <!-- #EndTemplate -->

@@ -60,7 +60,7 @@ public class ControlFormAppraisal {
     public static String createFormMain(AssessmentFormMain assessmentFormMain, AppraisalMain appraisalMain) {
         String strForm = "";
         strForm = createMainHeader(assessmentFormMain) + "<br>" + createMainData(assessmentFormMain, appraisalMain)
-                + "<br>" + createMainDesc() + "<br>"/*+createMainRating()*/;
+                /*+ "<br>" + createMainDesc() + "<br>"+createMainRating()*/;
         return strForm;
     }
 
@@ -1500,133 +1500,136 @@ public class ControlFormAppraisal {
     }
     
     private static String createItemTypeKpiEmployeePosition(AppraisalMain appMain, AssessmentFormSection assSection, AssessmentFormItem assessmentFormItem, Appraisal appraisal) {
-        String strItem = "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='pageCover'>";
-        strItem += "<tr>";
-        strItem += "  <td width='90%' height='100%'>";
-        strItem += "    <table width='100%' border='0' cellspacing='0' cellpadding='0'>";
-        strItem += "        <tr>";
-        strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
-        strItem += "            <b>" + assessmentFormItem.getNumber() + ".</b>";
-        strItem += "            </td>";
-        strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
-        strItem += "            <b>" + assessmentFormItem.getTitle() + "</b>";
-        if (assessmentFormItem.getTitle_L2().length() > 0) {
-            strItem += "            <br><b><i>" + assessmentFormItem.getTitle_L2() + "</i></b>";
-        }
-        strItem += "            <br></td>";
-        strItem += "<td  width='30' colspan='2' class='pageCover'> Target:<input type='text' readonly size='10'  value='" + assessmentFormItem.getKpiTarget() + "'> <input type='text' readonly size='15'  value='" + assessmentFormItem.getKpiUnit() + "'" + "&nbsp;&nbsp;</td><td  width='50' colspan='2' class='pageCover'>&nbsp;&nbsp;Note:<input type='text' readonly size='40'  value='" + assessmentFormItem.getKpiNote() + "'></td>";
-        strItem += "<td width='30' colspan='2' class='pageCover'>Weight:<input type='text' readonly size='5' name='" + FrmAssessmentFormItem.fieldNames[FrmAssessmentFormItem.FRM_FIELD_WEIGHT_POINT] + assessmentFormItem.getOID() + "' value='" + assessmentFormItem.getWeightPoint() + "'></td>";
-
-        strItem += "        </tr>";
-        int countNumber = 1;
-        for (int i = 0; i < 6; i++) {
-            String strPoin_1 = "";
-            String strPoin_2 = "";
-
-            String strTempPoin = "";
-            switch (i) {
-                case 0:
-                    strTempPoin = assessmentFormItem.getItemPoin1();
-                    break;
-                case 1:
-                    strTempPoin = assessmentFormItem.getItemPoin2();
-                    break;
-                case 2:
-                    strTempPoin = assessmentFormItem.getItemPoin3();
-                    break;
-                case 3:
-                    strTempPoin = assessmentFormItem.getItemPoin4();
-                    break;
-                case 4:
-                    strTempPoin = assessmentFormItem.getItemPoin5();
-                    break;
-                case 5:
-                    strTempPoin = assessmentFormItem.getItemPoin6();
-                    break;
-            }
-            int splitPos = strTempPoin.indexOf("(");
-            if (splitPos > -1) {
-                strPoin_1 = strTempPoin.substring(0, splitPos);
-                strPoin_2 = strTempPoin.substring(splitPos, strTempPoin.length());
-            } else {
-                strPoin_1 = strTempPoin;
-            }
-            if (strPoin_1.length() > 0 || !(strPoin_1.equals(""))) {
-                strItem += "        <tr>";
-                strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
-                strItem += "            " + countNumber + ".";
-                countNumber = countNumber + 1;
-                strItem += "            </td>";
-                strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
-                strItem += "            " + strPoin_1;
-                if (strPoin_2.length() > 0) {
-                    strItem += "            <br><i>" + strPoin_2 + "</i>";
-                }
-                strItem += "            <br><br>";
-                strItem += "            </td>";
-                strItem += "        </tr>";
-            }
-        }
-        strItem += "    </table>";
-        for (int i = 1; i < assessmentFormItem.getHeight(); i++) {
-            strItem += "<br/>";
-        }
-        strItem += "  </td>";
-        strItem += "  <td width='10%' height='100%' align='right' valign='top'>";
-        strItem += "              <table width='58' height='42' class='pageInput'>";
-        strItem += "                <tr>";
-        strItem += "                    <td width='70'>";
-        strItem += "Realization:<input onchange='cmdSetNeedSaving()' type='text' size='5' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_REALIZATION] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getRealization() > 0) ? appraisal.getRealization() : 0) + "'>" + assessmentFormItem.getEntryUnit();
-        strItem += "                    </td>";
-        strItem += "                    <td width='70'>";
-        strItem += "Evidence:<input onchange='cmdSetNeedSaving()' type='text'  size='50' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_EVIDENCE] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getEvidence() != null) ? appraisal.getEvidence() : "") + "'>";;
-        strItem += "                    </td>";
-        strItem += "                    <td width='70'>";
-        strItem += "Point:<input readonly onchange='cmdSetNeedSaving()' type='text' size='5' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_POINT] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getPoint() > 0) ? appraisal.getPoint() : 0) + "'>";;
-        strItem += "                    </td>";
-        strItem += "                    <td width='70'>";
-        strItem += "Point x Weight:<input  readonly onchange='cmdSetNeedSaving()' type='text' size='5' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_RATING] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getRating() > 0) ? appraisal.getRating() : 0) + "'>";;
-        strItem += "                    </td>";
-        strItem += "                </tr>";
-        strItem += "              </table>";
-        strItem += "  </td>";
-        strItem += " </tr>";
-        strItem += "</table>";
-
-        strItem += "<input type='hidden' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_APPRAISAL_ID] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getOID() > 0) ? appraisal.getOID() : 0) + "'>";
-        strItem += "<input type='hidden' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ASS_FORM_ITEM_ID] + assessmentFormItem.getOID() + "' value='" + ((assessmentFormItem.getOID() > 0) ? assessmentFormItem.getOID() : 0) + "'>";
-        //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_EMP_COMMENT]+assessmentFormItem.getOID()+"' value=''>";
-        //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ASS_COMMENT]+assessmentFormItem.getOID()+"' value=''>";
-        //  strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_1]+assessmentFormItem.getOID()+"' value=''>";
-        //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_2]+assessmentFormItem.getOID()+"' value=''>";
-        //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_3]+assessmentFormItem.getOID()+"' value=''>";
-        //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_4]+assessmentFormItem.getOID()+"' value=''>";
-        //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_5]+assessmentFormItem.getOID()+"' value=''>";
-        //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_6]+assessmentFormItem.getOID()+"' value=''>";
-        int maxNumber = SessAssessmentFormItem.getMaxNumber(assessmentFormItem.getAssFormSection());
-        if (false && maxNumber == assessmentFormItem.getNumber()) {
-
-            strItem += "<br><table width='100%' border='0' cellspacing='0' cellpadding='0' >";
+        String strItem = "";
+        if(assessmentFormItem.getNumber() > 0){
+            strItem += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='pageCover'>";
             strItem += "<tr>";
-            strItem += "<td alight='left'>";
-            strItem += "<font size='4'><b> PERFORMANCE %</b></font> (add ratings) <font size='4'><b>" + appMain.getTotalScore() + " / " + appMain.getTotalAssessment() + " = </b></font>";
-            strItem += "</td>";
-            strItem += "<td alight='right'>";
-            strItem += "              <table width='70' height='42' class='pageInput'>";
+            strItem += "  <td width='90%' height='100%'>";
+            strItem += "    <table width='100%' border='0' cellspacing='0' cellpadding='0'>";
+            strItem += "        <tr>";
+            strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
+            strItem += "            <b>" + assessmentFormItem.getNumber() + ".</b>";
+            strItem += "            </td>";
+            strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
+            strItem += "            <b>" + assessmentFormItem.getTitle() + "</b>";
+            if (assessmentFormItem.getTitle_L2().length() > 0) {
+                strItem += "            <br><b><i>" + assessmentFormItem.getTitle_L2() + "</i></b>";
+            }
+            strItem += "            <br></td>";
+            strItem += "<td  width='30' colspan='2' class='pageCover'> Target:<input type='text' readonly size='10'  value='" + assessmentFormItem.getKpiTarget() + "'> <input type='text' readonly size='15'  value='" + assessmentFormItem.getKpiUnit() + "'" + "&nbsp;&nbsp;</td><td  width='50' colspan='2' class='pageCover'>&nbsp;&nbsp;Note:<input type='text' readonly size='40'  value='" + assessmentFormItem.getKpiNote() + "'></td>";
+            strItem += "<td width='30' colspan='2' class='pageCover'>Weight:<input type='text' readonly size='5' name='" + FrmAssessmentFormItem.fieldNames[FrmAssessmentFormItem.FRM_FIELD_WEIGHT_POINT] + assessmentFormItem.getOID() + "' value='" + assessmentFormItem.getWeightPoint() + "'></td>";
+
+            strItem += "        </tr>";
+            int countNumber = 1;
+            for (int i = 0; i < 6; i++) {
+                String strPoin_1 = "";
+                String strPoin_2 = "";
+
+                String strTempPoin = "";
+                switch (i) {
+                    case 0:
+                        strTempPoin = assessmentFormItem.getItemPoin1();
+                        break;
+                    case 1:
+                        strTempPoin = assessmentFormItem.getItemPoin2();
+                        break;
+                    case 2:
+                        strTempPoin = assessmentFormItem.getItemPoin3();
+                        break;
+                    case 3:
+                        strTempPoin = assessmentFormItem.getItemPoin4();
+                        break;
+                    case 4:
+                        strTempPoin = assessmentFormItem.getItemPoin5();
+                        break;
+                    case 5:
+                        strTempPoin = assessmentFormItem.getItemPoin6();
+                        break;
+                }
+                int splitPos = strTempPoin.indexOf("(");
+                if (splitPos > -1) {
+                    strPoin_1 = strTempPoin.substring(0, splitPos);
+                    strPoin_2 = strTempPoin.substring(splitPos, strTempPoin.length());
+                } else {
+                    strPoin_1 = strTempPoin;
+                }
+                if (strPoin_1.length() > 0 || !(strPoin_1.equals(""))) {
+                    strItem += "        <tr>";
+                    strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
+                    strItem += "            " + countNumber + ".";
+                    countNumber = countNumber + 1;
+                    strItem += "            </td>";
+                    strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
+                    strItem += "            " + strPoin_1;
+                    if (strPoin_2.length() > 0) {
+                        strItem += "            <br><i>" + strPoin_2 + "</i>";
+                    }
+                    strItem += "            <br><br>";
+                    strItem += "            </td>";
+                    strItem += "        </tr>";
+                }
+            }
+            strItem += "    </table>";
+            for (int i = 1; i < assessmentFormItem.getHeight(); i++) {
+                strItem += "<br/>";
+            }
+            strItem += "  </td>";
+            strItem += "  <td width='10%' height='100%' align='right' valign='top'>";
+            strItem += "              <table width='58' height='42' class='pageInput'>";
             strItem += "                <tr>";
-            strItem += "                    <td width='70' alight='right'>";
-            strItem += "<font size='4'>" + appMain.getScoreAverage() + " %</font>";
+            strItem += "                    <td width='70'>";
+            strItem += "Realization:<input onchange='cmdSetNeedSaving()' type='text' size='5' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_REALIZATION] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getRealization() > 0) ? appraisal.getRealization() : 0) + "'>" + assessmentFormItem.getEntryUnit();
+            strItem += "                    </td>";
+            strItem += "                    <td width='70'>";
+            strItem += "Evidence:<input onchange='cmdSetNeedSaving()' type='text'  size='50' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_EVIDENCE] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getEvidence() != null) ? appraisal.getEvidence() : "") + "'>";;
+            strItem += "                    </td>";
+            strItem += "                    <td width='70'>";
+            strItem += "Point:<input readonly onchange='cmdSetNeedSaving()' type='text' size='5' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_POINT] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getPoint() > 0) ? appraisal.getPoint() : 0) + "'>";;
+            strItem += "                    </td>";
+            strItem += "                    <td width='70'>";
+            strItem += "Point x Weight:<input  readonly onchange='cmdSetNeedSaving()' type='text' size='5' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_RATING] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getRating() > 0) ? appraisal.getRating() : 0) + "'>";;
             strItem += "                    </td>";
             strItem += "                </tr>";
             strItem += "              </table>";
-            strItem += "</td>";
-            strItem += "<td>";
-            strItem += "(average %)";
-            strItem += "</td>";
-            strItem += "</tr>";
+            strItem += "  </td>";
+            strItem += " </tr>";
             strItem += "</table>";
+
+            strItem += "<input type='hidden' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_APPRAISAL_ID] + assessmentFormItem.getOID() + "' value='" + ((appraisal.getOID() > 0) ? appraisal.getOID() : 0) + "'>";
+            strItem += "<input type='hidden' name='" + FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ASS_FORM_ITEM_ID] + assessmentFormItem.getOID() + "' value='" + ((assessmentFormItem.getOID() > 0) ? assessmentFormItem.getOID() : 0) + "'>";
+            //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_EMP_COMMENT]+assessmentFormItem.getOID()+"' value=''>";
+            //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ASS_COMMENT]+assessmentFormItem.getOID()+"' value=''>";
+            //  strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_1]+assessmentFormItem.getOID()+"' value=''>";
+            //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_2]+assessmentFormItem.getOID()+"' value=''>";
+            //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_3]+assessmentFormItem.getOID()+"' value=''>";
+            //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_4]+assessmentFormItem.getOID()+"' value=''>";
+            //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_5]+assessmentFormItem.getOID()+"' value=''>";
+            //   strItem+="<input type='hidden' name='"+FrmAppraisal.fieldNames[FrmAppraisal.FRM_FIELD_ANSWER_6]+assessmentFormItem.getOID()+"' value=''>";
+            int maxNumber = SessAssessmentFormItem.getMaxNumber(assessmentFormItem.getAssFormSection());
+            if (false && maxNumber == assessmentFormItem.getNumber()) {
+
+                strItem += "<br><table width='100%' border='0' cellspacing='0' cellpadding='0' >";
+                strItem += "<tr>";
+                strItem += "<td alight='left'>";
+                strItem += "<font size='4'><b> PERFORMANCE %</b></font> (add ratings) <font size='4'><b>" + appMain.getTotalScore() + " / " + appMain.getTotalAssessment() + " = </b></font>";
+                strItem += "</td>";
+                strItem += "<td alight='right'>";
+                strItem += "              <table width='70' height='42' class='pageInput'>";
+                strItem += "                <tr>";
+                strItem += "                    <td width='70' alight='right'>";
+                strItem += "<font size='4'>" + appMain.getScoreAverage() + " %</font>";
+                strItem += "                    </td>";
+                strItem += "                </tr>";
+                strItem += "              </table>";
+                strItem += "</td>";
+                strItem += "<td>";
+                strItem += "(average %)";
+                strItem += "</td>";
+                strItem += "</tr>";
+                strItem += "</table>";
+            }
+            // System.out.println(strItem);
         }
-        // System.out.println(strItem);
         return strItem;
     }
 
@@ -1703,17 +1706,17 @@ public class ControlFormAppraisal {
                                 totalRating = totalRating + (float) appraisal.getRating();
                             }
                         } else if (assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_EMPLOYEE_KPI_TARGET){
-							String whereKPI = PstAppraisal.fieldNames[PstAppraisal.FLD_KPI_ID]+" > 0"+
-									" AND "+ PstAppraisal.fieldNames[PstAppraisal.FLD_APP_MAIN_ID]+"="+appMain.getOID()+
-									" AND "+ PstAppraisal.fieldNames[PstAppraisal.FLD_ASS_FORM_ITEM_ID]+"="+assItem.getOID();
-							Vector listAppMain = PstAppraisal.list(0, 0, whereKPI, "");
-							if (listAppMain.size()>0){
-								for (int kpi = 0; kpi < listAppMain.size(); kpi++){
-									Appraisal appraisalKpi = (Appraisal) listAppMain.get(kpi);
-									totalRating = totalRating + (float) appraisalKpi.getRating();
-								}
-							}
-						}
+                                String whereKPI = PstAppraisal.fieldNames[PstAppraisal.FLD_KPI_ID]+" > 0"+
+                                                " AND "+ PstAppraisal.fieldNames[PstAppraisal.FLD_APP_MAIN_ID]+"="+appMain.getOID()+
+                                                " AND "+ PstAppraisal.fieldNames[PstAppraisal.FLD_ASS_FORM_ITEM_ID]+"="+assItem.getOID();
+                                Vector listAppMain = PstAppraisal.list(0, 0, whereKPI, "");
+                                if (listAppMain.size()>0){
+                                        for (int kpi = 0; kpi < listAppMain.size(); kpi++){
+                                                Appraisal appraisalKpi = (Appraisal) listAppMain.get(kpi);
+                                                totalRating = totalRating + (float) appraisalKpi.getRating();
+                                        }
+                                }
+                        }
                         strPage += "<tr><td width='100%'>";
                         if (assSection.getPointEvaluationId() == Evaluation.EVAL_TYPE_PERFORMANCE_RANGE) {
                             assItem.setEntryUnit("%");

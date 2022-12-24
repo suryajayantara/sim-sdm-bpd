@@ -6,17 +6,39 @@ package com.dimata.gui.jsp;
 
 import com.dimata.harisma.entity.employee.assessment.AssessmentFormItem;
 import com.dimata.harisma.entity.employee.assessment.AssessmentFormMain;
+import com.dimata.harisma.entity.employee.assessment.AssessmentFormMainPosition;
 import com.dimata.harisma.entity.employee.assessment.AssessmentFormSection;
 import com.dimata.harisma.entity.employee.assessment.PstAssessmentFormItem;
 import com.dimata.harisma.entity.employee.assessment.PstAssessmentFormMain;
+import com.dimata.harisma.entity.employee.assessment.PstAssessmentFormMainPosition;
 import com.dimata.harisma.entity.employee.assessment.PstAssessmentFormSection;
 import com.dimata.harisma.entity.masterdata.Evaluation;
+import com.dimata.harisma.entity.masterdata.KPI_List;
+import com.dimata.harisma.entity.masterdata.KpiSetting;
+import com.dimata.harisma.entity.masterdata.KpiSettingList;
+import com.dimata.harisma.entity.masterdata.KpiSettingPosition;
+import com.dimata.harisma.entity.masterdata.KpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.Position;
 import com.dimata.harisma.entity.masterdata.PstEvaluation;
+import com.dimata.harisma.entity.masterdata.PstKPI_List;
+import com.dimata.harisma.entity.masterdata.PstKpiSetting;
+import com.dimata.harisma.entity.masterdata.PstKpiSettingList;
+import com.dimata.harisma.entity.masterdata.PstKpiSettingPosition;
+import com.dimata.harisma.entity.masterdata.PstKpiTargetDetail;
+import com.dimata.harisma.entity.masterdata.PstPosition;
 import com.dimata.harisma.session.employee.assessment.SessAssessmentFormItem;
 import com.dimata.harisma.session.employee.assessment.SessAssessmentFormSection;
+import com.dimata.qdep.db.DBException;
+import com.dimata.qdep.form.FRMQueryString;
 import com.dimata.system.entity.PstSystemProperty;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
+import org.jfree.data.time.Year;
 
 /**
  *
@@ -467,7 +489,22 @@ public class ControlForm {
             strItem += " </tr>";
         }
         strItem += "</table>";
-
+        strItem += "pilih posisi:";
+        strItem += "<select name='POSITION_ID' id='position-select'>";
+        strItem += "<option value=0>~Pilih posisi~</option>";
+        AssessmentFormSection entAssessmentFormSection;
+        try {
+            entAssessmentFormSection = PstAssessmentFormSection.fetchExc(assessmentFormItem.getAssFormSection());
+            Vector vFrmPosition = PstAssessmentFormMainPosition.list(0, 0, "ASS_FORM_MAIN_ID = " + entAssessmentFormSection.getAssFormMainId(), "");
+            for(int i = 0; i < vFrmPosition.size(); i++){
+                AssessmentFormMainPosition entAssessmentFormMainPosition = (AssessmentFormMainPosition) vFrmPosition.get(i);
+                Position entPosition = PstPosition.fetchExc(entAssessmentFormMainPosition.getPositionId());
+                strItem += "<option value='"+entPosition.getOID()+"'>"+entPosition.getPosition()+"</option>";
+            }
+        } catch (DBException ex) {
+            Logger.getLogger(ControlForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        strItem += "</select>";
         // System.out.println(strItem);
         return strItem;
     }
@@ -1117,116 +1154,167 @@ public class ControlForm {
         return strItem;
     }
     
-    private static String createItemTypeKpiEmployeePosition(AssessmentFormItem assessmentFormItem) {
-        String strItem = "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='pageCover'>";
-        strItem += "<tr>";
-        strItem += "  <td width='90%' height='100%'>";
-        strItem += "    <table width='100%' border='0' cellspacing='0' cellpadding='0'>";
-        strItem += "        <tr>";
-        strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
-        strItem += "            <b>" + assessmentFormItem.getNumber() + ".</b>";
-        strItem += "            </td>";
-        strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
-        strItem += "            <b>" + assessmentFormItem.getTitle() + "</b>";
-        if (assessmentFormItem.getTitle_L2().length() > 0) {
-            strItem += "            <br><b><i>" + assessmentFormItem.getTitle_L2() + "</i></b>";
-        }
-        strItem += "            <br></td>";
-        strItem += "<td  width='30' colspan='2' class='pageCover'> Target:<input type='text' readonly size='10'  value='" + assessmentFormItem.getKpiTarget() + "'> <input type='text' readonly size='15'  value='" + assessmentFormItem.getKpiUnit() + "'" + "&nbsp;&nbsp;</td><td  width='100' colspan='2' class='pageCover'>&nbsp;&nbsp;Note:<input type='text' readonly size='64'  value='" + assessmentFormItem.getKpiNote() + "'></td>";
-        strItem += "<td width='30' colspan='2' class='pageCover'>Weight:<input type='text' readonly size='10'  value='" + assessmentFormItem.getWeightPoint() +"'></td>";
-
-        strItem += "        </tr>";
-        int countNumber = 1;
-        for (int i = 0; i < 6; i++) {
-            String strPoin_1 = "";
-            String strPoin_2 = "";
-
-            String strTempPoin = "";
-            switch (i) {
-                case 0:
-                    strTempPoin = assessmentFormItem.getItemPoin1();
-                    break;
-                case 1:
-                    strTempPoin = assessmentFormItem.getItemPoin2();
-                    break;
-                case 2:
-                    strTempPoin = assessmentFormItem.getItemPoin3();
-                    break;
-                case 3:
-                    strTempPoin = assessmentFormItem.getItemPoin4();
-                    break;
-                case 4:
-                    strTempPoin = assessmentFormItem.getItemPoin5();
-                    break;
-                case 5:
-                    strTempPoin = assessmentFormItem.getItemPoin6();
-                    break;
-            }
-            int splitPos = strTempPoin.indexOf("(");
-            if (splitPos > -1) {
-                strPoin_1 = strTempPoin.substring(0, splitPos);
-                strPoin_2 = strTempPoin.substring(splitPos, strTempPoin.length());
-            } else {
-                strPoin_1 = strTempPoin;
-            }
-            if (strPoin_1.length() > 0 || !(strPoin_1.equals(""))) {
-                strItem += "        <tr>";
-                strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
-                strItem += "            " + countNumber + ".";
-                countNumber = countNumber + 1;
-                strItem += "            </td>";
-                strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
-                strItem += "            " + strPoin_1;
-                if (strPoin_2.length() > 0) {
-                    strItem += "            <br><i>" + strPoin_2 + "</i>";
+    private static String createItemTypeKpiEmployeePosition(AssessmentFormItem assessmentFormItem, HttpServletRequest request) {
+        String strItem = "";
+        if(assessmentFormItem.getNumber() == 0){
+            long positionId = FRMQueryString.requestLong(request, "position_id");
+            Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, "POSITION_ID = " + positionId, "");
+            String kpiSettingId = "(";
+            for(int i = 0; i < vKpiSettingPosition.size(); i++){
+                KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(i);
+                kpiSettingId += entKpiSettingPosition.getKpiSettingId();
+                if((i + 1) != vKpiSettingPosition.size()){
+                    kpiSettingId += ",";
+                } else {
+                    kpiSettingId += ")";
                 }
-                strItem += "            <br><br>";
-                strItem += "            </td>";
-                strItem += "        </tr>";
+            }
+
+            Date date = new Date();
+            SimpleDateFormat yearFormat = new SimpleDateFormat();
+            yearFormat.applyPattern("yyyy");
+            String year = yearFormat.format(date);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat();
+            dateFormat.applyPattern("yyyy-MM-dd");
+            String nowDate = dateFormat.format(date);
+
+            Vector vKpiSetting = PstKpiSetting.list(0, 0, 
+                    "KPI_SETTING_ID IN " + kpiSettingId + " AND TAHUN = YEAR(NOW()) AND START_DATE < CURDATE() AND VALID_DATE > CURDATE()", 
+                    "");
+            kpiSettingId = "(";
+            for(int i = 0; i < vKpiSetting.size(); i++){
+                KpiSetting entKpiSetting = (KpiSetting) vKpiSetting.get(i);
+                kpiSettingId += entKpiSetting.getOID();
+                if((i + 1) != vKpiSetting.size()){
+                    kpiSettingId += ",";
+                } else {
+                    kpiSettingId += ")";
+                }
+            }
+            
+            try {
+                Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "KPI_SETTING_ID IN " + kpiSettingId, "");
+                for(int j = 0; j < vKpiSettingList.size(); j++){
+                    KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(j);
+                    KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
+                    Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 1, "KPI_SETTING_LIST_ID = " + entKpiSettingList.getOID(), "");
+                    KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(0);
+
+                    strItem += "<table width='100%' border='0' cellspacing='0' cellpadding='0' class='pageCover'>";
+                    strItem += "<tr>";
+                    strItem += "  <td width='90%' height='100%'>";
+                    strItem += "    <table width='100%' border='0' cellspacing='0' cellpadding='0'>";
+                    strItem += "        <tr>";
+                    strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
+                    strItem += "            <b>" + (j + 1) + ".</b>";
+                    strItem += "            </td>";
+                    strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
+                    strItem += "            <b>" + entKpiList.getKpi_title() + "</b>";
+                    if (assessmentFormItem.getTitle_L2().length() > 0) {
+                        strItem += "            <br><b><i>" + assessmentFormItem.getTitle_L2() + "</i></b>";
+                    }
+                    strItem += "            <br></td>";
+                    strItem += "<td  width='30' colspan='2' class='pageCover'> Target:<input type='text' readonly size='10'  value='" + entKpiTargetDetail.getAmount() + "'> <input type='text' readonly size='15'  value='" + assessmentFormItem.getKpiUnit() + "'" + "&nbsp;&nbsp;</td><td  width='100' colspan='2' class='pageCover'>&nbsp;&nbsp;Note:<input type='text' readonly size='64'  value='" + assessmentFormItem.getKpiNote() + "'></td>";
+                    strItem += "<td width='30' colspan='2' class='pageCover'>Weight:<input type='text' readonly size='10'  value='" + entKpiTargetDetail.getWeightValue()+"'></td>";
+
+                    strItem += "        </tr>";
+                    int countNumber = 1;
+                    for (int i = 0; i < 6; i++) {
+                        String strPoin_1 = "";
+                        String strPoin_2 = "";
+
+                        String strTempPoin = "";
+                        switch (i) {
+                            case 0:
+                                strTempPoin = assessmentFormItem.getItemPoin1();
+                                break;
+                            case 1:
+                                strTempPoin = assessmentFormItem.getItemPoin2();
+                                break;
+                            case 2:
+                                strTempPoin = assessmentFormItem.getItemPoin3();
+                                break;
+                            case 3:
+                                strTempPoin = assessmentFormItem.getItemPoin4();
+                                break;
+                            case 4:
+                                strTempPoin = assessmentFormItem.getItemPoin5();
+                                break;
+                            case 5:
+                                strTempPoin = assessmentFormItem.getItemPoin6();
+                                break;
+                        }
+                        int splitPos = strTempPoin.indexOf("(");
+                        if (splitPos > -1) {
+                            strPoin_1 = strTempPoin.substring(0, splitPos);
+                            strPoin_2 = strTempPoin.substring(splitPos, strTempPoin.length());
+                        } else {
+                            strPoin_1 = strTempPoin;
+                        }
+                        if (strPoin_1.length() > 0 || !(strPoin_1.equals(""))) {
+                            strItem += "        <tr>";
+                            strItem += "            <td width='5%' height='100%' align='left' valign='top'>";
+                            strItem += "            " + countNumber + ".";
+                            countNumber = countNumber + 1;
+                            strItem += "            </td>";
+                            strItem += "            <td width='95%' height='100%' align='left' valign='top'>";
+                            strItem += "            " + strPoin_1;
+                            if (strPoin_2.length() > 0) {
+                                strItem += "            <br><i>" + strPoin_2 + "</i>";
+                            }
+                            strItem += "            <br><br>";
+                            strItem += "            </td>";
+                            strItem += "        </tr>";
+                        }
+                    }
+                    strItem += "    </table>";
+                    for (int i = 1; i < assessmentFormItem.getHeight(); i++) {
+                        strItem += "<br/>";
+                    }
+                    strItem += "  </td>";
+                    strItem += "  <td width='10%' height='100%' align='right' valign='top'>";
+                    strItem += "              <table width='58' height='42' class='pageInput'>";
+                    strItem += "                <tr>";
+                    strItem += "                    <td width='70'></td>";
+                    strItem += "                </tr>";
+                    strItem += "              </table>";
+                    strItem += "  </td>";
+                    strItem += " </tr>";
+                    strItem += "</table>";
+
+                    int maxNumber = SessAssessmentFormItem.getMaxNumber(assessmentFormItem.getAssFormSection());
+                    if ( false && maxNumber == assessmentFormItem.getNumber()) {
+                        strItem += "<br><table width='100%' border='0' cellspacing='0' cellpadding='0' >";
+                        strItem += "<tr>";
+                        strItem += "<td alight='left'>";
+                        strItem += "<font size='4'><b>PERFORMANCE %</b></font> (add ratings) <font size='4'><b>____________________ / ____ = </b></font>";
+                        strItem += "</td>";
+                        strItem += "<td alight='right'>";
+                        strItem += "              <table width='58' height='42' class='pageInput'>";
+                        strItem += "                <tr>";
+                        strItem += "                    <td width='70' alight='right'>";
+                        strItem += "<font size='4'> %</font>";
+                        strItem += "                    </td>";
+                        strItem += "                </tr>";
+                        strItem += "              </table>";
+                        strItem += "</td>";
+                        strItem += "<td>";
+                        strItem += "(average %)";
+                        strItem += "</td>";
+                        strItem += "</tr>";
+                        strItem += "</table>";
+                    }
+                    // System.out.println(strItem);
+                }
+            } catch (DBException ex) {
+                Logger.getLogger(ControlForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        strItem += "    </table>";
-        for (int i = 1; i < assessmentFormItem.getHeight(); i++) {
-            strItem += "<br/>";
-        }
-        strItem += "  </td>";
-        strItem += "  <td width='10%' height='100%' align='right' valign='top'>";
-        strItem += "              <table width='58' height='42' class='pageInput'>";
-        strItem += "                <tr>";
-        strItem += "                    <td width='70'></td>";
-        strItem += "                </tr>";
-        strItem += "              </table>";
-        strItem += "  </td>";
-        strItem += " </tr>";
-        strItem += "</table>";
-
-        int maxNumber = SessAssessmentFormItem.getMaxNumber(assessmentFormItem.getAssFormSection());
-        if ( false && maxNumber == assessmentFormItem.getNumber()) {
-            strItem += "<br><table width='100%' border='0' cellspacing='0' cellpadding='0' >";
-            strItem += "<tr>";
-            strItem += "<td alight='left'>";
-            strItem += "<font size='4'><b>PERFORMANCE %</b></font> (add ratings) <font size='4'><b>____________________ / ____ = </b></font>";
-            strItem += "</td>";
-            strItem += "<td alight='right'>";
-            strItem += "              <table width='58' height='42' class='pageInput'>";
-            strItem += "                <tr>";
-            strItem += "                    <td width='70' alight='right'>";
-            strItem += "<font size='4'> %</font>";
-            strItem += "                    </td>";
-            strItem += "                </tr>";
-            strItem += "              </table>";
-            strItem += "</td>";
-            strItem += "<td>";
-            strItem += "(average %)";
-            strItem += "</td>";
-            strItem += "</tr>";
-            strItem += "</table>";
-        }
-        // System.out.println(strItem);
         return strItem;
     }
 
-    public static String createPage(long mainOid, int page) {
+    public static String createPage(long mainOid, int page, HttpServletRequest request) {
         System.out.println("::::::::::: CREATE PAGE " + page);
         Vector vSection = new Vector(1, 1);
         Vector vItem = new Vector(1, 1);
@@ -1319,7 +1407,7 @@ public class ControlForm {
                                 strPage += createItemType1ColCommentsAssessor(assItem);
                                 break;
                             case PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION:
-                                strPage += createItemTypeKpiEmployeePosition(assItem);
+                                strPage += createItemTypeKpiEmployeePosition(assItem, request);
                                 break;
                         }
                         if(assItem.getType() != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){
