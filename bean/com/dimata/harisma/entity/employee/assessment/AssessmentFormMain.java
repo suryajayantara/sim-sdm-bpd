@@ -22,6 +22,7 @@ public class AssessmentFormMain extends Entity{
     // private long formMainIdGroup;
      
     private String[] sGroupRankId;
+    private String[] sAssFormMainid;
 
     public long getGroupRankId() {
         return groupRankId;
@@ -93,6 +94,15 @@ public class AssessmentFormMain extends Entity{
         this.sGroupRankId = sGroupRankId;
     }
    
-    
+    public String[] getsAssFormMainId() {
+        return sAssFormMainid;
+    }
+
+    /**
+     * @param sGroupRankId the sGroupRankId to set
+     */
+    public void setsAssFormMainId(String[] sAssFormMainid) {
+        this.sAssFormMainid = sAssFormMainid;
+    }
     
 }
