@@ -139,53 +139,7 @@ public class CtrlAssessmentFormItem extends Control implements I_Language {
                 }
 
                 if (assFormItem.getOID() == 0) {
-                    try {
-//                        if (this.assFormItem.getType() == PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION) {
-//                            long assFormSectionOID = this.assFormItem.getAssFormSection();
-//                            AssessmentFormSection entAssessmentFormSection = PstAssessmentFormSection.fetchExc(assFormSectionOID);
-//                            String whereFormMainId = PstAssessmentFormSection.fieldNames[PstAssessmentFormSection.FLD_ASS_FORM_MAIN_ID] + " = " + entAssessmentFormSection.getAssFormMainId();
-//                            Vector vAssessmentFormMainPosition = PstAssessmentFormMainPosition.list(0, 0, whereFormMainId, "");
-//
-//                            String wherePositionId = PstPosition.fieldNames[PstPosition.FLD_POSITION_ID] + " IN (";
-//                            for (int i = 0; i < vAssessmentFormMainPosition.size(); i++) {
-//                                AssessmentFormMainPosition entAssessmentFormMainPosition = (AssessmentFormMainPosition) vAssessmentFormMainPosition.get(i);
-//                                wherePositionId += entAssessmentFormMainPosition.getPositionId();
-//                                if ((i + 1) != vAssessmentFormMainPosition.size()) {
-//                                    wherePositionId += ", ";
-//                                } else {
-//                                    wherePositionId += ")";
-//                                }
-//                            }
-//
-//                            Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, wherePositionId, "");
-//                            String whereKpiSettingId = PstKpiSetting.fieldNames[PstKpiSetting.FLD_KPI_SETTING_ID] + " IN (";
-//                            for (int i = 0; i < vKpiSettingPosition.size(); i++) {
-//                                KpiSettingPosition entKpiSettingPosition = (KpiSettingPosition) vKpiSettingPosition.get(i);
-//                                whereKpiSettingId += entKpiSettingPosition.getKpiSettingId();
-//                                if ((i + 1) != vKpiSettingPosition.size()) {
-//                                    whereKpiSettingId += ", ";
-//                                } else {
-//                                    whereKpiSettingId += ")";
-//                                }
-//                            }
-//
-//                            Vector vKpiSettingList = PstKpiSettingList.list(0, 0, whereKpiSettingId, "");
-//                            for (int i = 0; i < vKpiSettingList.size(); i++) {
-//                                KpiSettingList entKpiSettingList = (KpiSettingList) vKpiSettingList.get(i);
-//                                KPI_List entKpiList = PstKPI_List.fetchExc(entKpiSettingList.getKpiListId());
-//                                Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 1, PstKpiTargetDetail.fieldNames[PstKpiTargetDetail.FLD_KPI_ID] + " = " + entKpiList.getOID(), "");
-//                                KpiTargetDetail entKpiTargetDetail = (KpiTargetDetail) vKpiTargetDetail.get(0);
-//                                this.assFormItem.setTitle(entKpiList.getKpi_title());
-//                                this.assFormItem.setKpiListId(entKpiList.getOID());
-//                                this.assFormItem.setKpiUnit(PstKPI_List.strType[entKpiList.getInputType()]);
-//                                this.assFormItem.setKpiTarget((float) entKpiTargetDetail.getAmount());
-//                                this.assFormItem.setWeightPoint((float) entKpiTargetDetail.getWeightValue());
-//                                this.assFormItem.setNumber(i + 1);
-//                                this.assFormItem.setOrderNumber(i + 2);
-//                                this.assFormItem.setPage(1);
-//                                this.assFormItem.setHeight(1);
-//                                pstAssFormItem.insertExc(this.assFormItem);
-//                            }
+                    try {                           
                         long oid = pstAssFormItem.insertExc(this.assFormItem);
                     } catch (DBException dbexc) {
                         excCode = dbexc.getErrorCode();

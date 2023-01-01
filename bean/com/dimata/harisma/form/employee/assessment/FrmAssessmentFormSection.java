@@ -45,6 +45,7 @@ public class FrmAssessmentFormSection extends FRMHandler implements I_FRMInterfa
 	public static final  int FRM_FIELD_POINT_EVAL_ID         = 9;
         public static final  int FRM_FIELD_PREDICATE_EVAL_ID     = 10;
         public static final  int FRM_FIELD_WEIGHT_POINT          =11;
+        public static final  int FRM_ASS_FORM_SECTION_ID_CHILD   =12;
 	public static String[] fieldNames = {
                 "FRM_FIELD_ASS_FORM_SECTION_ID",
 		"FRM_FIELD_ASS_FORM_MAIN_ID",
@@ -57,13 +58,14 @@ public class FrmAssessmentFormSection extends FRMHandler implements I_FRMInterfa
 		"FRM_FIELD_TYPE",
                 "FRM_FIELD_POINT_EVAL_ID",
                 "FRM_FIELD_PREDICATE_EVAL_ID",
-                "FRM_FIELD_WEIGHT_POINT"
+                "FRM_FIELD_WEIGHT_POINT",
+                "ASS_FORM_SECTION_ID_CHILD"
 	} ;
 
 	public static int[] fieldTypes = {
 		TYPE_LONG,
 		TYPE_LONG+ENTRY_REQUIRED,
-		TYPE_STRING+ENTRY_REQUIRED,
+		TYPE_STRING,
 		TYPE_STRING,
 		TYPE_STRING,
 		TYPE_STRING,
@@ -72,7 +74,9 @@ public class FrmAssessmentFormSection extends FRMHandler implements I_FRMInterfa
 		TYPE_INT,
                 TYPE_LONG,
                 TYPE_LONG,
-                TYPE_FLOAT
+                TYPE_FLOAT,
+                TYPE_LONG,
+                
 	} ;
 
 	public FrmAssessmentFormSection(){
@@ -110,6 +114,7 @@ public class FrmAssessmentFormSection extends FRMHandler implements I_FRMInterfa
                         assessmentFormSection.setPointEvaluationId(getLong(FRM_FIELD_POINT_EVAL_ID));
                         assessmentFormSection.setPredicateEvaluationId(getLong(FRM_FIELD_PREDICATE_EVAL_ID));
                         assessmentFormSection.setWeightPoint(getFloat(FRM_FIELD_WEIGHT_POINT));
+                        assessmentFormSection.setAssFormSectionIdChild(getLong(FRM_ASS_FORM_SECTION_ID_CHILD));
 		}catch(Exception e){
 			System.out.println("Error on requestEntityObject : "+e.toString());
 		}

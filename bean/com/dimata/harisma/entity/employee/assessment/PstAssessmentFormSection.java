@@ -44,6 +44,7 @@ public class PstAssessmentFormSection extends DBHandler implements I_DBInterface
         public static final  int FLD_POINT_EVALUATION_ID   = 9;
         public static final  int FLD_PREDICATE_EVALUATION_ID= 10;
         public static final  int FLD_WEIGHT_POINT= 11;
+        public static final  int FLD_ASS_FORM_SECTION_ID_CHILD= 12;
         
 	public static final  String[] fieldNames = {
 		"ASS_FORM_SECTION_ID",
@@ -57,7 +58,8 @@ public class PstAssessmentFormSection extends DBHandler implements I_DBInterface
 		"TYPE_SECTION",
                 "POINT_EVALUATION_ID",
                 "PREDICATE_EVALUATION_ID",
-                "WEIGHT_POINT"
+                "WEIGHT_POINT",
+                "ASS_FORM_SECTION_ID_CHILD"
 	 }; 
 
 	public static final  int[] fieldTypes = {
@@ -72,7 +74,8 @@ public class PstAssessmentFormSection extends DBHandler implements I_DBInterface
 		TYPE_INT,
                 TYPE_LONG,
                 TYPE_LONG,
-                TYPE_FLOAT
+                TYPE_FLOAT,
+                TYPE_LONG,
 	 }; 
 
 	public static final  int TYPE_TEXT_ONLY         = 0;
@@ -195,6 +198,7 @@ public class PstAssessmentFormSection extends DBHandler implements I_DBInterface
 			pstAssessmentFormSection.setLong(FLD_POINT_EVALUATION_ID, assessmentFormSection.getPointEvaluationId());
                         pstAssessmentFormSection.setLong(FLD_PREDICATE_EVALUATION_ID, assessmentFormSection.getPredicateEvaluationId());
                         pstAssessmentFormSection.setFloat(FLD_WEIGHT_POINT, assessmentFormSection.getWeightPoint());
+                        pstAssessmentFormSection.setLong(FLD_ASS_FORM_SECTION_ID_CHILD, assessmentFormSection.getAssFormSectionIdChild());
                         pstAssessmentFormSection.insert(); 
 			assessmentFormSection.setOID(pstAssessmentFormSection.getlong(FLD_ASS_FORM_MAIN_ID));
 		}catch(DBException dbe){ 
@@ -221,6 +225,7 @@ public class PstAssessmentFormSection extends DBHandler implements I_DBInterface
                         pstAssessmentFormSection.setLong(FLD_POINT_EVALUATION_ID, assessmentFormSection.getPointEvaluationId());
                         pstAssessmentFormSection.setLong(FLD_PREDICATE_EVALUATION_ID, assessmentFormSection.getPredicateEvaluationId());
                         pstAssessmentFormSection.setFloat(FLD_WEIGHT_POINT, assessmentFormSection.getWeightPoint());
+                        pstAssessmentFormSection.setLong(FLD_ASS_FORM_SECTION_ID_CHILD, assessmentFormSection.getAssFormSectionIdChild());
                         pstAssessmentFormSection.update(); 
                         return assessmentFormSection.getOID();
                     }
@@ -294,6 +299,7 @@ public class PstAssessmentFormSection extends DBHandler implements I_DBInterface
                     assessmentFormSection.setPointEvaluationId(rs.getLong(PstAssessmentFormSection.fieldNames[FLD_POINT_EVALUATION_ID]));
                     assessmentFormSection.setPredicateEvaluationId(rs.getLong(PstAssessmentFormSection.fieldNames[FLD_PREDICATE_EVALUATION_ID]));
                     assessmentFormSection.setWeightPoint(rs.getFloat(fieldNames[FLD_WEIGHT_POINT]));
+                    assessmentFormSection.setAssFormSectionIdChild(rs.getLong(fieldNames[FLD_ASS_FORM_SECTION_ID_CHILD]));
 		}catch(Exception e){ }
 	}
 

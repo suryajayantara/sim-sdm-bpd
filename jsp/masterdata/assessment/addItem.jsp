@@ -348,6 +348,7 @@ function hideObjectForMasterdata(){
                                                         <%//= ControlCombo.draw(frmAssessmentFormItem.fieldNames[frmAssessmentFormItem.FRM_FIELD_ORDER_NUMBER],"formElemen",null, ""+(assessmentFormSection.getOrderNumber()>0?assessmentFormSection.getOrderNumber():(maxON+1)), orderNumberValue, orderNumberKey) %>
                                                       </td>
                                                     </tr>
+                                                    <%if(currType != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){%>
                                                     <tr align="left" valign="top"> 
                                                       <td valign="top" width="17%"> 
                                                         Order Number</td>
@@ -367,7 +368,8 @@ function hideObjectForMasterdata(){
                                                             }
                                                         %> <%= ControlCombo.draw(frmAssessmentFormItem.fieldNames[frmAssessmentFormItem.FRM_FIELD_ORDER_NUMBER],"formElemen",null, ""+(assessmentFormItem.getOrderNumber()>0?assessmentFormItem.getOrderNumber():(maxON+1)), orderNumberValue, orderNumberKey) %>
                                                       </td>
-                                                    </tr>                                        
+                                                    </tr>
+                                                    <%}%>
                                                     <tr align="left" valign="top"> 
                                                       <td valign="top" width="17%"> 
                                                         Type</td>

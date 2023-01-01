@@ -23,6 +23,7 @@ public class AssessmentFormSection extends Entity{
     private long pointEvaluationId=0;
     private long predicateEvaluationId=0;
     private float weightPoint =0;
+    private long assFormSectionIdChild = 0;
 
     public int getType() {
         return type;
@@ -132,6 +133,15 @@ public class AssessmentFormSection extends Entity{
         this.weightPoint = weightPoint;
     }
 
-   
+    public long getAssFormSectionIdChild() {
+        return assFormSectionIdChild;
+    }
+
+    /**
+     * @param weightPoint the weightPoint to set
+     */
+    public void setAssFormSectionIdChild(long assFormSectionIdChild) {
+        this.assFormSectionIdChild = assFormSectionIdChild;
+    }
     
 }

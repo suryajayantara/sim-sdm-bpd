@@ -489,22 +489,6 @@ public class ControlForm {
             strItem += " </tr>";
         }
         strItem += "</table>";
-        strItem += "pilih posisi:";
-        strItem += "<select name='POSITION_ID' id='position-select'>";
-        strItem += "<option value=0>~Pilih posisi~</option>";
-        AssessmentFormSection entAssessmentFormSection;
-        try {
-            entAssessmentFormSection = PstAssessmentFormSection.fetchExc(assessmentFormItem.getAssFormSection());
-            Vector vFrmPosition = PstAssessmentFormMainPosition.list(0, 0, "ASS_FORM_MAIN_ID = " + entAssessmentFormSection.getAssFormMainId(), "");
-            for(int i = 0; i < vFrmPosition.size(); i++){
-                AssessmentFormMainPosition entAssessmentFormMainPosition = (AssessmentFormMainPosition) vFrmPosition.get(i);
-                Position entPosition = PstPosition.fetchExc(entAssessmentFormMainPosition.getPositionId());
-                strItem += "<option value='"+entPosition.getOID()+"'>"+entPosition.getPosition()+"</option>";
-            }
-        } catch (DBException ex) {
-            Logger.getLogger(ControlForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        strItem += "</select>";
         // System.out.println(strItem);
         return strItem;
     }
@@ -1158,6 +1142,31 @@ public class ControlForm {
         String strItem = "";
         if(assessmentFormItem.getNumber() == 0){
             long positionId = FRMQueryString.requestLong(request, "position_id");
+            if(assessmentFormItem.getOrderNumber() == 0){
+                strItem += assessmentFormItem.getTitle();
+                strItem += "&emsp;&emsp;&emsp;";
+                strItem += "pilih posisi:";
+                strItem += "<select name='POSITION_ID' id='position-select'>";
+                strItem += "<option value=0>~Pilih posisi~</option>";
+                AssessmentFormSection entAssessmentFormSection;
+                try {
+                    entAssessmentFormSection = PstAssessmentFormSection.fetchExc(assessmentFormItem.getAssFormSection());
+                    Vector vFrmPosition = PstAssessmentFormMainPosition.list(0, 0, "ASS_FORM_MAIN_ID = " + entAssessmentFormSection.getAssFormMainId(), "");
+                    for(int i = 0; i < vFrmPosition.size(); i++){
+                        AssessmentFormMainPosition entAssessmentFormMainPosition = (AssessmentFormMainPosition) vFrmPosition.get(i);
+                        Position entPosition = PstPosition.fetchExc(entAssessmentFormMainPosition.getPositionId());
+                        String selected = "";
+                        if(positionId == entPosition.getOID()){
+                            selected = "selected";
+                        }
+                        strItem += "<option value='"+entPosition.getOID()+"'"+selected+">"+entPosition.getPosition()+"</option>";
+                    }
+                } catch (DBException ex) {
+                    Logger.getLogger(ControlForm.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                strItem += "</select>";
+            }
+            
             Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, "POSITION_ID = " + positionId, "");
             String kpiSettingId = "(";
             for(int i = 0; i < vKpiSettingPosition.size(); i++){
@@ -1192,7 +1201,7 @@ public class ControlForm {
                     kpiSettingId += ")";
                 }
             }
-            
+
             try {
                 Vector vKpiSettingList = PstKpiSettingList.list(0, 0, "KPI_SETTING_ID IN " + kpiSettingId, "");
                 for(int j = 0; j < vKpiSettingList.size(); j++){
@@ -1407,10 +1416,12 @@ public class ControlForm {
                                 strPage += createItemType1ColCommentsAssessor(assItem);
                                 break;
                             case PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION:
-                                strPage += createItemTypeKpiEmployeePosition(assItem, request);
+                                if(assItem.getOrderNumber() == 0){
+                                    strPage += createItemTypeKpiEmployeePosition(assItem, request);
+                                }
                                 break;
                         }
-                        if(assItem.getType() != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION){
+                        if((assItem.getType() != PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION) || (assItem.getType() == PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION && assItem.getOrderNumber() == 0)){
                             strPage += "</td>";
                             strPage += "<td width='6%' valign='top'>";
                             strPage += createSpliterItem(assItem.getOID());
