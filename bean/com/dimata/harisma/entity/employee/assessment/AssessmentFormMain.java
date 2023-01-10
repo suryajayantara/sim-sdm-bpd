@@ -19,6 +19,7 @@ public class AssessmentFormMain extends Entity{
     private String mainData;
     private String note;
     private long groupRankId;
+    private int periodeAppraisalMonth;
     // private long formMainIdGroup;
      
     private String[] sGroupRankId;
@@ -103,6 +104,17 @@ public class AssessmentFormMain extends Entity{
      */
     public void setsAssFormMainId(String[] sAssFormMainid) {
         this.sAssFormMainid = sAssFormMainid;
+    }
+    
+    public int getPeriodeAppraisalMonth() {
+        return periodeAppraisalMonth;
+    }
+
+    /**
+     * @param sGroupRankId the sGroupRankId to set
+     */
+    public void setPeriodeAppraisalMonth(int periodeAppraisalMonth) {
+        this.periodeAppraisalMonth = periodeAppraisalMonth;
     }
     
 }

@@ -1179,17 +1179,8 @@ public class ControlForm {
                 }
             }
 
-            Date date = new Date();
-            SimpleDateFormat yearFormat = new SimpleDateFormat();
-            yearFormat.applyPattern("yyyy");
-            String year = yearFormat.format(date);
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat();
-            dateFormat.applyPattern("yyyy-MM-dd");
-            String nowDate = dateFormat.format(date);
-
             Vector vKpiSetting = PstKpiSetting.list(0, 0, 
-                    "KPI_SETTING_ID IN " + kpiSettingId + " AND TAHUN = YEAR(NOW()) AND START_DATE < CURDATE() AND VALID_DATE > CURDATE()", 
+                    "KPI_SETTING_ID IN " + kpiSettingId + " AND TAHUN = YEAR(NOW()) AND START_DATE <= CURDATE() AND VALID_DATE >= CURDATE()", 
                     "");
             kpiSettingId = "(";
             for(int i = 0; i < vKpiSetting.size(); i++){

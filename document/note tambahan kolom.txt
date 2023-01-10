@@ -2,3 +2,4 @@
 2. table hr_kpi_type tambahin kolom flag tipe integer
 3. table ass_form_section tambahin kolom ass_form_section_child relasi ke table ass_form_section
 4. table ass_form_main tambahkan kolom periode_appraisal_month
+5. table ass_form_item tambahkan kolom app_main_id

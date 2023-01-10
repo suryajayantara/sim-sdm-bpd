@@ -33,6 +33,7 @@ public class AssessmentFormItem extends Entity{
     private String kpiNote ="";
     private String entryUnit =""; // hanya untuk list tidak disimpan di database, diset dari section
     private String formula = "";
+    private long appMainId = 0;
 
     public int getNumber() {
         return number;
@@ -247,5 +248,14 @@ public class AssessmentFormItem extends Entity{
         this.formula = formula;
     }
     
-    
+    public long getAppMainId() {
+        return appMainId;
+    }
+
+    /**
+     * @param formula the formula to set
+     */
+    public void setAppMainId(long appMainId) {
+        this.appMainId = appMainId;
+    }
 }

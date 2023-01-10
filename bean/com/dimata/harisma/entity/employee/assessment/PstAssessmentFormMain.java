@@ -47,6 +47,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 	public static final  int FLD_SUBTITLE_L2        = 4;
 	public static final  int FLD_MAIN_DATA          = 5;
 	public static final  int FLD_NOTE               = 6;
+	public static final  int FLD_PERIODE_APPRAISAL_MONTH               = 7;
 	//public static final  int FLD_GROUP_RANK_ID      = 7;
         ///public static final  int FLD_ASS_FORM_MAIN_ID_GROUP = 8;
 
@@ -58,6 +59,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 		"SUBTITLE_L2",
 		"MAIN_DATA",
 		"NOTE",
+                "PERIODE_APPRAISAL_MONTH"
 		//"GROUP_RANK_ID"
                // "ASS_FORM_MAIN_ID_GROUP"
 	 }; 
@@ -70,6 +72,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 		TYPE_STRING,
 		TYPE_STRING,
 		TYPE_STRING,
+                TYPE_INT
 		//TYPE_LONG,
                 //TYPE_LONG
 	 };
@@ -259,6 +262,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 			assessmentFormMain.setSubtitle_L2(pstAssessmentFormMain.getString(FLD_SUBTITLE_L2));
 			assessmentFormMain.setMainData(pstAssessmentFormMain.getString(FLD_MAIN_DATA));
 			assessmentFormMain.setNote(pstAssessmentFormMain.getString(FLD_NOTE));
+			assessmentFormMain.setPeriodeAppraisalMonth(pstAssessmentFormMain.getInt(FLD_PERIODE_APPRAISAL_MONTH));
 			//assessmentFormMain.setGroupRankId(pstAssessmentFormMain.getlong(FLD_GROUP_RANK_ID));
                        // assessmentFormMain.setFormMainIdGroup(pstAssessmentFormMain.getlong(FLD_ASS_FORM_MAIN_ID_GROUP));
 			return assessmentFormMain; 
@@ -282,6 +286,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 			assessmentFormMain.setSubtitle_L2(pstAssessmentFormMain.getString(FLD_SUBTITLE_L2));
 			assessmentFormMain.setMainData(pstAssessmentFormMain.getString(FLD_MAIN_DATA));
 			assessmentFormMain.setNote(pstAssessmentFormMain.getString(FLD_NOTE));
+			assessmentFormMain.setPeriodeAppraisalMonth(pstAssessmentFormMain.getInt(FLD_PERIODE_APPRAISAL_MONTH));
 			//assessmentFormMain.setGroupRankId(pstAssessmentFormMain.getlong(FLD_GROUP_RANK_ID));
                        // assessmentFormMain.setFormMainIdGroup(pstAssessmentFormMain.getlong(FLD_ASS_FORM_MAIN_ID_GROUP));
                        // String groupRankId =PstAssessmentFormMain.listGroupRankId(0, 0, PstAssessmentFormMain.fieldNames[PstAssessmentFormMain.FLD_ASS_FORM_MAIN_ID_GROUP]+"="+oid, "");
@@ -303,6 +308,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 			pstAssessmentFormMain.setString(FLD_SUBTITLE_L2, assessmentFormMain.getSubtitle_L2()); 
 			pstAssessmentFormMain.setString(FLD_MAIN_DATA, assessmentFormMain.getMainData()); 
 			pstAssessmentFormMain.setString(FLD_NOTE, assessmentFormMain.getNote()); 
+			pstAssessmentFormMain.setInt(FLD_PERIODE_APPRAISAL_MONTH, assessmentFormMain.getPeriodeAppraisalMonth()); 
 			//pstAssessmentFormMain.setLong(FLD_GROUP_RANK_ID, assessmentFormMain.getGroupRankId()); 
                         //pstAssessmentFormMain.setLong(FLD_ASS_FORM_MAIN_ID_GROUP, assessmentFormMain.getFormMainIdGroup()); 
 
@@ -328,6 +334,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 			pstAssessmentFormMain.setString(FLD_SUBTITLE_L2, assessmentFormMain.getSubtitle_L2()); 
 			pstAssessmentFormMain.setString(FLD_MAIN_DATA, assessmentFormMain.getMainData()); 
 			pstAssessmentFormMain.setString(FLD_NOTE, assessmentFormMain.getNote()); 
+			pstAssessmentFormMain.setInt(FLD_PERIODE_APPRAISAL_MONTH, assessmentFormMain.getPeriodeAppraisalMonth()); 
 			//pstAssessmentFormMain.setLong(FLD_GROUP_RANK_ID, assessmentFormMain.getGroupRankId()); 
                         //pstAssessmentFormMain.setLong(FLD_ASS_FORM_MAIN_ID_GROUP, assessmentFormMain.getFormMainIdGroup()); 
 
@@ -352,6 +359,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
 			pstAssessmentFormMain.setString(FLD_SUBTITLE_L2, assessmentFormMain.getSubtitle_L2()); 
 			pstAssessmentFormMain.setString(FLD_MAIN_DATA, assessmentFormMain.getMainData()); 
 			pstAssessmentFormMain.setString(FLD_NOTE, assessmentFormMain.getNote()); 
+			pstAssessmentFormMain.setInt(FLD_PERIODE_APPRAISAL_MONTH, assessmentFormMain.getPeriodeAppraisalMonth()); 
 			//pstAssessmentFormMain.setLong(FLD_GROUP_RANK_ID, assessmentFormMain.getGroupRankId()); 
                         //pstAssessmentFormMain.setLong(FLD_ASS_FORM_MAIN_ID_GROUP, assessmentFormMain.getFormMainIdGroup()); 
                         pstAssessmentFormMain.update(); 
@@ -496,6 +504,7 @@ public class PstAssessmentFormMain extends DBHandler implements I_DBInterface, I
                     assessmentFormMain.setSubtitle_L2(rs.getString(PstAssessmentFormMain.fieldNames[PstAssessmentFormMain.FLD_SUBTITLE_L2]));
                     assessmentFormMain.setMainData(rs.getString(PstAssessmentFormMain.fieldNames[PstAssessmentFormMain.FLD_MAIN_DATA]));
                     assessmentFormMain.setNote(rs.getString(PstAssessmentFormMain.fieldNames[PstAssessmentFormMain.FLD_NOTE]));
+                    assessmentFormMain.setPeriodeAppraisalMonth(rs.getInt(PstAssessmentFormMain.fieldNames[PstAssessmentFormMain.FLD_PERIODE_APPRAISAL_MONTH]));
                     //assessmentFormMain.setGroupRankId(rs.getLong(PstAssessmentFormMain.fieldNames[PstAssessmentFormMain.FLD_GROUP_RANK_ID]));
                     //assessmentFormMain.setFormMainIdGroup(rs.getLong(PstAssessmentFormMain.fieldNames[PstAssessmentFormMain.FLD_ASS_FORM_MAIN_ID_GROUP]));
 		}catch(Exception e){ }

@@ -48,6 +48,8 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
     public static final int FLD_KPI_UNIT = 18;
     public static final int FLD_KPI_NOTE = 19;
     public static final int FLD_FORMULA = 20;
+    public static final int FLD_APP_MAIN_ID = 21;
+    
     public static final String[] fieldNames = {
         "ASS_FORM_ITEM_ID",//0
         "ASS_FORM_SECTION_ID",
@@ -69,7 +71,8 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
         "KPI_TARGET",
         "KPI_UNIT",
         "KPI_NOTE", //19
-        "FORMULA"
+        "FORMULA",
+        "APP_MAIN_ID"
     };
     public static final int[] fieldTypes = {
         TYPE_LONG + TYPE_PK + TYPE_ID,
@@ -92,7 +95,8 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
         TYPE_FLOAT,
         TYPE_STRING,
         TYPE_STRING,
-        TYPE_STRING
+        TYPE_STRING,
+        TYPE_LONG
     };
     public static final int ITEM_TYPE_SPACE = 0;
     public static final int ITEM_TYPE_COL_2_WITHOUT_TEXT = 1;
@@ -238,6 +242,7 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
             assessmentFormItem.setKpiUnit(pstAssessmentFormItem.getString(FLD_KPI_UNIT));
             assessmentFormItem.setKpiNote(pstAssessmentFormItem.getString(FLD_KPI_NOTE));
             assessmentFormItem.setFormula(pstAssessmentFormItem.getString(FLD_FORMULA));
+            assessmentFormItem.setAppMainId(pstAssessmentFormItem.getLong(FLD_APP_MAIN_ID));
 
             return assessmentFormItem;
         } catch (DBException dbe) {
@@ -271,6 +276,7 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
             pstAssessmentFormItem.setString(FLD_KPI_UNIT, assessmentFormItem.getKpiUnit());
             pstAssessmentFormItem.setString(FLD_KPI_NOTE, assessmentFormItem.getKpiNote());
             pstAssessmentFormItem.setString(FLD_FORMULA, assessmentFormItem.getFormula());
+            pstAssessmentFormItem.setLong(FLD_APP_MAIN_ID, assessmentFormItem.getAppMainId());
             pstAssessmentFormItem.insert();
             assessmentFormItem.setOID(pstAssessmentFormItem.getlong(FLD_ASS_FORM_ITEM_ID));
         } catch (DBException dbe) {
@@ -306,6 +312,7 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
                 pstAssessmentFormItem.setString(FLD_KPI_UNIT, assessmentFormItem.getKpiUnit());
                 pstAssessmentFormItem.setString(FLD_KPI_NOTE, assessmentFormItem.getKpiNote());
                 pstAssessmentFormItem.setString(FLD_FORMULA, assessmentFormItem.getFormula());
+                pstAssessmentFormItem.setLong(FLD_APP_MAIN_ID, assessmentFormItem.getAppMainId());
                 pstAssessmentFormItem.update();
                 return assessmentFormItem.getOID();
             }
@@ -390,6 +397,7 @@ public class PstAssessmentFormItem extends DBHandler implements I_DBInterface, I
             assessmentFormItem.setKpiUnit(rs.getString(fieldNames[FLD_KPI_UNIT]));
             assessmentFormItem.setKpiNote(rs.getString(fieldNames[FLD_KPI_NOTE]));
             assessmentFormItem.setFormula(rs.getString(fieldNames[FLD_FORMULA]));
+            assessmentFormItem.setAppMainId(rs.getLong(fieldNames[FLD_APP_MAIN_ID]));
         } catch (Exception e) {
         }
     }

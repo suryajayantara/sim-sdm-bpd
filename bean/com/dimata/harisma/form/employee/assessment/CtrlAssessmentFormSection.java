@@ -139,7 +139,7 @@ public class CtrlAssessmentFormSection extends Control implements I_Language {
                             entAssessmentFormSection.setAssFormSectionIdChild(this.assessmentFormSection.getAssFormSectionIdChild());
                             entAssessmentFormSection.setAssFormMainId(this.assessmentFormSection.getAssFormMainId());
                             entAssessmentFormSection.setPage(this.assessmentFormSection.getPage());
-                            long oid = pstAssessmentFormSection.insertExc(entAssessmentFormSection);
+                            long oidFormSection = pstAssessmentFormSection.insertExc(entAssessmentFormSection);
                             
                             Vector vAssFrmItem = PstAssessmentFormItem.list(0, 0, 
                                     "ASS_FORM_SECTION_ID = " + this.assessmentFormSection.getAssFormSectionIdChild(), 
@@ -147,7 +147,7 @@ public class CtrlAssessmentFormSection extends Control implements I_Language {
                             );
                             for(int i = 0; i < vAssFrmItem.size(); i++){
                                 AssessmentFormItem entAssessmentFormItem = (AssessmentFormItem) vAssFrmItem.get(i);
-                                entAssessmentFormItem.setAssFormSection(oid);
+                                entAssessmentFormItem.setAssFormSection(oidFormSection);
                                 entAssessmentFormItem.setPage(entAssessmentFormSection.getPage());
                                 PstAssessmentFormItem.insertExc(entAssessmentFormItem);
                             }
@@ -236,6 +236,11 @@ public class CtrlAssessmentFormSection extends Control implements I_Language {
             case Command.DELETE:
                 if (oidAssessmentFormSection != 0) {
                     try {
+                        Vector vAssFrmItem = PstAssessmentFormItem.list(0, 0, "ASS_FORM_SECTION_ID = " + oidAssessmentFormSection, "");
+                        for(int i = 0; i < vAssFrmItem.size(); i++){
+                            AssessmentFormItem entAssessmentFormItem = (AssessmentFormItem)vAssFrmItem.get(i);
+                            PstAssessmentFormItem.deleteExc(entAssessmentFormItem.getOID());
+                        }
                         long oid = PstAssessmentFormSection.deleteExc(oidAssessmentFormSection);
                         if (oid != 0) {
                             msgString = FRMMessage.getMessage(FRMMessage.MSG_DELETED);

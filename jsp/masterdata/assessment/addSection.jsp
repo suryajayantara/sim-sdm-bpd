@@ -333,19 +333,21 @@
                                                                                                                         <%
                                                                                                                             Vector childKey = new Vector(1, 1);
                                                                                                                             Vector childValue = new Vector(1, 1);
-                                                                                                                            Vector vAssFrmLink = PstAssessmentFormLink.list(0, 1, "HR_ASS_FORM_MAIN_ID_PARENT = " + oidAssessmentFormMain, "");
+                                                                                                                            Vector vAssFrmLink = PstAssessmentFormLink.list(0, 0, "HR_ASS_FORM_MAIN_ID_PARENT = " + oidAssessmentFormMain, "");
                                                                                                                             AssessmentFormMain entAssFrmMain = new AssessmentFormMain();
                                                                                                                             Vector vAssFrmSection = new Vector();
 
                                                                                                                             if (vAssFrmLink.size() > 0) {
-                                                                                                                                AssessmentFormLink entAssFrmLink = (AssessmentFormLink) vAssFrmLink.get(0);
-                                                                                                                                entAssFrmMain = PstAssessmentFormMain.fetchExc(oidAssessmentFormMain);
-                                                                                                                                vAssFrmSection = PstAssessmentFormSection.list(0, 0, "ASS_FORM_MAIN_ID = " + entAssFrmLink.getHrAssFormMainIdChild(), "");
-                                                                                                                            }
-                                                                                                                            for (int i = 0; i < vAssFrmSection.size(); i++) {
-                                                                                                                                AssessmentFormSection entAssFormSection = (AssessmentFormSection) vAssFrmSection.get(i);
-                                                                                                                                childKey.add(entAssFrmMain.getTitle() + " | Page " + (entAssFormSection.getPage() + 1) + " | " + entAssFormSection.getSection());
-                                                                                                                                childValue.add("" + entAssFormSection.getOID());
+                                                                                                                                for(int j = 0; j < vAssFrmLink.size(); j++){
+                                                                                                                                    AssessmentFormLink entAssFrmLink = (AssessmentFormLink) vAssFrmLink.get(j);
+                                                                                                                                    entAssFrmMain = PstAssessmentFormMain.fetchExc(entAssFrmLink.getHrAssFormMainIdChild());
+                                                                                                                                    vAssFrmSection = PstAssessmentFormSection.list(0, 0, "ASS_FORM_MAIN_ID = " + entAssFrmLink.getHrAssFormMainIdChild(), "");
+                                                                                                                                    for (int i = 0; i < vAssFrmSection.size(); i++) {
+                                                                                                                                        AssessmentFormSection entAssFormSection = (AssessmentFormSection) vAssFrmSection.get(i);
+                                                                                                                                        childKey.add(entAssFrmMain.getTitle() + " | Page " + (entAssFormSection.getPage() + 1) + " | " + entAssFormSection.getSection());
+                                                                                                                                        childValue.add("" + entAssFormSection.getOID());
+                                                                                                                                    }
+                                                                                                                                }
                                                                                                                             }
                                                                                                                             long childOID = 0;
                                                                                                                             if(assessmentFormSection.getAssFormSectionIdChild() > 0){

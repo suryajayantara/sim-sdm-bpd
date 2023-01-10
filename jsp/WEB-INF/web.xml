@@ -182,6 +182,10 @@
         <servlet-name>AjaxInsertRealitation</servlet-name>
         <servlet-class>com.dimata.harisma.ajax.realitation.AjaxInsertRealitation</servlet-class>
     </servlet>
+    <servlet>    
+        <servlet-name>AjaxGetAssMain</servlet-name>
+        <servlet-class>com.dimata.harisma.ajax.appraisal.AjaxGetAssMain</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AchievementPdf</servlet-name>
         <url-pattern>/servlet/com.dimata.harisma.report.employee.AchievementPdf</url-pattern>
@@ -1678,6 +1682,10 @@
     <servlet-mapping>
         <servlet-name>AjaxInsertRealitation</servlet-name>
         <url-pattern>/AjaxInsertRealitation</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AjaxGetAssMain</servlet-name>
+        <url-pattern>/AjaxGetAssMain</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

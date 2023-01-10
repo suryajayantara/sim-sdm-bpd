@@ -41,6 +41,7 @@ public class FrmAssessmentFormMain extends FRMHandler implements I_FRMInterface,
     public static final int FRM_FIELD_MAIN_DATA = 5;
     public static final int FRM_FIELD_NOTE = 6;
     public static final int FRM_FIELD_GROUP_RANK_ID = 7;
+    public static final int FRM_FIELD_PERIODE_APPRAISAL_MONTH = 8;
     //public static final int FRM_FIELD_ASS_FORM_MAIN_ID_GROUP = 8;
     public static String[] fieldNames = {
         "FRM_ASS_FORM_MAIN_ID",
@@ -50,7 +51,8 @@ public class FrmAssessmentFormMain extends FRMHandler implements I_FRMInterface,
         "FRM_SUBTITLE_L2",
         "FRM_MAIN_DATA",
         "FRM_NOTE",
-        "FRM_GROUP_RANK_ID"
+        "FRM_GROUP_RANK_ID",
+        "PERIODE_APPRAISAL_MONTH"
        // "FRM_FIELD_ASS_FORM_MAIN_ID_GROUP"
     };
     public static int[] fieldTypes = {
@@ -62,6 +64,7 @@ public class FrmAssessmentFormMain extends FRMHandler implements I_FRMInterface,
         TYPE_STRING,
         TYPE_STRING,
         TYPE_LONG + ENTRY_REQUIRED,
+        TYPE_INT
        // TYPE_LONG
     };
 
@@ -107,6 +110,7 @@ public class FrmAssessmentFormMain extends FRMHandler implements I_FRMInterface,
             assessmentFormMain.setMainData(getString(FRM_FIELD_MAIN_DATA));
             assessmentFormMain.setNote(getString(FRM_FIELD_NOTE));
             assessmentFormMain.setGroupRankId(getLong(FRM_FIELD_GROUP_RANK_ID));
+            assessmentFormMain.setPeriodeAppraisalMonth(getInt(FRM_FIELD_PERIODE_APPRAISAL_MONTH));
            // assessmentFormMain.setFormMainIdGroup(getLong(FRM_FIELD_ASS_FORM_MAIN_ID_GROUP));
         } catch (Exception e) {
             System.out.println("Error on requestEntityObject : " + e.toString());

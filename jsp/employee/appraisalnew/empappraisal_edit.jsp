@@ -1,4 +1,5 @@
  
+<%@page import="com.dimata.harisma.entity.employee.assessment.PstAssessmentFormLink"%>
 <%@page import="com.dimata.harisma.entity.employee.assessment.AssessmentFormSection"%>
 <%@page import="com.dimata.harisma.entity.employee.assessment.PstAssessmentFormSection"%>
 <%@page import="com.dimata.harisma.entity.employee.assessment.PstAssessmentFormItem"%>
@@ -112,6 +113,8 @@
             long assFormMainId = FRMQueryString.requestLong(request, "ASS_FORM_MAIN_ID");
             long positionId = 0;
             
+            AssessmentFormMain entAssessmentFormMain = PstAssessmentFormMain.fetchExc(assFormMainId);
+                    
             CareerPath entCareerPath = new CareerPath();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String formattedDateFrom = sdf.format(datePeriodFrom);
@@ -135,6 +138,7 @@
             appraisalMain.setDataPeriodFrom(datePeriodFrom);
             appraisalMain.setDataPeriodTo(datePeriodTo);
             
+            
             if(appraisalMain.getOID()>0){
                 try{
                     Vector vAssessmentFormSection = PstAssessmentFormSection.list(0, 1, 
@@ -145,7 +149,7 @@
                         AssessmentFormSection entAssessmentFormSection = (AssessmentFormSection) vAssessmentFormSection.get(0);
 
                         Vector vAssessmentFormItem = PstAssessmentFormItem.list(0, 0, 
-                                "ASS_FORM_SECTION_ID = " + entAssessmentFormSection.getOID() + " AND PAGE = 1 AND NUMBER > 0 AND TYPE = " + PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION, 
+                                "ASS_FORM_SECTION_ID = " + entAssessmentFormSection.getOID() + " AND PAGE = 1 AND NUMBER > 0 AND TYPE = " + PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION + " AND APP_MAIN_ID = " + appraisalMain.getOID(), 
                                 ""
                         );
                         for(int i = 0; i < vAssessmentFormItem.size(); i++){
@@ -155,7 +159,7 @@
                     }
                     
                     appraisalMain.setAssFormMainId(assFormMainId);
-                    oidAppraisalMain = PstAppraisalMain.updateExc(appraisalMain);
+                    PstAppraisalMain.updateExc(appraisalMain);
 
                     Vector vAssFormSection = PstAssessmentFormSection.list(0, 1, "ASS_FORM_MAIN_ID = " + appraisalMain.getAssFormMainId(), "");
                     AssessmentFormSection entAssessmentFormSection = (AssessmentFormSection) vAssFormSection.get(0);
@@ -258,6 +262,7 @@
                             entAssessmentFormItem.setItemPoin4("");
                             entAssessmentFormItem.setItemPoin5("");
                             entAssessmentFormItem.setItemPoin6("");
+                            entAssessmentFormItem.setAppMainId(appraisalMain.getOID());
                             PstAssessmentFormItem.insertExc(entAssessmentFormItem);
                         }
 
@@ -278,8 +283,9 @@
                         appraisalMain.setEmpLevelId(employee.getLevelId());
                         appraisalMain.setAssesorId(assessor.getOID());
                         appraisalMain.setAssesorPositionId(assessor.getPositionId());
-                        oidAppraisalMain = PstAppraisalMain.insertExc(appraisalMain);
-                        
+                        appraisalMain.setAssFormMainId(assFormMainId);
+                        long appMainId = PstAppraisalMain.insertExc(appraisalMain);
+
                         String kpiSettingId = "(";
                         Vector vKpiSettingPosition = PstKpiSettingPosition.list(0, 0, 
                                 "POSITION_ID = " + positionId, 
@@ -294,7 +300,7 @@
                                 kpiSettingId += ")";
                             }
                         }
-                        
+
                         Vector vKpiSetting = PstKpiSetting.list(0, 0, 
                                 "KPI_SETTING_ID IN " + kpiSettingId + " AND TAHUN = YEAR(NOW()) AND START_DATE < CURDATE() AND VALID_DATE > CURDATE()", 
                                 ""
@@ -309,7 +315,7 @@
                                 kpiSettingId += ")";
                             }
                         }
-                        
+
                         Vector vKpiTargetDetailEmployee = PstKpiTargetDetailEmployee.list(0, 0, 
                                 "EMPLOYEE_ID = " + employee.getOID(), 
                                 ""
@@ -324,7 +330,7 @@
                                 kpiTargetDetailId += ")";
                             }
                         }
-                        
+
                         Vector vKpiTargetDetail = PstKpiTargetDetail.list(0, 0, 
                                 "KPI_TARGET_DETAIL_ID IN " + kpiTargetDetailId, 
                                 ""
@@ -339,7 +345,7 @@
                                 kpiSettingListid += ")";
                             }
                         }
-                        
+
                         Vector vKpiSettingList = PstKpiSettingList.list(0, 0, 
                                 "KPI_SETTING_ID IN " + kpiSettingId + " AND KPI_SETTING_LIST_ID IN " + kpiSettingListid, 
                                 ""
@@ -354,7 +360,7 @@
                                     ""
                             );
                             AssessmentFormSection entAssFormSection = (AssessmentFormSection) vAssFormSection.get(0);
-                            
+
                             AssessmentFormItem entAssessmentFormItem = new AssessmentFormItem();
                             entAssessmentFormItem.setTitle(entKpiList.getKpi_title());
                             entAssessmentFormItem.setKpiListId(entKpiList.getOID());
@@ -367,6 +373,14 @@
                             entAssessmentFormItem.setHeight(1);
                             entAssessmentFormItem.setAssFormSection(entAssFormSection.getOID());
                             entAssessmentFormItem.setType(PstAssessmentFormItem.ITEM_TYPE_KPI_EMPLOYEE_POSITION);
+                            entAssessmentFormItem.setTitle_L2("");
+                            entAssessmentFormItem.setItemPoin1("");
+                            entAssessmentFormItem.setItemPoin2("");
+                            entAssessmentFormItem.setItemPoin3("");
+                            entAssessmentFormItem.setItemPoin4("");
+                            entAssessmentFormItem.setItemPoin5("");
+                            entAssessmentFormItem.setItemPoin6("");
+                            entAssessmentFormItem.setAppMainId(appMainId);
                             PstAssessmentFormItem.insertExc(entAssessmentFormItem);
                         }
 
@@ -422,9 +436,10 @@
 <head>
 <!-- #BeginEditable "doctitle" --> 
 <title>HARISMA - Employee Assessment</title>
-<script language="JavaScript">
 
-	function cmdEdit(oid){ 
+<script src="<%=approot%>/javascripts/jquery.js"></script>
+<script language="JavaScript">
+        function cmdEdit(oid){ 
 		document.<%=FrmAppraisalMain.FRM_APPRAISAL_MAIN%>.command.value="<%=String.valueOf(Command.EDIT)%>";
 		document.<%=FrmAppraisalMain.FRM_APPRAISAL_MAIN%>.action="empappraisal_edit.jsp";
 		document.<%=FrmAppraisalMain.FRM_APPRAISAL_MAIN%>.submit(); 
@@ -488,8 +503,6 @@
             window.open(url);  
 	}
 
-
-
         function cmdSearchEmp(){
             window.open("<%=approot%>/employee/search/searchEmp.jsp?formName=<%=FrmAppraisalMain.FRM_APPRAISAL_MAIN%>&empPathId=<%=FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_EMPLOYEE_ID]%>&firstName=EM_", null, "height=550,width=600, status=yes,toolbar=no,menubar=no,location=no, scrollbars=yes");       
         }
@@ -552,6 +565,7 @@
 	}
 
 function MM_preloadImages() { //v3.0
+                onLoad();
 		var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
 		var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
 		if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
@@ -569,7 +583,6 @@ function MM_swapImage() { //v3.0
 		var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
 		if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
 	}
-
 </script>
 <!-- #EndEditable -->
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
@@ -725,7 +738,7 @@ function showObjectForMenu(){
                                                         <!--Start Data Employee -->
                                                 <table width="100%" border="0" cellspacing="2" cellpadding="2">
                                                     <tr> 
-                                                      <input type="hidden" name="<%=FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_EMPLOYEE_ID]%>" value="<%=String.valueOf(appraisalMain.getOID()>0?appraisalMain.getEmployeeId():employee.getOID())%>" class="formElemen">
+                                                      <input type="hidden" id="empId" name="<%=FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_EMPLOYEE_ID]%>" value="<%=String.valueOf(appraisalMain.getOID()>0?appraisalMain.getEmployeeId():employee.getOID())%>" class="formElemen">
                                                       <input type="hidden" name="<%=FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_EMP_DEPARTMENT_ID]%>" value="<%=String.valueOf(appraisalMain.getOID()>0?appraisalMain.getEmpDepartmentId():employee.getDepartmentId())%>" class="formElemen">
                                                       <input type="hidden" name="<%=FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_EMP_LEVEL_ID]%>" value="<%=String.valueOf(appraisalMain.getOID()>0?appraisalMain.getEmpLevelId():employee.getLevelId())%>" class="formElemen">
                                                       <input type="hidden" name="<%=FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_EMP_POSITION_ID]%>" value="<%=String.valueOf(appraisalMain.getOID()>0?appraisalMain.getEmpPositionId():employee.getPositionId())%>" class="formElemen">
@@ -953,7 +966,24 @@ function showObjectForMenu(){
                                                 </td></tr>
                                                 <tr><td>
                                                     <!--Start detail data-->
-                                                    <table width="100%" border="0" cellspacing="2" cellpadding="2">
+                                                    <table width="100%" border="0" cellspacing="2" cellpadding="2" id="ass-table">
+                                                        <tr>
+                                                            <td width="12%" nowrap> 
+                                                                <div align="left">Choose Form</div>
+                                                            </td>
+                                                            <td width="88%" nowrap>:
+                                                                <select name="ASS_FORM_MAIN_ID" id="ass-form">
+                                                                    <option value="0">~Choose Form~</option>
+                                                                    <%
+                                                                        Vector vAssFormMain = PstAssessmentFormMain.list(0, 0, "", "");
+                                                                        for(int i = 0; i < vAssFormMain.size(); i++){
+                                                                            AssessmentFormMain entAssessmentFormMain = (AssessmentFormMain) vAssFormMain.get(i);
+                                                                    %>
+                                                                    <option value="<%= entAssessmentFormMain.getOID() %>" <% if(appraisalMain.getAssFormMainId() == entAssessmentFormMain.getOID()){%> selected <%} %>><%= entAssessmentFormMain.getTitle() %></option>
+                                                                    <% } %>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
                                                         <tr>
                                                             <td width="12%" nowrap> 
                                                                 <div align="left">Date of Assessment</div>
@@ -986,7 +1016,7 @@ function showObjectForMenu(){
                                                             <td width="12%" nowrap> 
                                                                 <div align="left">Data Period From</div>
                                                             </td>
-                                                            <td width="88%" nowrap>:
+                                                            <td width="88%" nowrap id="date-period">:
                                                             <%//=Formater.formatDate(appraisalMain.getDateOfAssessment(),"yyyy MM dd")%>
                                                                 <%=ControlDatePopup.writeDate(FrmAppraisalMain.fieldNames[FrmAppraisalMain.FRM_FIELD_DATA_PERIOD_FROM],appraisalMain.getDataPeriodFrom())%>
                                                                <!-- <a href="javascript:cmdClearDateLast()">Clear Date</a>-->
@@ -996,23 +1026,9 @@ function showObjectForMenu(){
                                                                <!-- <a href="javascript:cmdClearDateLast()">Clear Date</a>-->
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td width="12%" nowrap> 
-                                                                <div align="left">Choose Form</div>
-                                                            </td>
-                                                            <td width="88%" nowrap>:
-                                                                <select name="ASS_FORM_MAIN_ID">
-                                                                    <option value="0">~Pilih Form~</option>
-                                                                    <%
-                                                                        Vector vAssFormMain = PstAssessmentFormMain.list(0, 0, "", "");
-                                                                        for(int i = 0; i < vAssFormMain.size(); i++){
-                                                                            AssessmentFormMain entAssessmentFormMain = (AssessmentFormMain) vAssFormMain.get(i);
-                                                                    %>
-                                                                    <option value="<%= entAssessmentFormMain.getOID() %>" <% if(appraisalMain.getAssFormMainId() == entAssessmentFormMain.getOID()){%> selected <%} %>><%= entAssessmentFormMain.getTitle() %></option>
-                                                                    <% } %>
-                                                                </select>
-                                                            </td>
-                                                        </tr>
+                                                        
+                                                        <tbody id="ass-child-data"></tbody>
+                                                        
                                                     </table>
                                                     <!--End detail data-->
                                                 </td></tr>
@@ -1110,6 +1126,54 @@ function showObjectForMenu(){
                 <!-- #EndEditable --> </td>
             </tr>
             <%}%>
+<script>
+        $('body').on('change', '#ass-form', function(){
+           const assFormMainId = $(this).val();
+           const empId = $('#empId').val();
+           const datePeriodFrom = $('#FRM_FIELD_DATA_PERIOD_FROM').val();
+           ajaxGetChildList(assFormMainId, empId);
+           ajaxGetAssMain(assFormMainId, datePeriodFrom);
+        });
+        
+        $(document).ready(function(){
+           const assFormMainId = $('#ass-form').val();
+           const empId = $('#empId').val();
+           if(parseInt(assFormMainId) > 0 && parseInt(empId) > 0){
+               ajaxGetChildList(assFormMainId, empId);
+           }
+        });
+        
+        const ajaxGetAssMain = (assFormMainId, datePeriodFrom) => {
+            $.ajax({
+                url: "<%= approot %>/AjaxGetAssMain",
+                type: 'GET',
+                dataType: 'html',
+                data: {
+                    assFormMainId: assFormMainId,
+                    datePeriodFrom: datePeriodFrom
+                },
+                success: function(res){
+                    $('#FRM_FIELD_DATA_PERIOD_TO').remove();
+                    $('#date-period').append(res);
+                }
+           });
+        }
+        
+        const ajaxGetChildList = (assFormMainId, empId) => {
+            $.ajax({
+                url: 'list_ass_child.jsp',
+                type: 'GET',
+                dataType: 'html',
+                data: {
+                    assFormMainId: assFormMainId,
+                    empId: empId
+                },
+                success: function(res){
+                    $('#ass-child-data').html(res);
+                }
+           });
+        }
+</script>
 </table>
 </body>
 <!-- #BeginEditable "script" -->

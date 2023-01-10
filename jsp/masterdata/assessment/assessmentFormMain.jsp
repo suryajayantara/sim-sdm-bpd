@@ -685,7 +685,7 @@
                                                                                                                 </tr>
                                                                                                                 <tr align="left" valign="top"> 
                                                                                                                     <td valign="top" width="17%" nowrap> 
-                                                                                                                        Form Child</td>
+                                                                                                                        Child Form</td>
                                                                                                                     <td width="83%" nowrap> 
                                                                                                                         <%
                                                                                                                             Vector fr_value = new Vector(1, 1);
@@ -710,6 +710,29 @@
 
                                                                                                                         %>
                                                                                                                         <%=ControlCombo.drawStringArraySelected("HR_ASS_FORM_MAIN_ID_CHILD", "chosen-select", null, assOID, fr_key, fr_value, null, tagAttr)%>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                                
+                                                                                                                <tr align="left" valign="top"> 
+                                                                                                                    <td valign="top" width="17%" nowrap> 
+                                                                                                                        Period
+                                                                                                                    </td>
+                                                                                                                    <td width="83%" nowrap>
+                                                                                                                        <select name="<%= FrmAssessmentFormMain.fieldNames[FrmAssessmentFormMain.FRM_FIELD_PERIODE_APPRAISAL_MONTH] %>" class="chosen-select" style="width: 10rem">
+                                                                                                                            <option>-Choose-</option>
+                                                                                                                        <%
+                                                                                                                            for (int i = 0; i < 24; i++) {
+                                                                                                                                String selected = "";
+                                                                                                                                if(assessmentFormMain.getPeriodeAppraisalMonth() == (i + 1)){
+                                                                                                                                    selected = "selected";
+                                                                                                                                }
+                                                                                                                        %>
+                                                                                                                            <option value="<%= i + 1 %>" <%= selected %>><%= i +1 %></option>
+                                                                                                                        <%
+                                                                                                                            }
+                                                                                                                        %>
+                                                                                                                        </select>
+                                                                                                                        Month
                                                                                                                     </td>
                                                                                                                 </tr>
                                                                                                             </table>

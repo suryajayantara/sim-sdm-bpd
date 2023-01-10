@@ -200,7 +200,7 @@ public class PstAssessmentFormSection extends DBHandler implements I_DBInterface
                         pstAssessmentFormSection.setFloat(FLD_WEIGHT_POINT, assessmentFormSection.getWeightPoint());
                         pstAssessmentFormSection.setLong(FLD_ASS_FORM_SECTION_ID_CHILD, assessmentFormSection.getAssFormSectionIdChild());
                         pstAssessmentFormSection.insert(); 
-			assessmentFormSection.setOID(pstAssessmentFormSection.getlong(FLD_ASS_FORM_MAIN_ID));
+			assessmentFormSection.setOID(pstAssessmentFormSection.getlong(FLD_ASS_FORM_SECTION_ID));
 		}catch(DBException dbe){ 
 			throw dbe; 
 		}catch(Exception e){ 
